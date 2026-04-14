@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_class %}body-setup{% endblock %}
+{% block content %}
+
+<div class="setup-top-bar">
+    <button class="btn-icon-text">
+        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
+        Help
+    </button>
+    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">Return to Home <svg width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg></a>
+</div>
+
+<h1 class="setup-title">Test Overview</h1>
+<div class="setup-card" style="width: 800px; padding: 40px; text-align: left; margin: 0 auto; box-sizing: border-box;">
+    <div style="font-size: 15px; color: #333; line-height: 1.6;">
+        <p style="margin-bottom: 25px;">The digital SAT, PSAT/NMSQT, PSAT 10, and PSAT 8/9 each consist of a Reading and Writing section and a Math section.</p>
+        
+        <strong style="font-size: 18px; display: block; margin-bottom: 10px; color: #1e1e1e;">Section 1: Reading and Writing (54 Questions)</strong>
+        <p style="margin-bottom: 25px;">There are two modules in the Reading and Writing section. Each module has 27 questions.</p>
+
+        <strong style="font-size: 18px; display: block; margin-bottom: 10px; color: #1e1e1e;">Section 2: Math (44 Questions)</strong>
+        <p style="margin-bottom: 25px;">There are two modules in the Math section. Each module has 22 questions.</p>
+
+        <strong style="font-size: 18px; display: block; margin-bottom: 10px; color: #1e1e1e;">Modules</strong>
+        <p style="margin-bottom: 25px;">Within each section, the two modules are timed separately. If time permits, you can review your answers in a given module. When the timer reaches zero, you will automatically move on. Once you move on from any module, you cannot return to it.</p>
+
+        <strong style="font-size: 18px; display: block; margin-bottom: 10px; color: #1e1e1e;">Directions</strong>
+        <p style="margin-bottom: 0;">Directions for answering questions appear at the start of each section. You...</p>
+    </div>
+</div>
+<div class="bottom-nav">
+    <button class="btn-secondary" onclick="window.location.href='/setup_step5/'">Back</button>
+    <div class="progress-container"><span class="progress-text">Step 6 of 9</span>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 66%"></div>
+        </div>
+    </div>
+    <button class="btn-next" onclick="window.location.href='/setup_step7/'">Next</button>
+</div>
+{% endblock %}
