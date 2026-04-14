@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_class %}body-setup{% endblock %}
+{% block content %}
+
+<div class="setup-top-bar">
+    <button class="btn-icon-text">
+        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
+        Help
+    </button>
+    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">Return to Home <svg width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg></a>
+</div>
+
+<h1 class="setup-title">Exam Download</h1>
+<div class="setup-card"
+    style="width: 450px; padding: 10px; text-align: left; display: flex; align-items: center; gap: 20px;">
+    <img id="loading-exam" style="width: 100%; height: auto;;" src="{% static 'images/loading-exam.png' %}" alt="">
+    <img id="loaded" style="width: 100%; height: auto; display: none" src="{% static 'images/loaded.png' %}" alt="">
+</div>
+<div class="bottom-nav">
+    <button class="btn-secondary" onclick="window.location.href='/setup_step5/'">Back</button>
+    <div class="progress-container"><span class="progress-text">Step 7 of 9</span>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 77%"></div>
+        </div>
+    </div>
+    <button id="next-btn" class="btn-secondary" onclick="window.location.href='/setup_step8/'" disabled>Next</button>
+</div>
+<script>
+    setTimeout(() => {
+        const nextBtn = document.getElementById('next-btn');
+        nextBtn.disabled = false;
+        nextBtn.className = 'btn-next';
+        nextBtn.style.width = '140px';
+        document.getElementById('loading-exam').style.display = 'none';
+        document.getElementById('loaded').style.display = 'block';
+    }, 1500);
+</script>
+{% endblock %}

@@ -1,0 +1,1276 @@
+[
+    {
+        "id": 1,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. Thanks in part to his efforts, community-supported agriculture (CSA) has become a popular way for consumers to buy local produce.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance",
+            "hinder",
+            "misrepresent",
+            "aggravate"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 2,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates",
+            "complicates",
+            "simplifies",
+            "contradicts"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 3,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction",
+            "hypothesis",
+            "fallacy",
+            "conjecture"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 4,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed",
+            "forced",
+            "prohibited",
+            "encouraged"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 5,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning",
+            "developing",
+            "ignoring",
+            "criticizing"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 6,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance",
+            "hinder",
+            "misrepresent",
+            "aggravate"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 7,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates",
+            "complicates",
+            "simplifies",
+            "contradicts"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 8,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction",
+            "hypothesis",
+            "fallacy",
+            "conjecture"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 9,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed",
+            "forced",
+            "prohibited",
+            "encouraged"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 10,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning",
+            "developing",
+            "ignoring",
+            "criticizing"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 11,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance",
+            "hinder",
+            "misrepresent",
+            "aggravate"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 12,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates",
+            "complicates",
+            "simplifies",
+            "contradicts (11)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 13,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction",
+            "hypothesis",
+            "fallacy",
+            "conjecture (12)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 14,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed",
+            "forced",
+            "prohibited",
+            "encouraged (13)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 15,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning",
+            "developing",
+            "ignoring",
+            "criticizing (14)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 16,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance",
+            "hinder",
+            "misrepresent",
+            "aggravate (15)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 17,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates",
+            "complicates",
+            "simplifies",
+            "contradicts (16)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 18,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction",
+            "hypothesis",
+            "fallacy",
+            "conjecture (17)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 19,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed",
+            "forced",
+            "prohibited",
+            "encouraged"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 20,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning",
+            "developing",
+            "ignoring",
+            "criticizing"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 21,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance",
+            "hinder",
+            "misrepresent",
+            "aggravate"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 22,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates",
+            "complicates",
+            "simplifies",
+            "contradicts"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 23,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction (22)",
+            "hypothesis (22)",
+            "fallacy (22)",
+            "conjecture (22)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 24,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 24)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed (23)",
+            "forced (23)",
+            "prohibited (23)",
+            "encouraged (23)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 25,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 25)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning (24)",
+            "developing (24)",
+            "ignoring (24)",
+            "criticizing (24)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 26,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 26)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance (25)",
+            "hinder (25)",
+            "misrepresent (25)",
+            "aggravate (25)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 27,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 27)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates (26)",
+            "complicates (26)",
+            "simplifies (26)",
+            "contradicts (26)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 28,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 28)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction (27)",
+            "hypothesis (27)",
+            "fallacy (27)",
+            "conjecture (27)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 29,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 29)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed (28)",
+            "forced (28)",
+            "prohibited (28)",
+            "encouraged (28)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 30,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 30)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning (29)",
+            "developing (29)",
+            "ignoring (29)",
+            "criticizing (29)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 31,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 31)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance (30)",
+            "hinder (30)",
+            "misrepresent (30)",
+            "aggravate (30)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 32,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 32)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates (31)",
+            "complicates (31)",
+            "simplifies (31)",
+            "contradicts (31)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 33,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 33)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction (32)",
+            "hypothesis (32)",
+            "fallacy (32)",
+            "conjecture (32)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 34,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 34)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed (33)",
+            "forced (33)",
+            "prohibited (33)",
+            "encouraged (33)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 35,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 35)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning (34)",
+            "developing (34)",
+            "ignoring (34)",
+            "criticizing (34)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 36,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 36)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance (35)",
+            "hinder (35)",
+            "misrepresent (35)",
+            "aggravate (35)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 37,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 37)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates (36)",
+            "complicates (36)",
+            "simplifies (36)",
+            "contradicts (36)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 38,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 38)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction (37)",
+            "hypothesis (37)",
+            "fallacy (37)",
+            "conjecture (37)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 39,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 39)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed (38)",
+            "forced (38)",
+            "prohibited (38)",
+            "encouraged (38)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 40,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 40)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning (39)",
+            "developing (39)",
+            "ignoring (39)",
+            "criticizing (39)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 41,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 41)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance (40)",
+            "hinder (40)",
+            "misrepresent (40)",
+            "aggravate (40)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 42,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 42)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates (41)",
+            "complicates (41)",
+            "simplifies (41)",
+            "contradicts (41)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 43,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 43)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction (42)",
+            "hypothesis (42)",
+            "fallacy (42)",
+            "conjecture (42)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 44,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 44)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed (43)",
+            "forced (43)",
+            "prohibited (43)",
+            "encouraged (43)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 45,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 45)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning (44)",
+            "developing (44)",
+            "ignoring (44)",
+            "criticizing (44)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 46,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 46)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance (45)",
+            "hinder (45)",
+            "misrepresent (45)",
+            "aggravate (45)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 47,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 47)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates (46)",
+            "complicates (46)",
+            "simplifies (46)",
+            "contradicts (46)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 48,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 48)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction (47)",
+            "hypothesis (47)",
+            "fallacy (47)",
+            "conjecture (47)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 49,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 49)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed (48)",
+            "forced (48)",
+            "prohibited (48)",
+            "encouraged (48)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 50,
+        "type": "rw",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 50)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "abandoning (49)",
+            "developing (49)",
+            "ignoring (49)",
+            "criticizing (49)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 51,
+        "type": "rw",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 51)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "enhance (50)",
+            "hinder (50)",
+            "misrepresent (50)",
+            "aggravate (50)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 52,
+        "type": "rw",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 52)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "validates (51)",
+            "complicates (51)",
+            "simplifies (51)",
+            "contradicts (51)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 53,
+        "type": "rw",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 53)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "prediction (52)",
+            "hypothesis (52)",
+            "fallacy (52)",
+            "conjecture (52)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 54,
+        "type": "rw",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 54)",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "allowed (53)",
+            "forced (53)",
+            "prohibited (53)",
+            "encouraged (53)"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 55,
+        "type": "math",
+        "passage": "Question 1 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 56,
+        "type": "math",
+        "passage": "Question 2 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 57,
+        "type": "math",
+        "passage": "Question 3 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 58,
+        "type": "math",
+        "passage": "Question 4 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 59,
+        "type": "math",
+        "passage": "Question 5 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "4.4",
+            "5.6",
+            "6.0",
+            "7.2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 60,
+        "type": "math",
+        "passage": "Question 6 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 61,
+        "type": "math",
+        "passage": "Question 7 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 62,
+        "type": "math",
+        "passage": "Question 8 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 63,
+        "type": "math",
+        "passage": "Question 9 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 64,
+        "type": "math",
+        "passage": "Question 10 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "4.4",
+            "5.6",
+            "6.0",
+            "7.2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 65,
+        "type": "math",
+        "passage": "Question 11 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 66,
+        "type": "math",
+        "passage": "Question 12 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 67,
+        "type": "math",
+        "passage": "Question 13 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 68,
+        "type": "math",
+        "passage": "Question 14 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 69,
+        "type": "math",
+        "passage": "Question 15 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "4.4",
+            "5.6",
+            "6.0",
+            "7.2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 70,
+        "type": "math",
+        "passage": "Question 16 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 71,
+        "type": "math",
+        "passage": "Question 17 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 72,
+        "type": "math",
+        "passage": "Question 18 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 73,
+        "type": "math",
+        "passage": "Question 19 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 74,
+        "type": "math",
+        "passage": "Question 20 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "4.4",
+            "5.6",
+            "6.0",
+            "7.2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 75,
+        "type": "math",
+        "passage": "Question 21 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 76,
+        "type": "math",
+        "passage": "Question 22 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 77,
+        "type": "math",
+        "passage": "Question 23 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 78,
+        "type": "math",
+        "passage": "Question 24 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 79,
+        "type": "math",
+        "passage": "Question 25 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "4.4",
+            "5.6",
+            "6.0",
+            "7.2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 80,
+        "type": "math",
+        "passage": "Question 26 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 81,
+        "type": "math",
+        "passage": "Question 27 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 82,
+        "type": "math",
+        "passage": "Question 28 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 83,
+        "type": "math",
+        "passage": "Question 29 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 84,
+        "type": "math",
+        "passage": "Question 30 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "4.4",
+            "5.6",
+            "6.0",
+            "7.2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 85,
+        "type": "math",
+        "passage": "Question 31 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 86,
+        "type": "math",
+        "passage": "Question 32 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 87,
+        "type": "math",
+        "passage": "Question 33 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 88,
+        "type": "math",
+        "passage": "Question 34 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 89,
+        "type": "math",
+        "passage": "Question 35 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "4.4",
+            "5.6",
+            "6.0",
+            "7.2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 90,
+        "type": "math",
+        "passage": "Question 36 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 91,
+        "type": "math",
+        "passage": "Question 37 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 92,
+        "type": "math",
+        "passage": "Question 38 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 93,
+        "type": "math",
+        "passage": "Question 39 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 94,
+        "type": "math",
+        "passage": "Question 40 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "4.4",
+            "5.6",
+            "6.0",
+            "7.2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 95,
+        "type": "math",
+        "passage": "Question 41 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "2.50M + 3.00C = 35",
+            "3.00M + 2.50C = 35",
+            "2.50M - 3.00C = 35",
+            "5.50(M + C) = 35"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 96,
+        "type": "math",
+        "passage": "Question 42 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "1",
+            "-1",
+            "2",
+            "-2"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 97,
+        "type": "math",
+        "passage": "Question 43 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "10 * sqrt(2)",
+            "10 * sqrt(3) / 2",
+            "5 * sqrt(6)",
+            "15"
+        ],
+        "correct": 1
+    },
+    {
+        "id": 98,
+        "type": "math",
+        "passage": "Question 44 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "Solve the problem given the context above.",
+        "options": [
+            "600 * pi",
+            "300 * pi",
+            "120 * pi",
+            "240 * pi"
+        ],
+        "correct": 1
+    }
+]

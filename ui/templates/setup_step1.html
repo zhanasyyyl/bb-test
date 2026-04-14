@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_class %}body-setup{% endblock %}
+
+{% block content %}
+<div class="setup-top-bar">
+    <button class="btn-icon-text">
+        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
+        Help
+    </button>
+    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
+        Return to Home
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+    </a>
+</div>
+
+<h1 class="setup-title">Confirm Your Personal Information</h1>
+
+<div class="setup-card" style="width: 640px;">
+    <div class="setup-card-content">
+        <div class="setup-col">
+            <h3>First and Last Name</h3>
+            <p>{{ request.session.student_name|default:"Zhanassyl Zholtay" }}</p>
+        </div>
+        <div class="setup-col">
+            <h3>Accommodations</h3>
+            <p>• You don't have any approved<br> digital testing accommodations.</p>
+        </div>
+    </div>
+
+    <div class="setup-footer-text">
+        You may have approved accommodations that don't apply to digital testing.<br>
+        Learn more about <a>accommodations</a>.
+    </div>
+
+    <div class="confirm-question">
+        Is this information correct?
+    </div>
+
+    <div class="radio-group">
+        <label class="radio-option">
+            <input type="radio" name="info_correct" value="yes" checked>
+            Yes
+        </label>
+        <label class="radio-option" style="background:#fff;">
+            <input type="radio" name="info_correct" value="no">
+            No
+        </label>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <button class="btn-secondary" onclick="window.history.back()">Back</button>
+    <div class="progress-container">
+        <span class="progress-text">Step 1 of 9</span>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+    <button class="btn-next" onclick="window.location.href='/setup_step2/'">Next</button>
+</div>
+{% endblock %}

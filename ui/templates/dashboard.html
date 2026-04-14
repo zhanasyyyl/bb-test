@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}body-dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-top">
+        <div class="dashboard-header">
+            <img src="/static/images/bluebook-blue.svg" style="width: 110px;" alt="">
+            <div class="db-profile">
+                <span id="profile-name-display">{{ request.user.userprofile.full_name }}</span>
+                <img id="profile-pic" src="{% static 'images/profile.png' %}" alt="Profile Picture"
+                    style="width: 36px; height: 36px; cursor: pointer;">
+            </div>
+        </div>
+
+        <div class="welcome-message">
+            Welcome, {{ request.user.userprofile.full_name }}. Good luck on test day!
+        </div>
+    </div>
+
+    <div class="dashboard-main">
+        <div class="split-section">
+            <div class="section-header">
+                <h2>Your Tests</h2>
+                <div class="toggle-switch">
+                    <div class="toggle-option active">&#10003; Active</div>
+                    <div class="toggle-option">Past</div>
+                </div>
+                <a class="header-link">Don't see your test here?</a>
+            </div>
+
+            <div class="registration-card">
+                <div class="reg-title">SAT</div>
+                <div class="reg-details">
+                    <div class="reg-left">
+                        <p><strong>Date:</strong> Sat, May 2, 2026</p>
+                        <p><strong>Arrival Time:</strong> 7:45 a.m. +05</p>
+                        <p><strong>Doors Close:</strong> 8:00 a.m. +05</p>
+
+                        <div class="reg-location">
+                            {% if request.user.userprofile.test_center_address %}
+                            <p style="white-space: pre-wrap;">{{ request.user.userprofile.test_center_address }}</p>
+                            {% else %}
+                            <strong>QSI INTL SCH ASTANA</strong>
+                            <p>17 BAYAN SULU STREET<br>KOMSOMOLSKIY VILLAGE<br>ASTANA, KZ</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="reg-accommodations">
+                            <strong>Testing Accommodations:</strong>
+                            <p>You have no approved accommodations for this test.</p>
+                        </div>
+                    </div>
+                    <div class="reg-right">
+                        <a class="reg-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                            </svg>
+                            Exam Overview
+                        </a>
+                        <a class="reg-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Test Day Checklist
+                        </a>
+                    </div>
+                </div>
+
+                <div class="reg-divider"></div>
+
+                <div class="reg-footer">
+                    <div class="reg-status">
+                        <svg viewBox="0 0 24 24" fill="none" class="status-icon">
+                            <circle cx="12" cy="12" r="10" stroke="#188038" stroke-width="2"></circle>
+                            <polyline points="8 12 11 15 16 9" stroke="#188038" stroke-width="2"></polyline>
+                        </svg>
+                        <span>On test day, don't wait for your<br> proctor. Check in right away.</span>
+                    </div>
+                    <button class="btn-yellow reg-btn" onclick="window.location.href='/setup/'">Check In Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="split-section">
+            <div class="section-header">
+                <h2>Practice and Prepare</h2>
+                <div class="toggle-switch">
+                    <div class="toggle-option active">&#10003; Active</div>
+                    <div class="toggle-option">Past</div>
+                </div>
+                <a class="header-link">Learn more about practice</a>
+            </div>
+
+            <div class="cards-grid">
+                <div class="practice-card">
+                    <div class="card-icon">
+                        <img src="/static/images/test-preview.svg" style="width: 80px;" alt="">
+                        <h4>Test<br>Preview</h4>
+                    </div>
+                </div>
+                <div class="practice-card">
+                    <div class="card-icon">
+                        <img src="/static/images/full-length-practice.svg" style="width: 80px;" alt="">
+                        <h4>Full-Length<br>Practice</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Edit Modal -->
+<div id="profile-modal" class="profile-modal-overlay" style="display: none;">
+    <div class="modal-content profile-edit-modal">
+        <h3 style="margin-top: 0;">Edit Profile</h3>
+        <form method="POST" action="{% url 'update_profile' %}"
+            style="display: flex; flex-direction: column; gap: 15px;">
+            {% csrf_token %}
+            <div style="text-align: left;">
+                <label for="full_name" style="display: block; font-weight: 600; margin-bottom: 5px;">Full Name</label>
+                <input type="text" id="full_name" name="full_name" value="{{ request.user.userprofile.full_name }}"
+                    placeholder="Enter full name" required
+                    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+            </div>
+            <div style="text-align: left;">
+                <label for="contact_email" style="display: block; font-weight: 600; margin-bottom: 5px;">Contact Email</label>
+                <input type="email" id="contact_email" name="contact_email" value="{{ request.user.userprofile.contact_email }}"
+                    placeholder="Enter contact email for test start code"
+                    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+            </div>
+            <div style="text-align: left;">
+                <label for="test_center_address" style="display: block; font-weight: 600; margin-bottom: 5px;">Test
+                    Center Address</label>
+                <textarea id="test_center_address" name="test_center_address" rows="4" s
+                    placeholder="Enter test center name and address details..." required
+                    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; resize: vertical;">{{ request.user.userprofile.test_center_address|default:'' }}</textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button type="button" id="close-modal-btn"
+                    style="padding: 10px 20px; background-color: white; border: 1px solid black; cursor: pointer; border-radius: 20px; font-weight: bold;">Cancel</button>
+                <button type="submit" class="btn-yellow" style="padding: 10px 20px; border-radius: 20px;">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const profilePic = document.getElementById('profile-pic');
+    const profileModal = document.getElementById('profile-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    profilePic.addEventListener('click', () => {
+        profileModal.style.display = 'flex';
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        profileModal.style.display = 'none';
+    });
+
+    // Close modal if clicked outside of modal content
+    profileModal.addEventListener('click', (e) => {
+        if (e.target === profileModal) {
+            profileModal.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock %}

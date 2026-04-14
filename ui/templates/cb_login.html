@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_class %}body-login{% endblock %}
+
+{% block content %}
+<div class="bg-decor"
+    style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2240%22 opacity=%220.2%22 fill=%22white%22/%3E%3C/svg%3E');">
+</div>
+
+<div class="login-header">
+    <button class="btn-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        Test Your Device
+    </button>
+</div>
+
+<div class="login-center">
+    <div class="logo-large">
+        <img src="{% static 'images/bluebook-white-logo.svg' %}" width="auto" height="48" alt="">
+    </div>
+
+    <div class="login-card"
+        style="text-align: left; width: 450px; display: flex; flex-direction: column; align-items: center;">
+        <button class="btn-back"
+            style="cursor: pointer; background: none; border: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 4px 12px; margin-bottom: 24px; align-self: flex-start; margin-left: -12px;"
+            onclick="window.location.href='/'">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round"
+                style="border: 1px solid #d9d9d9; border-radius: 4px; padding: 4px;">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Back
+        </button>
+
+        <h1 style="font-size: 26px; font-weight: 700; margin-bottom: 28px; color: #1e1e1e; align-self: flex-start;">
+            Sign In with
+            a Student
+            Account
+        </h1>
+
+        <form method="POST" action="/cb_login/" style="width: 100%; text-align: left; margin-top: 24px;">
+            {% csrf_token %}
+
+            <div style="margin-bottom: 20px;">
+                <label for="email"
+                    style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 16px; color: #111;">Email
+                    Address</label>
+                <input type="text" id="email" name="email" required
+                    style="width: 100%; padding: 12px 14px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
+            </div>
+
+            <div style="margin-bottom: 12px; position: relative;">
+                <label for="password"
+                    style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 16px; color: #111;">Password</label>
+                <input type="password" id="password" name="password" required
+                    style="width: 100%; padding: 12px 14px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
+                <svg id="toggle-password"
+                    style="position: absolute; right: 12px; top: 38px; color: #555; cursor: pointer;" width="20"
+                    height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                    </path>
+                    <line id="toggle-line" x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+            </div>
+
+            <div style="margin-bottom: 32px;">
+                <a href="#" style="color: #324dc7; text-decoration: underline; font-size: 14px;">Forgot password?</a>
+            </div>
+
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <button type="submit" id="submit-btn" class="btn-yellow" disabled
+                    style="width: 100%; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 20px; opacity: 0.5;">
+                    Submit
+                </button>
+            </div>
+        </form>
+
+        <div class="login-links" style="text-align: center; margin-top: 32px;">
+            <a>Need help signing in?</a>
+        </div>
+    </div>
+</div>
+
+<img src="{% static 'images/login-background.svg' %}" alt=""
+    style="position: absolute; bottom: 0; left: -12vw; width: 124vw; overflow-x: hidden; z-index: 0;">
+
+<div class="version-info">VSN-0.9.605 BT-2026-03-12 20:36</div>
+
+<script>
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.getElementById('submit-btn');
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const toggleLine = document.getElementById('toggle-line');
+
+    function validateForm() {
+        if (emailInput.value.trim() !== '' && passwordInput.value.trim() !== '') {
+            submitBtn.disabled = false;
+            submitBtn.style.backgroundColor = '#fedb00';
+            submitBtn.style.cursor = 'pointer';
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.backgroundColor = '#f0f0f0';
+            submitBtn.style.cursor = 'not-allowed';
+        }
+    }
+
+    emailInput.addEventListener('input', validateForm);
+    passwordInput.addEventListener('input', validateForm);
+    validateForm();
+
+    togglePasswordBtn.addEventListener('click', function () {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleLine.style.display = 'none';
+        } else {
+            passwordInput.type = 'password';
+            toggleLine.style.display = 'block';
+        }
+    });
+</script>
+{% endblock %}

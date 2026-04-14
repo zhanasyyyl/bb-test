@@ -1,0 +1,799 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}body-test{% endblock %}
+
+{% block content %}
+<!-- Fullscreen Enforcement Overlay -->
+<div id="fs-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center; text-align: center;">
+   <h1 style="margin-bottom: 20px;">Secure Test Environment</h1>
+   <p style="margin-bottom: 40px; font-size: 18px;">You must be in full screen mode to take this test.</p>
+   <button type="button" onclick="document.documentElement.requestFullscreen().catch(e=>console.log(e))" class="btn-yellow" style="padding: 16px 32px; font-size: 20px; border-radius: 40px; cursor: pointer; width: auto; border: 1px solid black;">Enter Full Screen</button>
+</div>
+<script>
+    window.testFinished = false;
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement && !window.testFinished) {
+            document.getElementById('fs-overlay').style.display = 'flex';
+        } else {
+            document.getElementById('fs-overlay').style.display = 'none';
+        }
+    });
+    // Hide initially if somehow already in fullscreen
+    if (document.fullscreenElement) {
+        document.getElementById('fs-overlay').style.display = 'none';
+    }
+</script>
+<style>
+    /* Additions for Modals and Loading */
+    .modal-overlay {
+        position: fixed;
+        display: none;
+        z-index: 1000;
+        pointer-events: auto;
+    }
+
+    #modal-directions {
+        position: fixed;
+        display: none;
+        z-index: 1000;
+        pointer-events: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+        width: 100vw;
+        height: 100vh;
+        top: 89px;
+        left: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    #modal-nav {
+        bottom: 66px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .directions-modal {
+        background: #fff;
+        width: 860px;
+        height: 600px;
+        border-radius: 8px;
+        padding: 32px;
+        position: relative;
+        top: -17px;
+        left: 24px;
+    }
+
+    .directions-modal::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 40px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid #fff;
+    }
+
+    .directions-modal p {
+        font-size: 16px;
+        font-family: Georgia, "Times New Roman", Times, serif;
+        color: #202124;
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+
+    .nav-modal {
+        background: #fff;
+        width: 480px;
+        border-radius: 8px;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .nav-modal::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid #fff;
+    }
+
+    .nav-modal-header {
+        padding: 16px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        border-bottom: 1px solid #dadce0;
+        position: relative;
+    }
+
+    .nav-modal-close {
+        position: absolute;
+        right: 16px;
+        top: 16px;
+        cursor: pointer;
+    }
+
+    .nav-legend {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        padding: 12px;
+        border-bottom: 1px solid #dadce0;
+        font-size: 12px;
+    }
+
+    .nav-legend-item {
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .legend-box {
+        width: 14px;
+        height: 14px;
+        border: 1px dashed #5f6368;
+    }
+
+    .legend-box.current {
+        border: none;
+        background: url('{% static "images/current.png" %}') no-repeat center;
+        background-size: contain;
+    }
+
+    .legend-box.answered {
+        background: #2844c4;
+        border: none;
+    }
+
+    .nav-grid {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 26px 8px;
+        padding: 24px;
+    }
+
+    .nav-item {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px dashed #5f6368;
+        font-size: 18px;
+        font-weight: bold;
+        color: #324dc7;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .nav-item.page {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+    }
+
+    .nav-item.answered {
+        background: #324dc7;
+        border: none;
+    }
+
+    .nav-item.current {
+        border: 1px dashed #5f6368;
+        background: transparent;
+    }
+
+    .nav-item.answered {
+        background: #324dc7;
+        color: white;
+        border: none;
+    }
+
+    .nav-item.current::after {
+        content: '';
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 14px;
+        height: 20px;
+        background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 14 20" fill="none" stroke="%23202124" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M7 1c3.3 0 6 2.7 6 6 0 4.5-6 12-6 12S1 11.5 1 7c0-3.3 2.7-6 6-6z"></path><circle cx="7" cy="7" r="2"></circle></svg>') no-repeat center;
+    }
+
+    .nav-item.review::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        height: 12px;
+        width: 12px;
+        background: url('{% static "images/for-review.png" %}') no-repeat center;
+        background-size: cover;
+    }
+
+    .nav-footer {
+        padding: 16px;
+        padding-top: 0;
+        text-align: center;
+    }
+
+    /* Image and Overlays */
+    .test-workspace {
+        position: relative;
+        flex: 1;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .question-img-container {
+        position: absolute;
+        top: -110px;
+        /* Adjust to hide original topbar */
+        left: 0;
+        width: 100%;
+        height: calc(100% + 180px);
+        /* Adjust to compensate */
+    }
+
+    .question-img-container img {
+        width: 100%;
+        object-fit: cover;
+        object-position: top center;
+        pointer-events: none;
+    }
+
+    .overlay-practice-banner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 48px;
+        /* hides practice banner */
+        background: #fff;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    .overlay-cross-btns {
+        position: absolute;
+        right: 20px;
+        top: 150px;
+        bottom: 50px;
+        width: 60px;
+        /* covers cross buttons */
+        background: #fff;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    /* Native UI Interactive States */
+    .option-row {
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        padding: 0;
+        margin-bottom: 8px;
+    }
+
+    .option-row.selected {
+        border-color: #324dc7;
+    }
+
+    .option-row.selected .option-letter {
+        background: #324dc7;
+        color: #fff;
+    }
+
+    .mark-review {
+        transition: color 0.2s;
+    }
+
+    .mark-review:hover {
+        opacity: 0.8;
+    }
+
+    /* Bottom Bars */
+    .test-bottombar {
+        border: none;
+        background-image: url('{% static "images/dashed-border.png" %}');
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+    }
+
+    /* Full Page Screens */
+    .screen-review,
+    .screen-loading {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 100;
+        flex-direction: column;
+    }
+
+    .screen-loading {
+        background: #f8f9fa;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .screen-loading h2 {
+        color: #5c7cb8;
+        font-size: 28px;
+        font-weight: 300;
+        margin-bottom: 24px;
+    }
+
+    .screen-loading p {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .spinner {
+        margin-top: 32px;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #dadce0;
+        border-top: 4px solid #5c7cb8;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<div class="test-topbar">
+    <div class="test-info">
+        <div class="test-title" id="ui-test-title">Section 1, Module 1: Reading and Writing</div>
+        <div class="test-directions" onclick="document.getElementById('modal-directions').style.display='flex'">
+            Directions
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <div class="test-timer" style="position: absolute; left: 50%; transform: translateX(-50%);">
+        <img src="{% static 'images/timer.svg' %}" alt="">
+        <button class="btn-timer">Show</button>
+    </div>
+
+    <div class="test-tools" style="display: flex; align-items: center; gap: 8px;">
+        <div class="tool-item">
+            <img src="{% static 'images/highlights.svg' %}" alt="">
+            Highlights & Notes
+        </div>
+        <div class="tool-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#202124" stroke-width="2">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="12" cy="5" r="1"></circle>
+                <circle cx="12" cy="19" r="1"></circle>
+            </svg>
+            More
+        </div>
+        <div class="tool-item"
+            style="display: flex; align-items: center; gap: 6px; padding-left: 15px; margin-left: 10px; border-left: 1px solid #ccc; cursor: default;">
+            <img src="{% static 'images/battery.svg' %}" style="width: 22px; height: 11px;" alt="">
+            <span style="font-weight: 500; font-size: 13px;">98%</span>
+        </div>
+    </div>
+</div>
+<img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: auto; transform: scaleY(-1);">
+
+<div class="test-workspace" id="main-workspace">
+    <div class="passage-pane" id="ui-passage">
+        <!-- populated dynamically -->
+    </div>
+
+    <div class="resizer">
+        <img src="{% static 'images/separator.svg' %}" alt="">
+    </div>
+
+    <div class="question-pane">
+        <div class="question-header">
+            <div class="q-num-mark">
+                <span class="q-num" id="ui-q-num">1</span>
+                <span class="mark-review" onclick="app.toggleReview()" style="cursor: pointer;">
+                    <img src="{% static 'images/mark.svg' %}" id="btn-mark-review" style="width: 20px; height: 20px;"
+                        alt="">
+                    Mark for Review
+                </span>
+            </div>
+            <img src="{% static 'images/cross-out-abc.svg' %}" style="width: 28px; height: 28px; cursor: pointer;"
+                alt="">
+        </div>
+
+        <div class="question-text" id="ui-question">
+            <!-- populated dynamically -->
+        </div>
+
+        <div class="options-list" id="ui-options">
+            <!-- populated dynamically -->
+        </div>
+    </div>
+</div>
+
+<div class="test-bottombar" id="main-bottombar">
+    <div class="test-student-name">
+        {{ request.session.student_name|default:"Aibek Kanatov" }}
+    </div>
+
+    <div class="test-q-nav" style="cursor: pointer;" onclick="app.showNavModal()">
+        <span id="ui-q-nav">Question 1 of 27</span>
+        <img id="arrow" src="{% static 'images/arrow.png' %}" style="width: 20px; height: auto;" alt="">
+    </div>
+
+    <div>
+        <button class="btn-blue" id="btn-back" onclick="app.prevQuestion()">Back</button>
+        <button class="btn-blue" id="btn-next" onclick="app.nextQuestion()">Next</button>
+    </div>
+</div>
+
+<!-- Directions Modal -->
+<div class="directions-modal-overlay" id="modal-directions">
+    <div class="directions-modal">
+        <p>The questions in this section address a number of important reading and writing skills. Each question
+            includes one or more passages, which may include a table or graph. Read each passage and question carefully,
+            and then choose the best answer to the question based on the passage(s).</p>
+        <p>All questions in this section are multiple-choice with four answer choices. Each question has a single best
+            answer.</p>
+        <div style="text-align: right; position: absolute; bottom: 24px; right: 24px;">
+            <button class="btn-yellow"
+                style="width: auto; padding: 10px 24px; border-radius: 20px; font-size: 14px; border: none; display: inline-block;"
+                onclick="document.getElementById('modal-directions').style.display='none'">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Nav Modal -->
+<div class="modal-overlay" id="modal-nav">
+    <div class="nav-modal">
+        <div class="nav-modal-header">
+            <span id="nav-modal-title">Section 1, Module 1: Reading and Writing Questions</span>
+            <svg class="nav-modal-close" onclick="document.getElementById('modal-nav').style.display='none'" width="20"
+                height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </div>
+        <div class="nav-legend">
+            <div class="nav-legend-item">
+                <div class="legend-box current"></div> Current
+            </div>
+            <div class="nav-legend-item">
+                <div class="legend-box"></div> Unanswered
+            </div>
+            <div class="nav-legend-item">
+                <img src="{% static 'images/for-review.png' %}" style="width: 24px; height: 24px;" alt="">For Review
+            </div>
+        </div>
+        <div class="nav-grid" id="nav-grid"></div>
+        <div class="nav-footer">
+            <button class="btn-outline"
+                style="width:auto; padding: 6px 16px; border:1px solid #324dc7; color: #324dc7; border-radius: 24px; font-size: 14px;"
+                onclick="app.goToReview()">Go to Review Page</button>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Screen -->
+<div class="screen-loading" id="screen-loading">
+    <h2>This Module Is Over</h2>
+    <p>All your work has been saved.</p>
+    <p>You'll move on automatically in just a moment.</p>
+    <p>Do not refresh this page or quit the app.</p>
+    <div class="spinner"></div>
+</div>
+
+<!-- Review Page Full Screen -->
+<div class="screen-review" id="screen-review">
+    <div class="test-topbar">
+        <div class="test-info">
+            <div class="test-title" id="ui-test-title">Section 1, Module 1: Reading and Writing</div>
+            <div class="test-directions" onclick="document.getElementById('modal-directions').style.display='flex'">
+                Directions
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+        </div>
+
+        <div class="test-timer" style="position: absolute; left: 50%; transform: translateX(-50%);">
+            <img src="{% static 'images/timer.svg' %}" alt="">
+            <button class="btn-timer">Show</button>
+        </div>
+
+        <div class="test-tools" style="display: flex; align-items: center; gap: 8px;">
+            <div class="tool-item">
+                <img src="{% static 'images/highlights.svg' %}" alt="">
+                Highlights & Notes
+            </div>
+            <div class="tool-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#202124" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+                More
+            </div>
+            <div class="tool-item"
+                style="display: flex; align-items: center; gap: 6px; padding-left: 15px; margin-left: 10px; border-left: 1px solid #ccc; cursor: default;">
+                <svg width="22" height="11" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#76rhwldj7a)">
+                        <g clip-path="url(#whfx0evqrb)" fill="#202124">
+                            <path
+                                d="M15.32 2.5h-.82v-1A1.5 1.5 0 0 0 13 0H1.5A1.5 1.5 0 0 0 0 1.5v5A1.5 1.5 0 0 0 1.5 8H13a1.5 1.5 0 0 0 1.5-1.5v-1h.82a.67.67 0 0 0 .68-.67V3.18a.68.68 0 0 0-.68-.68zm-1.82 4a.5.5 0 0 1-.5.5H1.5a.5.5 0 0 1-.5-.5v-5a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 .5.5v5z" />
+                            <path
+                                d="M9.62 2H2.25a.25.25 0 0 0-.25.25v3.49c0 .138.112.25.25.25h7.37a.25.25 0 0 0 .25-.25V2.25A.25.25 0 0 0 9.62 2z" />
+                        </g>
+                    </g>
+                    <defs>
+                        <clipPath id="76rhwldj7a">
+                            <path fill="#fff" d="M0 0h15.99v8H0z" />
+                        </clipPath>
+                        <clipPath id="whfx0evqrb">
+                            <path fill="#fff" d="M0 0h16v8H0z" />
+                        </clipPath>
+                    </defs>
+                </svg>
+                <span style="font-weight: 500; font-size: 13px;">98%</span>
+            </div>
+        </div>
+    </div>
+    <img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: auto; transform: scaleY(-1);">
+
+    <div class="review-content"
+        style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 48px;">
+        <h1 style="margin-bottom: 24px; font-weight: 500;">Check Your Work</h1>
+        <p>You cannot to move on to the next module until time expires.</p>
+        <p>When time expires, you'll automatically move on to the next module.</p>
+    </div>
+
+    <div style="flex: 1; display:flex; justify-content:center; padding: 24px; overflow-y:auto;">
+        <div class="nav-modal" style="width: 720px; height: 320px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+            <div class="nav-legend">
+                <span class="nav-modal-title" style="font-size: 18px; font-weight: 600;">Section 1, Module 1: Reading
+                    and Writing Questions</span>
+                <div class="nav-legend-item">
+                    <div class="legend-box"></div> Unanswered
+                </div>
+                <div class="nav-legend-item">
+                    <div class="legend-box"
+                        style="border:none; background:#e81123; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 70%, 0 100%);">
+                    </div> For Review
+                </div>
+            </div>
+            <div class="nav-grid" id="review-grid" style="grid-template-columns: repeat(10, 1fr);"></div>
+        </div>
+    </div>
+    <div class="test-bottombar">
+        <div class="test-student-name">
+            {{ request.session.student_name|default:"Aibek Kanatov" }}
+        </div>
+        <div>
+            <button class="btn-blue" onclick="app.finishModule()">Next</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const staticUrl = "{% static 'questions/' %}";
+    const modulesData = JSON.parse('{{ modules_json|escapejs }}');
+
+    // Global state registry
+    const moduleState = {};
+
+    const app = {
+        modIdx: 0,
+        qIdx: 0,
+
+        init() {
+            // Initialize state structure
+            for (let i = 0; i < modulesData.length; i++) {
+                moduleState[i] = [];
+                for (let j = 0; j < modulesData[i].count; j++) {
+                    moduleState[i].push({ review: false, answer: null });
+                }
+            }
+            this.renderQuestion();
+        },
+
+        renderQuestion() {
+            const mod = modulesData[this.modIdx];
+            if (!mod) return;
+
+            const qData = mod.questions[this.qIdx];
+
+            document.getElementById('ui-test-title').innerText = mod.title;
+            document.getElementById('nav-modal-title').innerText = mod.title + " Questions";
+            document.getElementById('ui-q-nav').innerText = `Question ${this.qIdx + 1} of ${mod.count}`;
+
+            document.getElementById('ui-q-num').innerText = this.qIdx + 1;
+            document.getElementById('ui-passage').innerText = qData.passage;
+            document.getElementById('ui-question').innerText = qData.question;
+
+            const optionsList = document.getElementById('ui-options');
+            optionsList.innerHTML = '';
+
+            const charMap = ['A', 'B', 'C', 'D'];
+            qData.options.forEach((optText, index) => {
+                const optLetter = charMap[index];
+                const optRow = document.createElement('div');
+                optRow.className = 'option-row';
+                optRow.id = 'opt-row-' + optLetter;
+                optRow.onclick = () => this.selectOption(optLetter);
+
+                optRow.innerHTML = `
+                    <div class="option-box">
+                        <div class="option-letter">${optLetter}</div>
+                        <div class="option-text">${optText}</div>
+                    </div>
+                `;
+                optionsList.appendChild(optRow);
+            });
+
+            document.getElementById('btn-back').style.display = this.qIdx > 0 ? 'inline-block' : 'none';
+
+            // Sync states
+            this.syncSelections();
+        },
+
+        syncSelections() {
+            const state = moduleState[this.modIdx][this.qIdx];
+            const btnReview = document.getElementById('btn-mark-review');
+            if (state.review) {
+                btnReview.src = "/static/images/marked.svg";
+            } else {
+                btnReview.src = '/static/images/mark.svg';
+            }
+
+            ['A', 'B', 'C', 'D'].forEach(opt => {
+                const row = document.getElementById('opt-row-' + opt);
+                if (row) {
+                    if (state.answer === opt) {
+                        row.classList.add('selected');
+                    } else {
+                        row.classList.remove('selected');
+                    }
+                }
+            });
+        },
+
+        selectOption(opt) {
+            const state = moduleState[this.modIdx][this.qIdx];
+            if (state.answer === opt) {
+                state.answer = null;
+            } else {
+                state.answer = opt;
+            }
+            this.syncSelections();
+        },
+
+        toggleReview() {
+            const state = moduleState[this.modIdx][this.qIdx];
+            state.review = !state.review;
+            this.syncSelections();
+        },
+
+        renderNavGrid(containerId, isReviewPage = false) {
+            const mod = modulesData[this.modIdx];
+            const grid = document.getElementById(containerId);
+            grid.innerHTML = '';
+            for (let i = 0; i < mod.count; i++) {
+                const state = moduleState[this.modIdx][i];
+                let className = 'nav-item';
+
+                if (isReviewPage) className += ' page';
+
+                if (state.answer) className += ' answered';
+                if (i === this.qIdx && !isReviewPage) className += ' current';
+                if (state.review) className += ' review';
+
+                const navItem = document.createElement('div');
+                navItem.className = className;
+                navItem.innerText = i + 1;
+
+                navItem.onclick = () => {
+                    this.qIdx = i;
+                    document.getElementById('modal-nav').style.display = 'none';
+                    document.getElementById('screen-review').style.display = 'none';
+                    document.getElementById('main-workspace').style.display = 'flex';
+                    document.getElementById('main-bottombar').style.display = 'flex';
+                    this.renderQuestion();
+                };
+                grid.appendChild(navItem);
+            }
+        },
+
+        showNavModal() {
+            if (document.getElementById('modal-nav').style.display !== 'flex') {
+                document.getElementById('arrow').style.transform = 'rotate(180deg)';
+                this.renderNavGrid('nav-grid', false);
+                document.getElementById('modal-nav').style.display = 'flex';
+            } else {
+                document.getElementById('arrow').style.transform = 'rotate(0deg)';
+                document.getElementById('modal-nav').style.display = 'none';
+            }
+        },
+
+        nextQuestion() {
+            const mod = modulesData[this.modIdx];
+            if (this.qIdx < mod.count - 1) {
+                this.qIdx++;
+                this.renderQuestion();
+            } else {
+                this.goToReview();
+            }
+        },
+
+        prevQuestion() {
+            if (this.qIdx > 0) {
+                this.qIdx--;
+                this.renderQuestion();
+            }
+        },
+
+        goToReview() {
+            document.getElementById('modal-nav').style.display = 'none';
+            document.getElementById('main-workspace').style.display = 'none';
+            document.getElementById('main-bottombar').style.display = 'none';
+
+            const mod = modulesData[this.modIdx];
+
+            this.renderNavGrid('review-grid', true);
+
+            document.getElementById('screen-review').style.display = 'flex';
+        },
+
+        finishModule() {
+            document.getElementById('screen-review').style.display = 'none';
+            document.getElementById('screen-loading').style.display = 'flex';
+
+            setTimeout(() => {
+                this.modIdx++;
+                if (this.modIdx < modulesData.length) {
+                    this.qIdx = 0;
+                    document.getElementById('screen-loading').style.display = 'none';
+                    document.getElementById('main-workspace').style.display = 'flex';
+                    document.getElementById('main-bottombar').style.display = 'flex';
+                    this.renderQuestion();
+                } else {
+                    document.getElementById('screen-loading').style.display = 'none';
+                    // Test Finished! Disable fullscreen enforcement
+                    window.testFinished = true;
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen().catch(err => console.log('Could not exit fullscreen', err));
+                    }
+                    // Show congrats screen
+                    const congratsHtml = `
+                    <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #fff; z-index: 5000; overflow: hidden;">
+                        <img src="{% static 'images/congrats.png' %}?v=2" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" />
+                    </div>`;
+                    document.body.insertAdjacentHTML('beforeend', congratsHtml);
+                }
+            }, 3000);
+        }
+    };
+
+    app.init();
+</script>
+{% endblock %}

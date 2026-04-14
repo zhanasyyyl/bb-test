@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_class %}body-setup{% endblock %}
+{% block content %}
+
+<div class="setup-top-bar">
+    <button class="btn-icon-text">
+        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
+        Help
+    </button>
+    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">Return to Home <svg width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg></a>
+</div>
+
+<h1 class="setup-title">Testing Tools</h1>
+
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <img src="{% static 'images/testing-tools-video.png' %}" alt=""
+        style="width: 55%; height: auto; border-radius: 8px;">
+    <div class="testing-tools-text"
+        style="padding-top: 48px; width: 55%; height: 100px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+        <h3 style="font-size: 22px; text-align: left; margin-left: 32px;">Testing Tools</h3>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <button class="btn-secondary" onclick="window.location.href='/setup_step2/'">Back</button>
+    <div class="progress-container"><span class="progress-text">Step 4 of 9</span>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 44%"></div>
+        </div>
+    </div>
+    <button class="btn-next" onclick="window.location.href='/setup_step5/'">Next</button>
+</div>
+{% endblock %}

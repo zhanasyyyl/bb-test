@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_class %}body-setup{% endblock %}
+{% block content %}
+
+<div class="setup-top-bar">
+    <button class="btn-icon-text">
+        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
+        Help
+    </button>
+    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">Return to Home <svg width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg></a>
+</div>
+
+<h1 class="setup-title">Confirm Device Information</h1>
+<div class="setup-card" style="width: 664px; padding: 26px; text-align: left;">
+    <h3 style="font-size: 20px; margin-bottom: 20px;">Who owns this device?</h3>
+    <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <input type="radio" name="device_owner" value="mine" checked>
+            I own this device (or I borrowed it from someone I know).
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <input type="radio" name="device_owner" value="collegeboard">
+            I borrowed this device from College Board.
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <input type="radio" name="device_owner" value="school">
+            My school or test center owns this device.
+        </label>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #ddd; margin-bottom: 20px;">
+    <div style="color: #1e1e1e;">This information helps us resolve issues faster if you have a problem
+        with your device.</div>
+</div>
+<div class="bottom-nav">
+    <button class="btn-secondary" onclick="window.location.href='/setup/'">Back</button>
+    <div class="progress-container"><span class="progress-text">Step 2 of 9</span>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 22%"></div>
+        </div>
+    </div>
+    <button class="btn-next" onclick="window.location.href='/setup_step4/'">Next</button>
+</div>
+{% endblock %}

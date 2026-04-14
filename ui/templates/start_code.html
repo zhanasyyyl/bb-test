@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block body_class %}body-startcode{% endblock %}
+
+{% block content %}
+<!-- Fullscreen Enforcement Overlay -->
+<div id="fs-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center; text-align: center;">
+   <h1 style="margin-bottom: 20px;">Secure Test Environment</h1>
+   <p style="margin-bottom: 40px; font-size: 18px;">You must be in full screen mode to take this test.</p>
+   <button type="button" onclick="document.documentElement.requestFullscreen().catch(e=>console.log(e))" class="btn-yellow" style="padding: 16px 32px; font-size: 20px; border-radius: 40px; cursor: pointer; width: auto;">Enter Full Screen</button>
+</div>
+<script>
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            document.getElementById('fs-overlay').style.display = 'flex';
+        } else {
+            document.getElementById('fs-overlay').style.display = 'none';
+        }
+    });
+    // Hide initially if somehow already in fullscreen
+    if (document.fullscreenElement) {
+        document.getElementById('fs-overlay').style.display = 'none';
+    }
+</script>
+
+
+<div class="startcode-main">
+    <h1>Start Code</h1>
+    <p>Once the proctor shares the start code, enter it here to begin testing.</p>
+    <p>The start code contains <strong>numbers only</strong>.</p>
+
+    <form id="start-code-form" method="POST" action="{% url 'start_code' %}" style="text-align: center;">
+        {% csrf_token %}
+        <input type="hidden" name="full_code" id="full-code-input">
+
+        <div class="code-boxes" style="display:flex; justify-content:center; gap:15px; margin: 40px 0;">
+            <input type="text" maxlength="1" class="code-input"
+                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
+                autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input"
+                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
+                autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input"
+                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
+                autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input"
+                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
+                autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input"
+                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
+                autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input"
+                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
+                autocomplete="off" />
+        </div>
+
+        <button type="submit" id="start-btn" class="btn-secondary"
+            style="font-size: 16px; width:auto; padding: 16px 24px; border-radius: 24px; display: inline-block; cursor: pointer;"
+            disabled>Start Test</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('.code-input');
+            const startBtn = document.getElementById('start-btn');
+            const fullCodeInput = document.getElementById('full-code-input');
+
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    if (e.target.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+
+                    const allFilled = Array.from(inputs).every(i => i.value.length === 1);
+                    if (allFilled) {
+                        fullCodeInput.value = Array.from(inputs).map(i => i.value).join('');
+                        startBtn.disabled = false;
+                        startBtn.className = 'btn-start';
+                        startBtn.style.padding = '16px 24px';
+                        startBtn.style.borderRadius = '24px';
+                        startBtn.style.width = 'auto';
+                    } else {
+                        fullCodeInput.value = '';
+                        startBtn.disabled = true;
+                        startBtn.className = 'btn-secondary';
+                        startBtn.style.padding = '16px 24px';
+                        startBtn.style.borderRadius = '24px';
+                        startBtn.style.width = 'auto';
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+
+<div class="bottom-info">
+    You can <a>review the instructions</a> that the proctor reads aloud.
+</div>
+{% endblock %}

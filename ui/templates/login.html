@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_class %}body-login{% endblock %}
+
+{% block content %}
+
+<div class="login-header">
+    <button class="btn-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        Test Your Device
+    </button>
+</div>
+
+<div class="login-center">
+    <div class="logo-large">
+        <img src="{% static 'images/bluebook-white-logo.svg' %}" width="auto" height="48" alt="">
+    </div>
+
+    <div class="login-card">
+        <h1>Sign In</h1>
+
+        <button class="btn-yellow">
+            <img src="{% static 'images/ticket.svg' %}" alt="">
+            Use a sign-in ticket from your school
+        </button>
+
+        <div class="divider">OR</div>
+
+        <button class="btn-outline" onclick="window.location.href='/cb_login/'">Sign in with a College Board student
+            account</button>
+
+        <div class="login-links">
+            <a>I'm an educator</a>
+            <a>Need help signing in?</a>
+        </div>
+    </div>
+</div>
+
+<img src="{% static 'images/login-background.svg' %}" alt=""
+    style="position: absolute; bottom: 0; left: -12vw; width: 124vw; overflow-x: hidden; z-index: 0;">
+
+<div class="version-info">VSN-0.9.605 BT-2026-03-12 20:36</div>
+{% endblock %}
