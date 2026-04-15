@@ -151,7 +151,7 @@
             "validates",
             "complicates",
             "simplifies",
-            "contradicts (11)"
+            "contradicts "
         ],
         "correct": 1
     },
@@ -164,7 +164,7 @@
             "prediction",
             "hypothesis",
             "fallacy",
-            "conjecture (12)"
+            "conjecture "
         ],
         "correct": 1
     },
@@ -177,7 +177,7 @@
             "allowed",
             "forced",
             "prohibited",
-            "encouraged (13)"
+            "encouraged "
         ],
         "correct": 1
     },
@@ -190,7 +190,7 @@
             "abandoning",
             "developing",
             "ignoring",
-            "criticizing (14)"
+            "criticizing "
         ],
         "correct": 1
     },
@@ -203,7 +203,7 @@
             "enhance",
             "hinder",
             "misrepresent",
-            "aggravate (15)"
+            "aggravate "
         ],
         "correct": 1
     },
@@ -216,7 +216,7 @@
             "validates",
             "complicates",
             "simplifies",
-            "contradicts (16)"
+            "contradicts "
         ],
         "correct": 1
     },
@@ -229,7 +229,7 @@
             "prediction",
             "hypothesis",
             "fallacy",
-            "conjecture (17)"
+            "conjecture "
         ],
         "correct": 1
     },
@@ -291,82 +291,82 @@
         "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "prediction (22)",
-            "hypothesis (22)",
-            "fallacy (22)",
-            "conjecture (22)"
+            "prediction ",
+            "hypothesis ",
+            "fallacy ",
+            "conjecture "
         ],
         "correct": 1
     },
     {
         "id": 24,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 24)",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "allowed (23)",
-            "forced (23)",
-            "prohibited (23)",
-            "encouraged (23)"
+            "allowed ",
+            "forced ",
+            "prohibited ",
+            "encouraged "
         ],
         "correct": 1
     },
     {
         "id": 25,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 25)",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "abandoning (24)",
-            "developing (24)",
-            "ignoring (24)",
-            "criticizing (24)"
+            "abandoning ",
+            "developing ",
+            "ignoring ",
+            "criticizing "
         ],
         "correct": 1
     },
     {
         "id": 26,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 26)",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "enhance (25)",
-            "hinder (25)",
-            "misrepresent (25)",
-            "aggravate (25)"
+            "enhance ",
+            "hinder ",
+            "misrepresent ",
+            "aggravate "
         ],
         "correct": 1
     },
     {
         "id": 27,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 27)",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "validates (26)",
-            "complicates (26)",
-            "simplifies (26)",
-            "contradicts (26)"
+            "validates ",
+            "complicates ",
+            "simplifies ",
+            "contradicts "
         ],
         "correct": 1
     },
     {
         "id": 28,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 28)",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "prediction (27)",
-            "hypothesis (27)",
-            "fallacy (27)",
-            "conjecture (27)"
+            "prediction ",
+            "hypothesis ",
+            "fallacy ",
+            "conjecture "
         ],
         "correct": 1
     },
     {
         "id": 29,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 29)",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "allowed (28)",
@@ -379,7 +379,7 @@
     {
         "id": 30,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 30)",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "abandoning (29)",
@@ -392,7 +392,7 @@
     {
         "id": 31,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 31)",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "enhance (30)",
@@ -405,7 +405,7 @@
     {
         "id": 32,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 32)",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "validates (31)",
@@ -418,7 +418,7 @@
     {
         "id": 33,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 33)",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction (32)",
@@ -431,7 +431,7 @@
     {
         "id": 34,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 34)",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "allowed (33)",
@@ -444,7 +444,7 @@
     {
         "id": 35,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 35)",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "abandoning (34)",
@@ -457,7 +457,7 @@
     {
         "id": 36,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 36)",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "enhance (35)",
@@ -470,7 +470,7 @@
     {
         "id": 37,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 37)",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "validates (36)",
@@ -483,7 +483,7 @@
     {
         "id": 38,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 38)",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction (37)",
@@ -496,7 +496,7 @@
     {
         "id": 39,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 39)",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "allowed (38)",
@@ -509,7 +509,7 @@
     {
         "id": 40,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 40)",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "abandoning (39)",
@@ -522,7 +522,7 @@
     {
         "id": 41,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 41)",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "enhance (40)",
@@ -535,7 +535,7 @@
     {
         "id": 42,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 42)",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "validates (41)",
@@ -548,7 +548,7 @@
     {
         "id": 43,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 43)",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction (42)",
@@ -561,7 +561,7 @@
     {
         "id": 44,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 44)",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "allowed (43)",
@@ -574,7 +574,7 @@
     {
         "id": 45,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 45)",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "abandoning (44)",
@@ -587,7 +587,7 @@
     {
         "id": 46,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 46)",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "enhance (45)",
@@ -600,7 +600,7 @@
     {
         "id": 47,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 47)",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "validates (46)",
@@ -613,7 +613,7 @@
     {
         "id": 48,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 48)",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction (47)",
@@ -626,7 +626,7 @@
     {
         "id": 49,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 49)",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "allowed (48)",
@@ -639,7 +639,7 @@
     {
         "id": 50,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. (Variation 50)",
+        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "abandoning (49)",
@@ -652,7 +652,7 @@
     {
         "id": 51,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. (Variation 51)",
+        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "enhance (50)",
@@ -665,7 +665,7 @@
     {
         "id": 52,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. (Variation 52)",
+        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "validates (51)",
@@ -678,7 +678,7 @@
     {
         "id": 53,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. (Variation 53)",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction (52)",
@@ -691,7 +691,7 @@
     {
         "id": 54,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. (Variation 54)",
+        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "allowed (53)",

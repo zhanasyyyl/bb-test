@@ -10,17 +10,18 @@
    <button type="button" onclick="document.documentElement.requestFullscreen().catch(e=>console.log(e))" class="btn-yellow" style="padding: 16px 32px; font-size: 20px; border-radius: 40px; cursor: pointer; width: auto;">Enter Full Screen</button>
 </div>
 <script>
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement) {
-            document.getElementById('fs-overlay').style.display = 'flex';
-        } else {
+    function checkFS() {
+        const isFS = document.fullscreenElement || (window.innerWidth === screen.width && window.innerHeight === screen.height);
+        if (isFS) {
             document.getElementById('fs-overlay').style.display = 'none';
+        } else {
+            document.getElementById('fs-overlay').style.display = 'flex';
         }
-    });
-    // Hide initially if somehow already in fullscreen
-    if (document.fullscreenElement) {
-        document.getElementById('fs-overlay').style.display = 'none';
     }
+    document.addEventListener('fullscreenchange', checkFS);
+    window.addEventListener('resize', checkFS);
+    // Hide initially if somehow already in fullscreen
+    checkFS();
 </script>
 
 

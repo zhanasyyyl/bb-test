@@ -23,7 +23,7 @@
     <div class="setup-card-content">
         <div class="setup-col">
             <h3>First and Last Name</h3>
-            <p>{{ request.session.student_name|default:"Zhanassyl Zholtay" }}</p>
+            <p>{{ request.user.userprofile.full_name }}</p>
         </div>
         <div class="setup-col">
             <h3>Accommodations</h3>

@@ -5,24 +5,30 @@
 
 {% block content %}
 <!-- Fullscreen Enforcement Overlay -->
-<div id="fs-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center; text-align: center;">
-   <h1 style="margin-bottom: 20px;">Secure Test Environment</h1>
-   <p style="margin-bottom: 40px; font-size: 18px;">You must be in full screen mode to take this test.</p>
-   <button type="button" onclick="document.documentElement.requestFullscreen().catch(e=>console.log(e))" class="btn-yellow" style="padding: 16px 32px; font-size: 20px; border-radius: 40px; cursor: pointer; width: auto; border: 1px solid black;">Enter Full Screen</button>
+<div id="fs-overlay"
+    style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center; text-align: center;">
+    <h1 style="margin-bottom: 20px;">Secure Test Environment</h1>
+    <p style="margin-bottom: 40px; font-size: 18px;">You must be in full screen mode to take this test.</p>
+    <button type="button" onclick="document.documentElement.requestFullscreen().catch(e=>console.log(e))"
+        class="btn-yellow"
+        style="padding: 16px 32px; font-size: 20px; border-radius: 40px; cursor: pointer; width: auto; border: 1px solid black;">Enter
+        Full Screen</button>
 </div>
 <script>
     window.testFinished = false;
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement && !window.testFinished) {
-            document.getElementById('fs-overlay').style.display = 'flex';
-        } else {
+    function checkFS() {
+        if (window.testFinished) return;
+        const isFS = document.fullscreenElement || (window.innerWidth === screen.width && window.innerHeight === screen.height);
+        if (isFS) {
             document.getElementById('fs-overlay').style.display = 'none';
+        } else {
+            document.getElementById('fs-overlay').style.display = 'flex';
         }
-    });
-    // Hide initially if somehow already in fullscreen
-    if (document.fullscreenElement) {
-        document.getElementById('fs-overlay').style.display = 'none';
     }
+    document.addEventListener('fullscreenchange', checkFS);
+    window.addEventListener('resize', checkFS);
+    // Hide initially if somehow already in fullscreen
+    checkFS();
 </script>
 <style>
     /* Additions for Modals and Loading */
@@ -296,7 +302,8 @@
     }
 
     .mark-review:hover {
-        opacity: 0.8;
+        color: #000;
+        font-weight: 500;
     }
 
     /* Bottom Bars */
@@ -372,12 +379,15 @@
         </div>
     </div>
 
-    <div class="test-timer" style="position: absolute; left: 50%; transform: translateX(-50%);">
-        <img src="{% static 'images/timer.svg' %}" alt="">
-        <button class="btn-timer">Show</button>
+    <div class="test-timer"
+        style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
+        <img id="timer-icon-1" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
+        <div id="timer-text-1" style="font-size:22px; font-weight:600; line-height: 1; margin-top:2px;"
+            onclick="app.skipModuleTimer()">--:--</div>
+        <button id="timer-btn-1" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
     </div>
 
-    <div class="test-tools" style="display: flex; align-items: center; gap: 8px;">
+    <div class="test-tools" style="display: flex; align-items: center; gap: 8px; margin-top: 12px;">
         <div class="tool-item">
             <img src="{% static 'images/highlights.svg' %}" alt="">
             Highlights & Notes
@@ -390,11 +400,11 @@
             </svg>
             More
         </div>
-        <div class="tool-item"
-            style="display: flex; align-items: center; gap: 6px; padding-left: 15px; margin-left: 10px; border-left: 1px solid #ccc; cursor: default;">
-            <img src="{% static 'images/battery.svg' %}" style="width: 22px; height: 11px;" alt="">
-            <span style="font-weight: 500; font-size: 13px;">98%</span>
-        </div>
+    </div>
+
+    <div style="position: absolute; right: 14px; top: 4px;">
+        <span style="font-weight: 600; font-size: 11px; color: #1e1e1e;">98%</span>
+        <img src="{% static 'images/battery.svg' %}" style="width: 16px; height: 10px;" alt="">
     </div>
 </div>
 <img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: auto; transform: scaleY(-1);">
@@ -418,9 +428,11 @@
                     Mark for Review
                 </span>
             </div>
-            <img src="{% static 'images/cross-out-abc.svg' %}" style="width: 28px; height: 28px; cursor: pointer;"
-                alt="">
+            <img src="{% static 'images/cross-out-abc.svg' %}"
+                style="width: 28px; height: 28px; cursor: pointer; margin-right: 12px;" alt="">
         </div>
+        <img src="{% static 'images/question-border.png' %}" alt=""
+            style="width: 100%; height: auto; margin-bottom: 24px;">
 
         <div class="question-text" id="ui-question">
             <!-- populated dynamically -->
@@ -434,7 +446,7 @@
 
 <div class="test-bottombar" id="main-bottombar">
     <div class="test-student-name">
-        {{ request.session.student_name|default:"Aibek Kanatov" }}
+        {{ request.user.userprofile.full_name }}
     </div>
 
     <div class="test-q-nav" style="cursor: pointer;" onclick="app.showNavModal()">
@@ -504,6 +516,152 @@
     <div class="spinner"></div>
 </div>
 
+<style>
+    .screen-break {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #202124;
+        color: #fff;
+        z-index: 200;
+        flex-direction: column;
+    }
+
+    .break-top-bar {
+        display: flex;
+        justify-content: flex-end;
+        padding: 24px;
+    }
+
+    .break-battery {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #404040;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .break-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 80px;
+        padding: 40px;
+    }
+
+    .break-timer-card {
+        border: 1px solid #777;
+        border-radius: 8px;
+        padding: 40px 60px;
+        text-align: center;
+        min-width: 380px;
+    }
+
+    .break-timer-card h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 24px;
+    }
+
+    .break-timer-card .time {
+        font-size: 80px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .break-info {
+        max-width: 480px;
+    }
+
+    .break-info h1 {
+        font-size: 36px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        line-height: 1.2;
+    }
+
+    .break-info p {
+        font-size: 18px;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .break-info h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    .break-info ol {
+        padding-left: 24px;
+    }
+
+    .break-info li {
+        font-size: 18px;
+        margin-bottom: 16px;
+        line-height: 1.4;
+    }
+
+    .break-bottom-bar {
+        padding: 32px 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .break-name {
+        font-size: 24px;
+        font-weight: 600;
+    }
+</style>
+
+<!-- Break Screen -->
+<div class="screen-break" id="screen-break">
+    <div class="break-top-bar">
+        <div class="break-battery">
+            98%
+            <img src="{% static 'images/battery.svg' %}"
+                style="width: 22px; height: 11px; filter: brightness(0) invert(1);" alt="">
+        </div>
+    </div>
+
+    <div class="break-content">
+        <div class="break-timer-card">
+            <h3>Remaining Break Time:</h3>
+            <div class="time" id="break-time-display" onclick="app.skipBreak()">10:00</div>
+        </div>
+        <button id="btn-resume-break" class="btn-yellow"
+            style="display: none; padding: 16px 32px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
+            onclick="app.resumeTesting()">Resume Testing Now</button>
+        <div class="break-info">
+            <h1>Take a Break: Do Not Close Your Device</h1>
+            <p>After the break, a <strong>Resume Testing Now</strong> button will appear and you'll start the next
+                section.</p>
+            <h4>Follow these rules during the break:</h4>
+            <ol>
+                <li>Do not disturb students who are still testing.</li>
+                <li>Do not exit the app or close your laptop.</li>
+                <li>Do not access phones, smartwatches, textbooks, notes, or the internet.</li>
+                <li>Do not eat or drink near any testing device.</li>
+                <li>Do not speak in the test room; outside the test room, do not discuss the exam with anyone.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="break-bottom-bar">
+        <div class="break-name">
+            {{ request.user.userprofile.full_name }}
+        </div>
+    </div>
+</div>
+
 <!-- Review Page Full Screen -->
 <div class="screen-review" id="screen-review">
     <div class="test-topbar">
@@ -517,9 +675,12 @@
             </div>
         </div>
 
-        <div class="test-timer" style="position: absolute; left: 50%; transform: translateX(-50%);">
-            <img src="{% static 'images/timer.svg' %}" alt="">
-            <button class="btn-timer">Show</button>
+        <div class="test-timer"
+            style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
+            <img id="timer-icon-2" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
+            <div id="timer-text-2" style="font-size:22px; font-weight:600; line-height: 1; margin-top:2px;"
+                onclick="app.skipModuleTimer()">--:--</div>
+            <button id="timer-btn-2" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
         </div>
 
         <div class="test-tools" style="display: flex; align-items: center; gap: 8px;">
@@ -587,10 +748,10 @@
     </div>
     <div class="test-bottombar">
         <div class="test-student-name">
-            {{ request.session.student_name|default:"Aibek Kanatov" }}
+            {{ request.user.userprofile.full_name }}
         </div>
         <div>
-            <button class="btn-blue" onclick="app.finishModule()">Next</button>
+            <!-- Removed 'Next' button; transitioning is automatic via timer -->
         </div>
     </div>
 </div>
@@ -614,7 +775,61 @@
                     moduleState[i].push({ review: false, answer: null });
                 }
             }
+            this.startModuleTimer();
             this.renderQuestion();
+        },
+
+        timerIsHidden: false,
+        mainTimerInterval: null,
+        moduleTimeRemaining: 0,
+
+        startModuleTimer() {
+            if (this.mainTimerInterval) clearInterval(this.mainTimerInterval);
+
+            let isMath = this.modIdx >= 2;
+            this.moduleTimeRemaining = isMath ? 35 * 60 : 32 * 60;
+            this.updateTimerDisplays();
+
+            this.mainTimerInterval = setInterval(() => {
+                if (this.moduleTimeRemaining > 0) {
+                    this.moduleTimeRemaining--;
+                    this.updateTimerDisplays();
+                } else {
+                    clearInterval(this.mainTimerInterval);
+                    this.finishModule();
+                }
+            }, 1000);
+        },
+
+        updateTimerDisplays() {
+            const m = Math.floor(this.moduleTimeRemaining / 60);
+            const s = this.moduleTimeRemaining % 60;
+            const timeStr = `${m}:${s < 10 ? '0' : ''}${s}`;
+
+            document.getElementById('timer-text-1').innerText = timeStr;
+            document.getElementById('timer-text-2').innerText = timeStr;
+        },
+
+        toggleTimer() {
+            this.timerIsHidden = !this.timerIsHidden;
+            const displayVal = this.timerIsHidden ? 'none' : 'block';
+            const iconVal = this.timerIsHidden ? 'block' : 'none';
+            const btnText = this.timerIsHidden ? 'Show' : 'Hide';
+
+            document.getElementById('timer-text-1').style.display = displayVal;
+            document.getElementById('timer-text-2').style.display = displayVal;
+
+            document.getElementById('timer-icon-1').style.display = iconVal;
+            document.getElementById('timer-icon-2').style.display = iconVal;
+
+            document.getElementById('timer-btn-1').innerText = btnText;
+            document.getElementById('timer-btn-2').innerText = btnText;
+        },
+
+        skipModuleTimer() {
+            if (this.moduleTimeRemaining > 0) {
+                this.moduleTimeRemaining = 2; // Fast forward
+            }
         },
 
         renderQuestion() {
@@ -764,6 +979,42 @@
             document.getElementById('screen-review').style.display = 'flex';
         },
 
+        showBreakScreen() {
+            document.getElementById('screen-loading').style.display = 'none';
+            document.getElementById('screen-break').style.display = 'flex';
+
+            this.breakTimeRemaining = 600; // 10 minutes
+            const timerEl = document.getElementById('break-time-display');
+            const btnEl = document.getElementById('btn-resume-break');
+
+            this.breakInterval = setInterval(() => {
+                this.breakTimeRemaining--;
+                const m = Math.floor(this.breakTimeRemaining / 60);
+                const s = this.breakTimeRemaining % 60;
+                timerEl.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+
+                if (this.breakTimeRemaining <= 0) {
+                    clearInterval(this.breakInterval);
+                    timerEl.innerText = '0:00';
+                    btnEl.style.display = 'block';
+                }
+            }, 1000);
+        },
+
+        skipBreak() {
+            if (this.breakTimeRemaining > 0) {
+                this.breakTimeRemaining = 1; // skip to 1 second remaining cleanly
+            }
+        },
+
+        resumeTesting() {
+            document.getElementById('screen-break').style.display = 'none';
+            document.getElementById('main-workspace').style.display = 'flex';
+            document.getElementById('main-bottombar').style.display = 'flex';
+            this.startModuleTimer();
+            this.renderQuestion();
+        },
+
         finishModule() {
             document.getElementById('screen-review').style.display = 'none';
             document.getElementById('screen-loading').style.display = 'flex';
@@ -772,10 +1023,15 @@
                 this.modIdx++;
                 if (this.modIdx < modulesData.length) {
                     this.qIdx = 0;
-                    document.getElementById('screen-loading').style.display = 'none';
-                    document.getElementById('main-workspace').style.display = 'flex';
-                    document.getElementById('main-bottombar').style.display = 'flex';
-                    this.renderQuestion();
+                    if (this.modIdx === 2) {
+                        this.showBreakScreen();
+                    } else {
+                        document.getElementById('screen-loading').style.display = 'none';
+                        document.getElementById('main-workspace').style.display = 'flex';
+                        document.getElementById('main-bottombar').style.display = 'flex';
+                        this.startModuleTimer();
+                        this.renderQuestion();
+                    }
                 } else {
                     document.getElementById('screen-loading').style.display = 'none';
                     // Test Finished! Disable fullscreen enforcement
