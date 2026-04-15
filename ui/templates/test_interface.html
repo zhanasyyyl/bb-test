@@ -633,13 +633,15 @@
     </div>
 
     <div class="break-content">
-        <div class="break-timer-card">
-            <h3>Remaining Break Time:</h3>
-            <div class="time" id="break-time-display" onclick="app.skipBreak()">10:00</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
+            <div class="break-timer-card">
+                <h3>Remaining Break Time:</h3>
+                <div class="time" id="break-time-display" onclick="app.skipBreak()">10:00</div>
+            </div>
+            <button id="btn-resume-break" class="btn-yellow"
+                style="display: none; padding: 16px 32px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
+                onclick="app.resumeTesting()">Resume Testing Now</button>
         </div>
-        <button id="btn-resume-break" class="btn-yellow"
-            style="display: none; padding: 16px 32px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
-            onclick="app.resumeTesting()">Resume Testing Now</button>
         <div class="break-info">
             <h1>Take a Break: Do Not Close Your Device</h1>
             <p>After the break, a <strong>Resume Testing Now</strong> button will appear and you'll start the next
@@ -697,7 +699,7 @@
                 More
             </div>
             <div class="tool-item"
-                style="display: flex; align-items: center; gap: 6px; padding-left: 15px; margin-left: 10px; border-left: 1px solid #ccc; cursor: default;">
+                style="display: flex; align-items: center; gap: 6px; padding-left: 15px; margin-left: 10px; border-left: 1px solid #505050; cursor: default;">
                 <svg width="22" height="11" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#76rhwldj7a)">
                         <g clip-path="url(#whfx0evqrb)" fill="#202124">
@@ -836,39 +838,138 @@
             const mod = modulesData[this.modIdx];
             if (!mod) return;
 
+            const isMath = this.modIdx >= 2;
             const qData = mod.questions[this.qIdx];
+            // If it is Math and has no options, it's an SPR question.
+            const isSPR = isMath && (!qData.options || qData.options.length === 0);
+
+            const workspace = document.querySelector('.test-workspace');
+            if (isMath) {
+                workspace.classList.add('math-mode');
+            } else {
+                workspace.classList.remove('math-mode');
+            }
 
             document.getElementById('ui-test-title').innerText = mod.title;
             document.getElementById('nav-modal-title').innerText = mod.title + " Questions";
             document.getElementById('ui-q-nav').innerText = `Question ${this.qIdx + 1} of ${mod.count}`;
-
             document.getElementById('ui-q-num').innerText = this.qIdx + 1;
-            document.getElementById('ui-passage').innerText = qData.passage;
-            document.getElementById('ui-question').innerText = qData.question;
+
+            let finalQuestionHtml = qData.question;
+            // For Math questions, the context/passage must render in the right pane, above the question.
+            if (isMath && qData.passage && qData.passage.trim() !== '' && qData.passage !== 'Student-produced response directions') {
+                finalQuestionHtml = `<div style="margin-bottom: 24px; text-align: left; font-weight: normal; font-family: Georgia, 'Times New Roman', Times, serif;">${qData.passage}</div>` + finalQuestionHtml;
+            }
+            document.getElementById('ui-question').innerHTML = finalQuestionHtml;
+
+            const passagePane = document.getElementById('ui-passage');
+            const resizer = document.querySelector('.resizer');
+            const questionPane = document.querySelector('.question-pane');
+
+            const sprRulesHtml = `
+                <div style="padding: 20px; font-family: Georgia, 'Times New Roman', Times, serif;">
+                    <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">Student-produced response directions</h2>
+                    <ul style="font-size: 15px; margin-bottom: 24px; padding-left: 20px; line-height: 1.5;">
+                        <li>If you find <b>more than one correct answer</b>, enter only one answer.</li>
+                        <li>You can enter up to 5 characters for a <b>positive</b> answer and up to 6 characters (including the negative sign) for a <b>negative</b> answer.</li>
+                        <li>If your answer is a <b>fraction</b> that doesn't fit in the provided space, enter the decimal equivalent.</li>
+                        <li>If your answer is a <b>decimal</b> that doesn't fit in the provided space, enter it by truncating or rounding at the fourth digit.</li>
+                        <li>If your answer is a <b>mixed number</b> (such as $3\\frac{1}{2}$), enter it as an improper fraction (7/2) or its decimal equivalent (3.5).</li>
+                        <li>Don't enter <b>symbols</b> such as a percent sign, comma, or dollar sign.</li>
+                    </ul>
+                    <div style="text-align: center; margin-bottom: 4px; font-size: 14px;">Examples</div>
+                    <table style="width: 70%; text-align: center; border-collapse: collapse; font-size: 14px;">
+                        <tr>
+                            <th style="border: 1px solid #505050; padding: 12px; font-weight: 500;">Answer</th>
+                            <th style="border: 1px solid #505050; padding: 12px; font-weight: 500;">Acceptable ways to<br>enter answer</th>
+                            <th style="border: 1px solid #505050; padding: 12px; font-weight: 500;">Unacceptable: will<br>NOT receive credit</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #505050; padding: 12px; font-weight: 500;">3.5</td>
+                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;">3.5<br>3.50<br>7/2</td>
+                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;">31/2<br>3 1/2</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #505050; padding: 12px; font-weight: 500;">2/3</td>
+                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;">2/3<br>.666<br>.667<br>0.666<br>0.667</td>
+                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;">0.66<br>.66<br>0.67<br>.67</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #505050; padding: 12px; font-weight: 500;">-1/3</td>
+                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;">-1/3<br>-.3333<br>-0.333</td>
+                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;">-.33<br>-0.33</td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+
+            if (isMath && !isSPR) {
+                passagePane.style.display = 'none';
+                resizer.style.display = 'none';
+                questionPane.style.maxWidth = '50%';
+                questionPane.style.margin = '0 auto';
+                questionPane.style.minWidth = '400px';
+            } else {
+                passagePane.style.display = 'block';
+                resizer.style.display = 'flex';
+                questionPane.style.maxWidth = 'none';
+                questionPane.style.margin = '0';
+                questionPane.style.minWidth = '0';
+                if (isSPR) {
+                    passagePane.innerHTML = sprRulesHtml;
+                } else {
+                    passagePane.innerHTML = qData.passage;
+                }
+            }
 
             const optionsList = document.getElementById('ui-options');
             optionsList.innerHTML = '';
 
-            const charMap = ['A', 'B', 'C', 'D'];
-            qData.options.forEach((optText, index) => {
-                const optLetter = charMap[index];
-                const optRow = document.createElement('div');
-                optRow.className = 'option-row';
-                optRow.id = 'opt-row-' + optLetter;
-                optRow.onclick = () => this.selectOption(optLetter);
-
-                optRow.innerHTML = `
-                    <div class="option-box">
-                        <div class="option-letter">${optLetter}</div>
-                        <div class="option-text">${optText}</div>
+            if (isSPR) {
+                const state = moduleState[this.modIdx][this.qIdx];
+                optionsList.innerHTML = `
+                    <div style="margin-top: 24px;">
+                        <input type="text" id="spr-input" maxlength="6" value="${state.answer || ''}" oninput="app.setSPRAnswer(this.value)" style="width: 140px; height: 50px; font-size: 24px; text-align: center; border: 1px solid #1e1e1e; border-radius: 6px;" />
+                        <h4 style="margin-top: 24px; font-size: 18px; color: #202124;">Answer Preview:</h4>
+                        <div id="spr-preview" style="font-size: 24px; min-height: 24px; margin-top: 8px;">${state.answer || ''}</div>
                     </div>
                 `;
-                optionsList.appendChild(optRow);
-            });
+            } else {
+                const charMap = ['A', 'B', 'C', 'D'];
+                qData.options.forEach((optText, index) => {
+                    const optLetter = charMap[index];
+                    const optRow = document.createElement('div');
+                    optRow.className = 'option-row';
+                    optRow.id = 'opt-row-' + optLetter;
+                    optRow.onclick = () => this.selectOption(optLetter);
+                    optRow.innerHTML = `
+                        <div class="option-box">
+                            <div class="option-letter">${optLetter}</div>
+                            <div class="option-text">${optText}</div>
+                        </div>
+                    `;
+                    optionsList.appendChild(optRow);
+                });
+            }
 
             document.getElementById('btn-back').style.display = this.qIdx > 0 ? 'inline-block' : 'none';
 
             // Sync states
+            this.syncSelections();
+
+            // Typeset MathJax dynamically
+            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+                if (typeof MathJax.typesetClear === 'function') {
+                    MathJax.typesetClear();
+                }
+                MathJax.typesetPromise();
+            }
+        },
+
+        setSPRAnswer(val) {
+            const state = moduleState[this.modIdx][this.qIdx];
+            state.answer = val;
+            document.getElementById('spr-preview').innerText = val;
             this.syncSelections();
         },
 
@@ -1042,7 +1143,7 @@
                     // Show congrats screen
                     const congratsHtml = `
                     <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #fff; z-index: 5000; overflow: hidden;">
-                        <img src="{% static 'images/congrats.png' %}?v=2" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" />
+                        <a href="{% url 'quit' %}"><img src="{% static 'images/congrats.png' %}?v=2" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" /></a>
                     </div>`;
                     document.body.insertAdjacentHTML('beforeend', congratsHtml);
                 }

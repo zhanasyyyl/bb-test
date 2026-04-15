@@ -702,575 +702,491 @@
         "correct": 1
     },
     {
+        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of 35.00?",
+        "options": [
+            "2.50$M$ + 3.00$C$ = 35",
+            "3.00$M$ + 2.50$C$ = 35",
+            "2.50$M$ - 3.00$C$ = 35",
+            "5.50($M$ + $C$) = 35"
+        ],
+        "correct": 0,
         "id": 55,
-        "type": "math",
-        "passage": "Question 1 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "options": [
+            "6",
+            "8",
+            "36",
+            "64"
+        ],
+        "correct": 0,
         "id": 56,
-        "type": "math",
-        "passage": "Question 2 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
+        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "options": [
+            "10",
+            "20",
+            "5",
+            "15"
+        ],
+        "correct": 0,
         "id": 57,
-        "type": "math",
-        "passage": "Question 3 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
-            "15"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "options": [
+            "6.0",
+            "4.4",
+            "5.5",
+            "7.2"
+        ],
+        "correct": 0,
         "id": 58,
-        "type": "math",
-        "passage": "Question 4 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A rectangular tank has a width of 5 meters, a length of 10 meters, and a height of 12 meters.",
+        "question": "If the water level is rising at a rate of 0.5 cubic meters per minute, how many minutes will it take to fill the tank?",
+        "options": [
+            "1200",
+            "600",
+            "300",
+            "240"
+        ],
+        "correct": 0,
         "id": 59,
-        "type": "math",
-        "passage": "Question 5 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "4.4",
-            "5.6",
-            "6.0",
-            "7.2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x)$ = $m$$x$ - 28, where $m$ is a constant. What is the value of $m$?",
         "id": 60,
-        "type": "math",
-        "passage": "Question 6 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 3($x$ - 2) + 5 = 2$x$ + 10, what is the value of $x$?",
+        "options": [
+            "11",
+            "7",
+            "5",
+            "3"
+        ],
+        "correct": 0,
         "id": 61,
-        "type": "math",
-        "passage": "Question 7 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A population of bacteria doubles every 4 hours.",
+        "question": "If the initial population is 100, what will be the population after 12 hours?",
+        "options": [
+            "800",
+            "400",
+            "600",
+            "1200"
+        ],
+        "correct": 0,
         "id": 62,
-        "type": "math",
-        "passage": "Question 8 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
-            "15"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 3$x$ + 4$x$ = 21, what is the value of $x$?",
         "id": 63,
-        "type": "math",
-        "passage": "Question 9 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "A square has an area of 16. What is its perimeter?",
         "id": 64,
-        "type": "math",
-        "passage": "Question 10 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "4.4",
-            "5.6",
-            "6.0",
-            "7.2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of 35.00?",
+        "options": [
+            "2.50$M$ + 3.00$C$ = 35",
+            "3.00$M$ + 2.50$C$ = 35",
+            "2.50$M$ - 3.00$C$ = 35",
+            "5.50($M$ + $C$) = 35"
+        ],
+        "correct": 0,
         "id": 65,
-        "type": "math",
-        "passage": "Question 11 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "options": [
+            "6",
+            "8",
+            "36",
+            "64"
+        ],
+        "correct": 0,
         "id": 66,
-        "type": "math",
-        "passage": "Question 12 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
+        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "options": [
+            "10",
+            "20",
+            "5",
+            "15"
+        ],
+        "correct": 0,
         "id": 67,
-        "type": "math",
-        "passage": "Question 13 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
-            "15"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "options": [
+            "6.0",
+            "4.4",
+            "5.5",
+            "7.2"
+        ],
+        "correct": 0,
         "id": 68,
-        "type": "math",
-        "passage": "Question 14 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A rectangular tank has a width of 5 meters, a length of 10 meters, and a height of 12 meters.",
+        "question": "If the water level is rising at a rate of 0.5 cubic meters per minute, how many minutes will it take to fill the tank?",
+        "options": [
+            "1200",
+            "600",
+            "300",
+            "240"
+        ],
+        "correct": 0,
         "id": 69,
-        "type": "math",
-        "passage": "Question 15 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "4.4",
-            "5.6",
-            "6.0",
-            "7.2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x)$ = $m$$x$ - 28, where $m$ is a constant. What is the value of $m$?",
         "id": 70,
-        "type": "math",
-        "passage": "Question 16 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 3($x$ - 2) + 5 = 2$x$ + 10, what is the value of $x$?",
+        "options": [
+            "11",
+            "7",
+            "5",
+            "3"
+        ],
+        "correct": 0,
         "id": 71,
-        "type": "math",
-        "passage": "Question 17 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A population of bacteria doubles every 4 hours.",
+        "question": "If the initial population is 100, what will be the population after 12 hours?",
+        "options": [
+            "800",
+            "400",
+            "600",
+            "1200"
+        ],
+        "correct": 0,
         "id": 72,
-        "type": "math",
-        "passage": "Question 18 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
-            "15"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 3$x$ + 4$x$ = 39, what is the value of $x$?",
         "id": 73,
-        "type": "math",
-        "passage": "Question 19 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "A square has an area of 16. What is its perimeter?",
         "id": 74,
-        "type": "math",
-        "passage": "Question 20 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "4.4",
-            "5.6",
-            "6.0",
-            "7.2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of 35.00?",
+        "options": [
+            "2.50$M$ + 3.00$C$ = 35",
+            "3.00$M$ + 2.50$C$ = 35",
+            "2.50$M$ - 3.00$C$ = 35",
+            "5.50($M$ + $C$) = 35"
+        ],
+        "correct": 0,
         "id": 75,
-        "type": "math",
-        "passage": "Question 21 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "options": [
+            "6",
+            "8",
+            "36",
+            "64"
+        ],
+        "correct": 0,
         "id": 76,
-        "type": "math",
-        "passage": "Question 22 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
+        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "options": [
+            "10",
+            "20",
+            "5",
+            "15"
+        ],
+        "correct": 0,
         "id": 77,
-        "type": "math",
-        "passage": "Question 23 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
-            "15"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "options": [
+            "6.0",
+            "4.4",
+            "5.5",
+            "7.2"
+        ],
+        "correct": 0,
         "id": 78,
-        "type": "math",
-        "passage": "Question 24 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A rectangular tank has a width of 5 meters, a length of 10 meters, and a height of 12 meters.",
+        "question": "If the water level is rising at a rate of 0.5 cubic meters per minute, how many minutes will it take to fill the tank?",
+        "options": [
+            "1200",
+            "600",
+            "300",
+            "240"
+        ],
+        "correct": 0,
         "id": 79,
-        "type": "math",
-        "passage": "Question 25 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "4.4",
-            "5.6",
-            "6.0",
-            "7.2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x)$ = $m$$x$ - 28, where $m$ is a constant. What is the value of $m$?",
         "id": 80,
-        "type": "math",
-        "passage": "Question 26 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 3($x$ - 2) + 5 = 2$x$ + 10, what is the value of $x$?",
+        "options": [
+            "11",
+            "7",
+            "5",
+            "3"
+        ],
+        "correct": 0,
         "id": 81,
-        "type": "math",
-        "passage": "Question 27 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A population of bacteria doubles every 4 hours.",
+        "question": "If the initial population is 100, what will be the population after 12 hours?",
+        "options": [
+            "800",
+            "400",
+            "600",
+            "1200"
+        ],
+        "correct": 0,
         "id": 82,
-        "type": "math",
-        "passage": "Question 28 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
-            "15"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 3$x$ + 4$x$ = 49, what is the value of $x$?",
         "id": 83,
-        "type": "math",
-        "passage": "Question 29 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "A square has an area of 16. What is its perimeter?",
         "id": 84,
-        "type": "math",
-        "passage": "Question 30 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "4.4",
-            "5.6",
-            "6.0",
-            "7.2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of 35.00?",
+        "options": [
+            "2.50$M$ + 3.00$C$ = 35",
+            "3.00$M$ + 2.50$C$ = 35",
+            "2.50$M$ - 3.00$C$ = 35",
+            "5.50($M$ + $C$) = 35"
+        ],
+        "correct": 0,
         "id": 85,
-        "type": "math",
-        "passage": "Question 31 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "options": [
+            "6",
+            "8",
+            "36",
+            "64"
+        ],
+        "correct": 0,
         "id": 86,
-        "type": "math",
-        "passage": "Question 32 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
+        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "options": [
+            "10",
+            "20",
+            "5",
+            "15"
+        ],
+        "correct": 0,
         "id": 87,
-        "type": "math",
-        "passage": "Question 33 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
-            "15"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "options": [
+            "6.0",
+            "4.4",
+            "5.5",
+            "7.2"
+        ],
+        "correct": 0,
         "id": 88,
-        "type": "math",
-        "passage": "Question 34 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "A rectangular tank has a width of 5 meters, a length of 10 meters, and a height of 12 meters.",
+        "question": "If the water level is rising at a rate of 0.5 cubic meters per minute, how many minutes will it take to fill the tank?",
+        "options": [
+            "1200",
+            "600",
+            "300",
+            "240"
+        ],
+        "correct": 0,
         "id": 89,
-        "type": "math",
-        "passage": "Question 35 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "4.4",
-            "5.6",
-            "6.0",
-            "7.2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x)$ = $m$$x$ - 28, where $m$ is a constant. What is the value of $m$?",
         "id": 90,
-        "type": "math",
-        "passage": "Question 36 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
+        "passage": "",
+        "question": "If 3($x$ - 2) + 5 = 2$x$ + 10, what is the value of $x$?",
+        "options": [
+            "11",
+            "7",
+            "5",
+            "3"
+        ],
+        "correct": 0,
         "id": 91,
-        "type": "math",
-        "passage": "Question 37 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
+        "type": "math"
     },
     {
-        "id": 92,
-        "type": "math",
-        "passage": "Question 38 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
+        "passage": "A population of bacteria doubles every 4 hours.",
+        "question": "If the initial population is 100, what will be the population after 12 hours?",
         "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
+            "800",
+            "400",
+            "600",
+            "1200"
+        ],
+        "correct": 0,
+        "id": 92,
+        "type": "math"
+    },
+    {
+        "passage": "",
+        "question": "If 3$x$ + 4$x$ = 59, what is the value of $x$?",
+        "id": 93,
+        "type": "math"
+    },
+    {
+        "passage": "",
+        "question": "A square has an area of 16. What is its perimeter?",
+        "id": 94,
+        "type": "math"
+    },
+    {
+        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of 35.00?",
+        "options": [
+            "2.50$M$ + 3.00$C$ = 35",
+            "3.00$M$ + 2.50$C$ = 35",
+            "2.50$M$ - 3.00$C$ = 35",
+            "5.50($M$ + $C$) = 35"
+        ],
+        "correct": 0,
+        "id": 95,
+        "type": "math"
+    },
+    {
+        "passage": "",
+        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "options": [
+            "6",
+            "8",
+            "36",
+            "64"
+        ],
+        "correct": 0,
+        "id": 96,
+        "type": "math"
+    },
+    {
+        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
+        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "options": [
+            "10",
+            "20",
+            "5",
             "15"
         ],
-        "correct": 1
+        "correct": 0,
+        "id": 97,
+        "type": "math"
     },
     {
-        "id": 93,
-        "type": "math",
-        "passage": "Question 39 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
+        "passage": "",
+        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
         "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
-    },
-    {
-        "id": 94,
-        "type": "math",
-        "passage": "Question 40 Context: If  - 4y = 12$ and  + 2y = 8$, what is the value of  + yTrue",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "4.4",
-            "5.6",
             "6.0",
+            "4.4",
+            "5.5",
             "7.2"
         ],
-        "correct": 1
-    },
-    {
-        "id": 95,
-        "type": "math",
-        "passage": "Question 41 Context: A local bakery sells muffins for .50 each and croissants for .00 each. If a customer buys $ muffins and $ croissants, which equation represents a total cost of .00?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "2.50M + 3.00C = 35",
-            "3.00M + 2.50C = 35",
-            "2.50M - 3.00C = 35",
-            "5.50(M + C) = 35"
-        ],
-        "correct": 1
-    },
-    {
-        "id": 96,
-        "type": "math",
-        "passage": "Question 42 Context: The function (x) = ax^2 + bx + c$ has a vertex at 3 -4$ and passes through the point 1 0$. What is the value of True",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "1",
-            "-1",
-            "2",
-            "-2"
-        ],
-        "correct": 1
-    },
-    {
-        "id": 97,
-        "type": "math",
-        "passage": "Question 43 Context: In triangle ABC, the measure of angle A is ^\\circ$, and the measure of angle B is ^\\circ$. If the length of side BC is $, what is the length of side AC?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "10 * sqrt(2)",
-            "10 * sqrt(3) / 2",
-            "5 * sqrt(6)",
-            "15"
-        ],
-        "correct": 1
-    },
-    {
+        "correct": 0,
         "id": 98,
-        "type": "math",
-        "passage": "Question 44 Context: A cylindrical tank has a radius of $ meters and a height of $ meters. If the water level is rising at a rate of .5$ cubic meters per minute, how many minutes will it take to fill the tank?",
-        "question": "Solve the problem given the context above.",
-        "options": [
-            "600 * pi",
-            "300 * pi",
-            "120 * pi",
-            "240 * pi"
-        ],
-        "correct": 1
+        "type": "math"
     }
 ]

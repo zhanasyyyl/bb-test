@@ -1,4 +1,11 @@
 /* Global & Reset */
+@font-face {
+    font-family: 'MathNumbers';
+    src: local('Symbola'), local('Times New Roman');
+    unicode-range: U+0020-002F, U+0030-0039, U+003A-0040, U+2200-22FF, U+2A00-2AFF;
+    /* digits, dot, dash, plus, equals, slash */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -185,7 +192,7 @@ body {
 
 .login-card h1 {
     font-size: 30px;
-    color: #202124;
+    color: #1e1e1e;
     margin-bottom: 32px;
     font-weight: 700;
 }
@@ -258,7 +265,7 @@ body {
 .btn-outline {
     background-color: transparent;
     border: 1px solid black;
-    color: #202124;
+    color: #1e1e1e;
     padding: 16px;
     border-radius: 40px;
     font-size: 14px;
@@ -350,13 +357,13 @@ body {
     gap: 12px;
     font-size: 16px;
     font-weight: 500;
-    color: #202124;
+    color: #1e1e1e;
 }
 
 .profile-icon {
     width: 40px;
     height: 40px;
-    background-color: #202124;
+    background-color: #1e1e1e;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -393,7 +400,7 @@ body {
 .section-header h2 {
     font-size: 32px;
     font-weight: 700;
-    color: #202124;
+    color: #1e1e1e;
 }
 
 .toggle-switch {
@@ -585,7 +592,7 @@ body {
     border: none;
     font-size: 16px;
     font-weight: 500;
-    color: #202124;
+    color: #1e1e1e;
     cursor: pointer;
 }
 
@@ -627,7 +634,7 @@ body {
 
 .setup-col p {
     font-size: 16px;
-    color: #202124;
+    color: #1e1e1e;
     line-height: 1.5;
 }
 
@@ -663,7 +670,7 @@ body {
     align-items: center;
     gap: 12px;
     font-size: 16px;
-    color: #202124;
+    color: #1e1e1e;
     cursor: pointer;
 }
 
@@ -775,7 +782,7 @@ input[type="radio"] {
 .startcode-main p {
     font-size: 20px;
     margin-bottom: 24px;
-    color: #202124;
+    color: #1e1e1e;
 }
 
 .code-boxes {
@@ -788,7 +795,7 @@ input[type="radio"] {
     width: 64px;
     height: 72px;
     background: #fff;
-    border: 1px solid #202124;
+    border: 1px solid #1e1e1e;
     border-radius: 8px;
     display: flex;
     justify-content: center;
@@ -842,7 +849,7 @@ input[type="radio"] {
 .test-directions {
     font-size: 14px;
     font-weight: bold;
-    color: #202124;
+    color: #1e1e1e;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -914,8 +921,8 @@ input[type="radio"] {
     padding: 48px;
     overflow-y: auto;
     font-size: 17px;
-    line-height: 1.6;
-    color: #202124;
+    line-height: 1.5;
+    color: #1e1e1e;
     font-family: Georgia, "Times New Roman", Times, serif;
 }
 
@@ -957,7 +964,7 @@ input[type="radio"] {
 }
 
 .q-num {
-    background: #202124;
+    background: #1e1e1e;
     color: #fff;
     font-size: 20px;
     font-weight: 700;
@@ -970,14 +977,15 @@ input[type="radio"] {
     align-items: center;
     gap: 4px;
     font-size: 14px;
-    color: #202124;
+    color: #1e1e1e;
     cursor: pointer;
 }
 
 .question-text {
     font-size: 17px;
     margin-bottom: 12px;
-    font-family: Georgia, "Times New Roman", Times, serif;
+    line-height: 1.5;
+    font-family: 'MathNumbers', Georgia, "Times New Roman", Times, serif;
 }
 
 .options-list {
@@ -1003,6 +1011,7 @@ input[type="radio"] {
     cursor: pointer;
     background: #fff;
     transition: box-shadow 0.2s, border-color 0.2s;
+    overflow: hidden;
 }
 
 .option-box:hover {
@@ -1024,8 +1033,13 @@ input[type="radio"] {
 }
 
 .option-text {
-    font-size: 17px;
+    font-size: 16px;
     font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.math-mode .option-text {
+    font-family: 'MathNumbers', serif;
+    font-size: 17px;
 }
 
 .cross-btn {
