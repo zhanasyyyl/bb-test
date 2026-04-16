@@ -962,7 +962,11 @@
                 if (typeof MathJax.typesetClear === 'function') {
                     MathJax.typesetClear();
                 }
-                MathJax.typesetPromise();
+                MathJax.typesetPromise([
+                    document.getElementById('ui-question'),
+                    document.getElementById('ui-passage'),
+                    document.getElementById('ui-options')
+                ]);
             }
         },
 

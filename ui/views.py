@@ -37,7 +37,7 @@ def start_code_view(request):
                 subject="Bluebook Testing Code",
                 message=f"This is the code - {full_code}.",
                 from_email="Bluebook <onboarding@resend.dev>",
-                recipient_list=["jonabonah@gmail.com"],
+                recipient_list=[request.user.userprofile.contact_email],
             )
         return redirect('test_interface')
         
