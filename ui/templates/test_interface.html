@@ -92,7 +92,7 @@
         background: #fff;
         width: 480px;
         border-radius: 8px;
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
         display: flex;
         flex-direction: column;
         position: relative;
@@ -130,6 +130,16 @@
         justify-content: center;
         gap: 16px;
         padding: 12px;
+        border-bottom: 1px solid #dadce0;
+        font-size: 12px;
+    }
+
+    .nav-legend-fullscreen {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 28px;
+        padding-top: 32px;
         border-bottom: 1px solid #dadce0;
         font-size: 12px;
     }
@@ -432,7 +442,7 @@
                 style="width: 28px; height: 28px; cursor: pointer; margin-right: 12px;" alt="">
         </div>
         <img src="{% static 'images/question-border.png' %}" alt=""
-            style="width: 100%; height: auto; margin-bottom: 24px;">
+            style="width: 100%; margin: 0; margin-bottom: 12px; padding: 0;">
 
         <div class="question-text" id="ui-question">
             <!-- populated dynamically -->
@@ -733,8 +743,9 @@
 
     <div style="flex: 1; display:flex; justify-content:center; padding: 24px; overflow-y:auto;">
         <div class="nav-modal" style="width: 720px; height: 320px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
-            <div class="nav-legend">
-                <span class="nav-modal-title" style="font-size: 18px; font-weight: 600;">Section 1, Module 1: Reading
+            <div class="nav-legend-fullscreen">
+                <span class="nav-modal-title" style="font-size: 18px; font-weight: 600; display: block;">Section 1,
+                    Module 1: Reading
                     and Writing Questions</span>
                 <div class="nav-legend-item">
                     <div class="legend-box"></div> Unanswered
@@ -748,6 +759,7 @@
             <div class="nav-grid" id="review-grid" style="grid-template-columns: repeat(10, 1fr);"></div>
         </div>
     </div>
+
     <div class="test-bottombar">
         <div class="test-student-name">
             {{ request.user.userprofile.full_name }}
@@ -1147,7 +1159,7 @@
                     // Show congrats screen
                     const congratsHtml = `
                     <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #fff; z-index: 5000; overflow: hidden;">
-                        <a href="{% url 'quit' %}"><img src="{% static 'images/congrats.png' %}?v=2" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" /></a>
+                        <a href="{% url 'quit' %}"><img src="{% static 'images/congrats.jpeg' %}?v=2" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" /></a>
                     </div>`;
                     document.body.insertAdjacentHTML('beforeend', congratsHtml);
                 }

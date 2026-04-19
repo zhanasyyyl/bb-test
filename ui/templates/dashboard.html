@@ -41,16 +41,38 @@
 
                         <div class="reg-location">
                             {% if request.user.userprofile.test_center_address %}
-                            <p style="white-space: pre-wrap;">{{ request.user.userprofile.test_center_address }}</p>
+                            <div id="custom-test-center"></div>
+                            {{ request.user.userprofile.test_center_address|json_script:"test-center-address-data" }}
+                            <script>
+                                (function() {
+                                    const dataEl = document.getElementById('test-center-address-data');
+                                    let address = '';
+                                    if (dataEl) {
+                                        try {
+                                            address = JSON.parse(dataEl.textContent);
+                                        } catch (e) {}
+                                    }
+                                    if (address) {
+                                        const lines = address.split('\n');
+                                        const container = document.getElementById('custom-test-center');
+                                        const strong = document.createElement('strong');
+                                        strong.textContent = lines[0];
+                                        container.appendChild(strong);
+                                        
+                                        if (lines.length > 1) {
+                                            const p = document.createElement('p');
+                                            p.style.whiteSpace = 'pre-wrap';
+                                            p.style.margin = '0';
+                                            p.textContent = lines.slice(1).join('\n').trim();
+                                            container.appendChild(p);
+                                        }
+                                    }
+                                })();
+                            </script>
                             {% else %}
                             <strong>QSI INTL SCH ASTANA</strong>
                             <p>17 BAYAN SULU STREET<br>KOMSOMOLSKIY VILLAGE<br>ASTANA, KZ</p>
                             {% endif %}
-                        </div>
-
-                        <div class="reg-accommodations">
-                            <strong>Testing Accommodations:</strong>
-                            <p>You have no approved accommodations for this test.</p>
                         </div>
                     </div>
                     <div class="reg-right">
@@ -68,6 +90,11 @@
                             Test Day Checklist
                         </a>
                     </div>
+                </div>
+
+                <div class="reg-accommodations">
+                    <strong>Testing Accommodations:</strong>
+                    <p>You have no approved accommodations for this test.</p>
                 </div>
 
                 <div class="reg-divider"></div>

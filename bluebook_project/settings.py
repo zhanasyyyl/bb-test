@@ -29,8 +29,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-)l2n*1ef=5v34*&&(4inn3!1*g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 't')
 
-allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'bluebook.space')
-ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()] if allowed_hosts_env else ['bluebook.space', '*']
+allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'bbtest.space')
+ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()] if allowed_hosts_env else ['bbtest.space', '*']
 
 
 # Application definition
@@ -138,7 +138,7 @@ EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
 ANYMAIL = {
     "RESEND_API_KEY": os.getenv('RESEND_API_KEY', ''),
 }
-DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
+DEFAULT_FROM_EMAIL = "messages@bbtest.space"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
