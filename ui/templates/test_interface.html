@@ -44,7 +44,7 @@
         display: none;
         z-index: 1000;
         pointer-events: auto;
-        background-color: rgba(0, 0, 0, 0.6);
+        background-color: rgba(0, 0, 0, 0.3);
         width: 100vw;
         height: 100vh;
         top: 89px;
@@ -98,6 +98,18 @@
         position: relative;
     }
 
+    .nav-modal-fullscreen {
+        background: #fff;
+        width: 780px;
+        height: 320px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
     .nav-modal::after {
         content: '';
         position: absolute;
@@ -138,9 +150,10 @@
         display: flex;
         justify-content: space-between;
         gap: 16px;
-        padding: 20px 28px;
+        padding: 20px 0;
         padding-top: 32px;
-        border-bottom: 1px solid #dadce0;
+        margin: 0 28px;
+        border-bottom: 1px solid #1e1e1e;
         font-size: 12px;
     }
 
@@ -742,7 +755,7 @@
     </div>
 
     <div style="flex: 1; display:flex; justify-content:center; padding: 24px; overflow-y:auto;">
-        <div class="nav-modal" style="width: 720px; height: 320px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+        <div class="nav-modal-fullscreen">
             <div class="nav-legend-fullscreen">
                 <span class="nav-modal-title" style="font-size: 18px; font-weight: 600; display: block;">Section 1,
                     Module 1: Reading

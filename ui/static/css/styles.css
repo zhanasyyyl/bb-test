@@ -1,6 +1,7 @@
     /* Global & Reset */
     @font-face {
         font-family: 'CMU';
+        font-weight: 600;
         src: url('../fonts/CMU-Regulat.woff') format('woff');
         unicode-range: U+0020-002F, U+0030-0039, U+003A-0040, U+2200-22FF, U+2A00-2AFF;
     }
@@ -1054,7 +1055,7 @@
         align-items: center;
         font-weight: 700;
         font-size: 16px;
-        font-family: 'CMU', 'Myriad Pro', sans-serif;
+        font-family: 'Roboto', sans-serif;
         color: #505050;
     }
 

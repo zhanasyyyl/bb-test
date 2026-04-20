@@ -26,7 +26,7 @@
 <body class="{% block body_class %}{% endblock %}">
   <div class="window-frame">
     {% if not view_locked %}
-    <header class="title-bar">
+    <header class="title-bar" id="windows-title-bar" style="display: none;">
       <div class="title-bar-left">
         <img src="/static/images/logo-white.svg" style="width: 15px; padding: 2px; background-color: #324dc7;" alt="">
         <span class="title-text">Bluebook</span>
@@ -37,6 +37,14 @@
         <span class="window-control close">&#10005;</span>
       </div>
     </header>
+    <script>
+      (function() {
+        var isWindows = navigator.platform.indexOf('Win') > -1 || navigator.userAgent.indexOf('Windows') > -1;
+        if (isWindows) {
+          document.getElementById('windows-title-bar').style.display = 'flex';
+        }
+      })();
+    </script>
     {% endif %}
 
     <main class="content-area">
