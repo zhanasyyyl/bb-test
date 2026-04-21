@@ -26,7 +26,12 @@
         }
     }
     document.addEventListener('fullscreenchange', checkFS);
-    window.addEventListener('resize', checkFS);
+    window.addEventListener('resize', () => {
+        checkFS();
+        if (typeof app !== 'undefined' && app.updateQuestionPanePosition) {
+            app.updateQuestionPanePosition();
+        }
+    });
     // Hide initially if somehow already in fullscreen
     checkFS();
 </script>
@@ -82,7 +87,7 @@
 
     .directions-modal p {
         font-size: 16px;
-        font-family: Georgia, "Times New Roman", Times, serif;
+        font-family: 'Minion Pro', serif;
         color: #202124;
         line-height: 1.6;
         margin-bottom: 16px;
@@ -411,9 +416,21 @@
     </div>
 
     <div class="test-tools" style="display: flex; align-items: center; gap: 8px; margin-top: 12px;">
-        <div class="tool-item">
-            <img src="{% static 'images/highlights.svg' %}" alt="">
-            Highlights & Notes
+        <div id="ui-tools-reading-1" style="display: flex; gap: 8px; align-items: center;">
+            <div class="tool-item">
+                <img src="{% static 'images/highlights.svg' %}" alt="">
+                Highlights & Notes
+            </div>
+        </div>
+        <div id="ui-tools-math-1" style="display: none; gap: 8px; align-items: center;">
+            <div class="tool-item" onclick="app.toggleCalculator()">
+                <img src="{% static 'images/calculator.svg' %}" style="width: 16px; height: 16px;" alt="">
+                Calculator
+            </div>
+            <div class="tool-item">
+                <img src="{% static 'images/reference.svg' %}" style="width: 16px; height: 12px;" alt="">
+                Reference
+            </div>
         </div>
         <div class="tool-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#202124" stroke-width="2">
@@ -709,9 +726,21 @@
         </div>
 
         <div class="test-tools" style="display: flex; align-items: center; gap: 8px;">
-            <div class="tool-item">
-                <img src="{% static 'images/highlights.svg' %}" alt="">
-                Highlights & Notes
+            <div id="ui-tools-reading-2" style="display: flex; gap: 8px; align-items: center;">
+                <div class="tool-item">
+                    <img src="{% static 'images/highlights.svg' %}" alt="">
+                    Highlights & Notes
+                </div>
+            </div>
+            <div id="ui-tools-math-2" style="display: none; gap: 8px; align-items: center;">
+                <div class="tool-item" onclick="app.toggleCalculator()">
+                    <img src="{% static 'images/calculator.svg' %}" style="width: 20px; height: 20px;" alt="">
+                    Calculator
+                </div>
+                <div class="tool-item">
+                    <img src="{% static 'images/reference.svg' %}" style="width: 20px; height: 20px;" alt="">
+                    Reference
+                </div>
             </div>
             <div class="tool-item">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#202124" stroke-width="2">
@@ -783,6 +812,59 @@
     </div>
 </div>
 
+<!-- Desmos Modal -->
+<div id="calc-modal"
+    style="position:absolute; top:80px; left:60px; width:680px; height:650px; background:#fff; z-index:2000; display:none; flex-direction:column; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid #777; overflow: hidden;">
+    <div id="calc-header"
+        style="background:#202124; color:#fff; height:44px; display:flex; align-items:center; justify-content:space-between; cursor:move; user-select:none; padding: 0;">
+        <div style="display:flex; height: 100%;">
+            <!-- Tabs -->
+            <div
+                style="display:flex; align-items:center; background:#fff; color:#1e1e1e; font-family:'Roboto', sans-serif; font-size: 12px; font-weight:600; padding: 0 4px; margin-top: 6px; margin-left: 12px; border-radius: 6px;">
+                <img src="{% static 'images/calculator.svg' %}"
+                    style="width: 16px; height: 16px; padding: 0; margin: 0; margin-right: 6px;" alt=""> Graphing
+            </div>
+            <div
+                style="display:flex; align-items:center; color:#fff; font-family:'Roboto', sans-serif; font-size: 12px; font-weight:600; padding: 0 4px; margin-top: 6px;">
+                <img src="{% static 'images/calculator.svg' %}"
+                    style="width: 16px; height: 16px; padding: 0; margin: 0; margin-right: 6px;" alt=""> Scientific
+            </div>
+        </div>
+        <div
+            style="display:flex; align-items:center; opacity: 0.8; position:absolute; left:50%; transform:translateX(-50%); pointer-events:none;">
+            <svg width="24" height="16" viewBox="0 0 16 24" fill="#fff" stroke="#fff" stroke-width="2">
+                <circle cx="12" cy="6" r="1.5"></circle>
+                <circle cx="12" cy="18" r="1.5"></circle>
+                <circle cx="18" cy="6" r="1.5"></circle>
+                <circle cx="18" cy="18" r="1.5"></circle>
+                <circle cx="6" cy="6" r="1.5"></circle>
+                <circle cx="6" cy="18" r="1.5"></circle>
+            </svg>
+        </div>
+        <div style="display:flex; align-items:center; padding-right: 12px; gap: 16px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                style="cursor:pointer;">
+                <line x1="19" y1="5" x2="5" y2="19"></line>
+                <line x1="19" y1="19" x2="5" y2="5"></line>
+                <line x1="19" y1="5" x2="19" y2="11"></line>
+                <line x1="19" y1="5" x2="13" y2="5"></line>
+                <line x1="5" y1="19" x2="11" y2="19"></line>
+                <line x1="5" y1="19" x2="5" y2="13"></line>
+            </svg>
+            <svg onclick="app.toggleCalculator()" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                stroke-width="2" style="cursor:pointer;">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </div>
+    </div>
+    <div style="flex:1; background:#fff; position: relative;">
+        <div id="calculator-container" style="width: 100%; height: 100%;"></div>
+    </div>
+</div>
+
+<script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
 <script>
     const staticUrl = "{% static 'questions/' %}";
     const modulesData = JSON.parse('{{ modules_json|escapejs }}');
@@ -804,6 +886,81 @@
             }
             this.startModuleTimer();
             this.renderQuestion();
+            this.initDraggable();
+        },
+
+        desmosCalc: null,
+        isCalculatorOpen: false,
+
+        updateQuestionPanePosition() {
+            const questionPane = document.querySelector('.question-pane');
+            const workspace = document.querySelector('.test-workspace');
+            if (!workspace || !questionPane) return;
+            const isMath = this.modIdx >= 2;
+            const qData = modulesData[this.modIdx]?.questions[this.qIdx];
+            const isSPR = isMath && (!qData.options || qData.options.length === 0);
+
+            if (isMath && !isSPR) {
+                if (this.isCalculatorOpen) {
+                    const offset = (workspace.offsetWidth - questionPane.offsetWidth) / 2;
+                    questionPane.style.transform = `translateX(${offset}px)`;
+                } else {
+                    questionPane.style.transform = 'translateX(0)';
+                }
+            } else {
+                questionPane.style.transform = 'none';
+            }
+        },
+
+        toggleCalculator() {
+            const modal = document.getElementById('calc-modal');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                this.isCalculatorOpen = false;
+                this.updateQuestionPanePosition();
+            } else {
+                modal.style.display = 'flex';
+                this.isCalculatorOpen = true;
+                this.updateQuestionPanePosition();
+                if (!this.desmosCalc) {
+                    const elt = document.getElementById('calculator-container');
+                    this.desmosCalc = Desmos.GraphingCalculator(elt, {
+                        keypad: true,
+                        expressions: true,
+                        settingsMenu: true,
+                        zoomButtons: true
+                    });
+                }
+            }
+        },
+
+        initDraggable() {
+            const modal = document.getElementById('calc-modal');
+            const header = document.getElementById('calc-header');
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.closest('svg')) return; // Ignore clicks on buttons
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = modal.offsetLeft;
+                initialY = modal.offsetTop;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    modal.style.left = (initialX + dx) + 'px';
+                    modal.style.top = (initialY + dy) + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
         },
 
         timerIsHidden: false,
@@ -855,7 +1012,7 @@
 
         skipModuleTimer() {
             if (this.moduleTimeRemaining > 0) {
-                this.moduleTimeRemaining = 2; // Fast forward
+                this.moduleTimeRemaining = 0; // Fast forward
             }
         },
 
@@ -871,8 +1028,16 @@
             const workspace = document.querySelector('.test-workspace');
             if (isMath) {
                 workspace.classList.add('math-mode');
+                document.getElementById('ui-tools-reading-1').style.display = 'none';
+                document.getElementById('ui-tools-reading-2').style.display = 'none';
+                document.getElementById('ui-tools-math-1').style.display = 'flex';
+                document.getElementById('ui-tools-math-2').style.display = 'flex';
             } else {
                 workspace.classList.remove('math-mode');
+                document.getElementById('ui-tools-reading-1').style.display = 'flex';
+                document.getElementById('ui-tools-reading-2').style.display = 'flex';
+                document.getElementById('ui-tools-math-1').style.display = 'none';
+                document.getElementById('ui-tools-math-2').style.display = 'none';
             }
 
             document.getElementById('ui-test-title').innerText = mod.title;
@@ -880,19 +1045,14 @@
             document.getElementById('ui-q-nav').innerText = `Question ${this.qIdx + 1} of ${mod.count}`;
             document.getElementById('ui-q-num').innerText = this.qIdx + 1;
 
-            let finalQuestionHtml = qData.question;
-            // For Math questions, the context/passage must render in the right pane, above the question.
-            if (isMath && qData.passage && qData.passage.trim() !== '' && qData.passage !== 'Student-produced response directions') {
-                finalQuestionHtml = `<div style="margin-bottom: 24px; text-align: left; font-weight: normal; font-family: Georgia, 'Times New Roman', Times, serif;">${qData.passage}</div>` + finalQuestionHtml;
-            }
-            document.getElementById('ui-question').innerHTML = finalQuestionHtml;
+            document.getElementById('ui-question').innerHTML = qData.question;
 
             const passagePane = document.getElementById('ui-passage');
             const resizer = document.querySelector('.resizer');
             const questionPane = document.querySelector('.question-pane');
 
             const sprRulesHtml = `
-                <div style="padding: 20px; font-family: Georgia, 'Times New Roman', Times, serif;">
+                <div style="padding: 20px; font-family: 'Minion Pro', serif;">
                     <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">Student-produced response directions</h2>
                     <ul style="font-size: 15px; margin-bottom: 24px; padding-left: 20px; line-height: 1.5;">
                         <li>If you find <b>more than one correct answer</b>, enter only one answer.</li>
@@ -902,8 +1062,8 @@
                         <li>If your answer is a <b>mixed number</b> (such as $3\\frac{1}{2}$), enter it as an improper fraction (7/2) or its decimal equivalent (3.5).</li>
                         <li>Don't enter <b>symbols</b> such as a percent sign, comma, or dollar sign.</li>
                     </ul>
-                    <div style="text-align: center; margin-bottom: 4px; font-size: 14px;">Examples</div>
-                    <table style="width: 70%; text-align: center; border-collapse: collapse; font-size: 14px;">
+                    <div style="text-align: center; width: 100%; margin-bottom: 4px; font-size: 14px;">Examples</div>
+                    <table style="width: 70%; text-align: center; border-collapse: collapse; font-size: 14px; margin: 0 auto;">
                         <tr>
                             <th style="border: 1px solid #505050; padding: 12px; font-weight: 500;">Answer</th>
                             <th style="border: 1px solid #505050; padding: 12px; font-weight: 500;">Acceptable ways to<br>enter answer</th>
@@ -934,14 +1094,19 @@
                 questionPane.style.maxWidth = '50%';
                 questionPane.style.margin = '0 auto';
                 questionPane.style.minWidth = '400px';
+                questionPane.style.transition = 'transform 0.8s ease';
+                this.updateQuestionPanePosition();
             } else {
                 passagePane.style.display = 'block';
                 resizer.style.display = 'flex';
                 questionPane.style.maxWidth = 'none';
                 questionPane.style.margin = '0';
                 questionPane.style.minWidth = '0';
+                questionPane.style.transform = 'none';
+                questionPane.style.transition = 'none';
                 if (isSPR) {
                     passagePane.innerHTML = sprRulesHtml;
+                    passagePane.style.fontFamily = 'Minion Pro';
                 } else {
                     passagePane.innerHTML = qData.passage;
                 }
@@ -954,9 +1119,10 @@
                 const state = moduleState[this.modIdx][this.qIdx];
                 optionsList.innerHTML = `
                     <div style="margin-top: 24px;">
-                        <input type="text" id="spr-input" maxlength="6" value="${state.answer || ''}" oninput="app.setSPRAnswer(this.value)" style="width: 140px; height: 50px; font-size: 24px; text-align: center; border: 1px solid #1e1e1e; border-radius: 6px;" />
-                        <h4 style="margin-top: 24px; font-size: 18px; color: #202124;">Answer Preview:</h4>
-                        <div id="spr-preview" style="font-size: 24px; min-height: 24px; margin-top: 8px;">${state.answer || ''}</div>
+                        <input type="text" id="spr-input" maxlength="6" value="${state.answer || ''}" oninput="app.setSPRAnswer(this.value)" style="width: 140px; height: 50px; font-size: 24px; text-align: center; border: 1px solid #1e1e1e; border-radius: 6px; font-family: 'CMU';" />
+                        <br>
+                        <h4 style="font-size: 24px; color: #202124; font-family: 'Minion Pro'; display: inline-block;">Answer Preview:</h4>
+                        <div id="spr-preview" style="font-size: 26px; font-family: 'CMU'; font-weight: 600; display: inline-block;">${state.answer || ''}</div>
                     </div>
                 `;
             } else {
@@ -1113,7 +1279,7 @@
             document.getElementById('screen-loading').style.display = 'none';
             document.getElementById('screen-break').style.display = 'flex';
 
-            this.breakTimeRemaining = 600; // 10 minutes
+            this.breakTimeRemaining = 0; // 10 minutes
             const timerEl = document.getElementById('break-time-display');
             const btnEl = document.getElementById('btn-resume-break');
 
@@ -1172,11 +1338,11 @@
                     // Show congrats screen
                     const congratsHtml = `
                     <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #fff; z-index: 5000; overflow: hidden;">
-                        <a href="{% url 'quit' %}"><img src="{% static 'images/congrats.jpeg' %}?v=2" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" /></a>
+                        <a href="{% url 'dashboard' %}" style="cursor: default;"><img src="{% static 'images/congrats.jpeg' %}?v=2" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" /></a>
                     </div>`;
                     document.body.insertAdjacentHTML('beforeend', congratsHtml);
                 }
-            }, 3000);
+            }, 0);
         }
     };
 
