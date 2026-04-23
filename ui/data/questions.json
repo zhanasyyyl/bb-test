@@ -2,358 +2,331 @@
     {
         "id": 1,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. Thanks in part to his efforts, community-supported agriculture (CSA) has become a popular way for consumers to buy local produce.",
+        "passage": "The National Heritage Fellowship was created to honor exceptional folk and traditional artists in the United States. In 2013, the fellowship was given to the Pyramid Lake Paiute storyteller Ralph Burns. Burns was _____ to receive it because of his lifetime contributions to the arts.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "enhance",
-            "hinder",
-            "misrepresent",
-            "aggravate"
-        ],
-        "correct": 1
+            "confused",
+            "reluctant",
+            "ineligible",
+            "chosen"
+        ]
     },
     {
         "id": 2,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
+        "passage": "The following text is adapted from Willa Cather's 1912 novel Alexander's Bridge.<br><br>For the next few days Alexander was very busy. He took a desk in the office of a [Scottish] engineering firm on Henrietta Street, and was at work almost constantly. He avoided the clubs and usually dined alone at his hotel.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "validates",
-            "complicates",
-            "simplifies",
-            "contradicts"
-        ],
-        "correct": 1
+            "Enough",
+            "Nonstop",
+            "Quickly",
+            "Cautiously"
+        ]
     },
     {
         "id": 3,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
+        "passage": "Though it does not guarantee a book's commercial success, _____ can play a big role in that success—a well-executed marketing campaign helped to make Danielle Steel's novel The Gift the fourth-best-selling novel of 1994.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "prediction",
-            "hypothesis",
-            "fallacy",
-            "conjecture"
-        ],
-        "correct": 1
+            "originality",
+            "publicity",
+            "complexity",
+            "practicality"
+        ]
     },
     {
         "id": 4,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia.",
+        "passage": "According to a team of neuroeconomists from the University of Zurich, ease of decision making may be linked to communication between two brain regions, the prefrontal cortex and the parietal cortex. Individuals tend to be more decisive if the information flow between the regions is intensified, whereas they make choices more slowly when information flow is _____.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "allowed",
-            "forced",
-            "prohibited",
-            "encouraged"
-        ],
-        "correct": 1
+            "reduced",
+            "evaluated",
+            "determined",
+            "acquired"
+        ]
     },
     {
         "id": 5,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks.",
+        "passage": "Ecologist Exequiel Ezcurra and colleagues found that the inhabitants of the Mexica empire used natural landmarks to track time with a high degree of _____. By observing the sun’s position in relation to various points on the mountains surrounding the Basin of Mexico, the Mexica were able to precisely identify the dates when significant events such as solstices occurred.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "abandoning",
-            "developing",
-            "ignoring",
-            "criticizing"
-        ],
-        "correct": 1
+            "precariousness",
+            "exactitude",
+            "resilience",
+            "inconspicuousness"
+        ]
     },
     {
         "id": 6,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "The Old Manse in Concord, Massachusetts, is the house where Ralph Waldo Emerson lived for a few years and wrote his essay “Nature.” Now the house is a museum dedicated to Emerson’s life and writings. Visitors travel to this museum to feel more connected to an author they admire. To encourage that sense of connection, the museum’s curators recommend nearby hiking trails and organize outdoor activities. Such activities help visitors appreciate the natural scenery that inspired Emerson.",
+        "question": "Which choice best states the main purpose of the text?",
         "options": [
-            "enhance",
-            "hinder",
-            "misrepresent",
-            "aggravate"
-        ],
-        "correct": 1
+            "To summarize Emerson's biography.",
+            "To explain why readers enjoy Emerson's works.",
+            "To describe a museum focused on Emerson's life and works.",
+            "To compare the Old Manse with other museums."
+        ]
     },
     {
         "id": 7,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "Horses and toads can see in three dimensions (3D), which helps them perceive distance and depth. Octopuses and squid are thought to lack 3D vision. Many researchers once thought the same about cuttlefish, but Trevor Wardill and his team wanted to test whether this assumption was true. The team studied how cuttlefish wearing 3D glasses reacted to 3D images of shrimp (a favorite prey) projected on a tank wall. <span style='text-decoration:underline;'>Cuttlefish changed their striking position to match the 3D images, suggesting that their vision is more like that of horses and toads than that of octopuses or squid.<span>",
+        "question": "Which choice best states the function of the underlined sentence in the text as a whole?",
         "options": [
-            "validates",
-            "complicates",
-            "simplifies",
-            "contradicts"
-        ],
-        "correct": 1
+            "It explains how 3D vision in horses and toads differs from the type of 3D vision discussed in the text.",
+            "It offers a suggestion for future research on the aspect of 3D vision discussed in the text.",
+            "It presents the results of the study of 3D vision discussed in the text.",
+            "It explains why the animals discussed in the text were once thought to lack 3D vision."
+        ]
     },
     {
         "id": 8,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "Boston has high pedestrian traffic, but simply replicating a feature of Boston associated with walkability—e.g., its high number of intersections—may be insufficient to induce increased walking in other cities. As urbanist Mariela Alfonzo argues, our understanding of individuals’ decision-making about whether to walk is insufficiently robust: some studies emphasize the role of <span style='text-decoration:underline;'>population density</span>, others the role of <span style='text-decoration:underline;'>individual physical fitness</span>, and so on, but walking decisions are made in complex contexts in which multiple conditions and needs inform individuals’ choices.",
+        "question": "Which choice best describes the function of the references to \"population density\" and \"individual physical fitness\" in the text as a whole?",
         "options": [
-            "prediction",
-            "hypothesis",
-            "fallacy",
-            "conjecture"
-        ],
-        "correct": 1
+            "They represent factors that have been identified as important influences on walking decisions but that the text suggests are merely some of the many factors that may contribute to people’s decision-making about walking.",
+            "They are examples of factors that studies suggest are important in people's decision making about walking but that the text claims most people rarely consider when making walking decisions.",
+            "They identify factors that Alfonzo argues have been overemphasized in studies of decision-making about walking but that the text asserts are relevant to most people’s walking decisions.",
+            "They illustrate factors that researchers believe people consider when making walking decisions in most contexts but that the text argues are unique to walking decisions made by people in Boston."
+        ]
     },
     {
         "id": 9,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "The following text is adapted from Emily Dickinson's circa 1873 poem “There is no Frigate like a Book.” A frigate is a light, fast ship; coursers are swift horses.<br><br>\nThere is no Frigate like a Book<br>\nTo take us Lands away<br>\nNor any Coursers like a Page<br>\nOf prancing Poetry—<br>\nThis Traverse may the poorest take<br>\nWithout oppress of Toll—<br>\nHow frugal is the Chariot\nThat bears the Human soul.",
+        "question": "Which choice best states the main idea of the text?",
         "options": [
-            "allowed",
-            "forced",
-            "prohibited",
-            "encouraged"
-        ],
-        "correct": 1
+            "Poetry can forge connections between people from different cultures.",
+            "Reading is a way of defying the modern world’s emphasis on money.",
+            "Literature can metaphorically transport people to new places regardless of their means.",
+            "People can learn more about distant places by reading books than by traveling to those places."
+        ]
     },
     {
         "id": 10,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "Darcie Little Badger is a novelist and a member of the Lipan Apache Tribe of Texas. Critics and fellow writers have praised her work for combining traditional Apache stories with popular genres of literature, such as fantasy and horror fiction. But Little Badger is not the only Indigenous writer to blend traditional stories with popular literature. In the 2016 novel Wrist, Nathan Adler successfully blended the oral storytelling tradition of their people, the Anishinaabe, with horror fiction.",
+        "question": "Which choice best states the main idea of the text?",
         "options": [
-            "abandoning",
-            "developing",
-            "ignoring",
-            "criticizing"
-        ],
-        "correct": 1
+            "Several famous Indigenous writers increased their book sales when they began incorporating traditional stories.",
+            "Recent Indigenous fiction writers are mixing traditional stories with popular literary genres.",
+            "The success of Darcie Little Badger has influenced non Indigenous authors who write in popular literary genres.",
+            "Non Indigenous authors should consider the expectations of Indigenous readers."
+        ]
     },
     {
         "id": 11,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "Uncle Vanya: Scenes from Country Life in Four Acts is an 1898 play by Anton Chekhov, originally written in Russian. In the play, Professor Serebrakoff and his wife Helena have come to stay at their country estate, which Vanya manages with the help of Sonia, the professor's daughter from a previous marriage. Chekhov portrays the professor as being unable to adjust to living at the country estate, as is evident when ______",
+        "question": "Which quotation from a translation of Uncle Vanya most effectively illustrates the claim?",
         "options": [
-            "enhance",
-            "hinder",
-            "misrepresent",
-            "aggravate"
-        ],
-        "correct": 1
+            "Vanya says to Professor Serebrakoff, “We used to think of you as almost superhuman, but now the scales have fallen from my eyes and I see you as you are!”.",
+            "Professor Serebrakoff says, “I am a book worm and a scholar, and am unfamiliar with practical affairs. I cannot. I find dispense with the help of well-informed people.”.",
+            "Professor Serebrakoff says to Helena, “I am used to my library and the lecture hall and to the esteem and admiration of my colleagues. Now I suddenly find myself plunged into this wilderness [the estate], condemned to see the same stupid people from morning till night and listen to their futile conversations.”.",
+            "Professor Serebrakoff says to Helena and Sonia, “No, no, no! Don't leave me alone with [Vanya\n    ]! Oh, don't He will begin to lecture me.”."
+        ]
     },
     {
         "id": 12,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "Fish whose DNA has been modified to include genetic material from other species are known as transgenic. Some transgenic fish have genes from jellyfish that result in fluorescence (that is, they glow in the dark). Although these fish were initially engineered for research purposes in the 1990s, they were sold as pets in the 2000s and can now be found in the wild in creeks in Brazil. A student in a biology seminar who is writing a paper on these fish asserts that their escape from Brazilian fish farms into the wild may have significant negative long-term ecological effects.",
+        "question": "Which quotation from a researcher would best support the student's assertion?",
         "options": [
-            "validates",
-            "complicates",
-            "simplifies",
-            "contradicts "
-        ],
-        "correct": 1
+            "“In one site in the wild where transgenic fish were observed, females outnumbered males, while in another the numbers of females and males were equivalent.”",
+            "“Though some presence of transgenic fish in the wild has been recorded, there are insufficient studies of the impact of those fish on the ecosystems into which they are introduced.”",
+            "“The ecosystems into which transgenic fish are known to have been introduced may represent a subset of the ecosystems into which the fish have actually been introduced.”",
+            "“Through interbreeding, transgenic fish might introduce the trait of fluorescence into wild fish populations, making those populations more vulnerable to predators.” "
+        ]
     },
     {
         "id": 13,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "Cane is a 1923 novel by Jean Toomer. In the novel, Toomer mentions a road in rural Georgia called Dixie Pike and describes it as having a deep connection to a faraway place, writing, ______",
+        "question": "Which quotation from Cane most effectively illustrates the claim?",
         "options": [
-            "prediction",
-            "hypothesis",
-            "fallacy",
-            "conjecture "
-        ],
-        "correct": 1
+            "“And when the wind is from the South, soil of my homeland falls like a fertile shower upon the lean streets of [Washington, DC].”",
+            "“The Dixie Pike has grown from a goat path in Africa.”",
+            "“From down the railroad track, the chug–chug of a gas engine announces that the repair gang is coming home.”",
+            "“One evening I walked up the [Dixie] Pike on purpose, and stopped to say hello [to Fern].” "
+        ]
     },
     {
         "id": 14,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "The 1980 production of Charlie and Algernon was the first Broadway show for which Jess Goldstein was credited as a costume designer. Goldstein was among the Broadway costume designers interviewed by Sara Jablon-Roberts and Eulanda A. Sanders for their study of historical accuracy in costume design. They argue that aesthetics often outweigh fidelity to the past among designers for shows with historical settings. In a paper for a theater class, a student claims that the costume design for a modern production of the musical Our Town (set in the early 1900s) exemplifies this tendency.",
+        "question": "Which quotation from the costume designer for the modern production of Our Town most effectively supports the student’s claim?",
         "options": [
-            "allowed",
-            "forced",
-            "prohibited",
-            "encouraged "
-        ],
-        "correct": 1
+            "“Although historically accurate costumes would have added an air of authenticity to Our Town, they have so many layers that costume changes would have been difficult.”",
+            "“The clothing of the period of Our Town is aesthetically appealing but largely unfamiliar to today’s audiences, so minor deviations from historical accuracy largely went unnoticed.”",
+            "“For Our Town, I decided not to include the extra fabric that would have been typical of clothing in the period because it made the costumes unappealingly bulky.”",
+            "“In trying to create the period look of Our Town, I had to make some practical compromises, such as substituting cooler modern fabrics for historically accurate woolens so that the actors didn’t overheat.” "
+        ]
     },
     {
         "id": 15,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "Zooarchaeologist Ophélie Lebrasseur and her team examined a fox skeleton discovered in 1991 at an archaeological site alongside artifacts of human habitation (like spear points) in central Argentina. Lebrasseur et al. determined that the fox was Dusicyon avus, an extinct species resembling a jackal, and radiocarbon dating placed the fox at the site at the same time as human inhabitants. (Indeed, the inhabitants may have deliberately buried the fox.) In addition, while wild foxes have a diet entirely made of meat, isotopic signatures of the skeleton’s teeth indicated that the fox’s diet, like that of the humans, was partly composed of plant material. Lebrasseur et al. therefore concluded that ______",
+        "question": "Which choice most logically completes the text?",
         "options": [
-            "abandoning",
-            "developing",
-            "ignoring",
-            "criticizing "
-        ],
-        "correct": 1
+            "the humans who were alive at the same time as the fox most likely ate more meat than the fox did.",
+            "the humans who were alive at the same time as the fox hunted using the spears whose points were also found at the site.",
+            "the fox may have been a companion animal of the humans who inhabited the site at the same time.",
+            "the fox had a diet more similar to that of jackals than to that of wild foxes. "
+        ]
     },
     {
         "id": 16,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "In the nineteenth century, Elizabeth Cady Stanton and Susan B. Anthony _____ for women's right to vote in the United States.",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "enhance",
-            "hinder",
-            "misrepresent",
-            "aggravate "
-        ],
-        "correct": 1
+            "having campaigned",
+            "campaigned",
+            "campaigning",
+            "to campaign "
+        ]
     },
     {
         "id": 17,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "While conducting an interview for her book Latina Authors and Their Muses, editor Mayra Calvani asked Sarah Cortez, author of the memoir Walking Home, what _____ Cortez’s response was Bury Me Deep by Megan Abbott.",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "validates",
-            "complicates",
-            "simplifies",
-            "contradicts "
-        ],
-        "correct": 1
+            "her favorite book was.",
+            "was her favorite book?",
+            "her favorite book was?",
+            "was her favorite book!"
+        ]
     },
     {
         "id": 18,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "Choreographers George Balanchine and Martha Graham both contributed sections to the dance piece Episodes, which premiered at New York's City Center of Music and Drama in 1959. This cross-genre collaboration brought together the distinct features of Balanchine's neoclassical ballet and Graham's modern ______ the stylistic diversity and creative innovation within the dance world.",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "prediction",
-            "hypothesis",
-            "fallacy",
-            "conjecture "
-        ],
-        "correct": 1
+            "dance, it showcased",
+            "dance. Which showcased",
+            "dance, showcasing",
+            "which showcased"
+        ]
     },
     {
         "id": 19,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "In the book <i>A Theory of Harmony</i> (1985), Swiss musicologist Ernst Levy argued that every chord has an opposite that can be substituted for it. For example, a pianist could replace the vi chord for the bIII chord while _____ chord is a given chord’s opposite can be determined using a music visualization tool called the circle of fifths.",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "allowed",
-            "forced",
-            "prohibited",
-            "encouraged"
-        ],
-        "correct": 1
+            "improvising which",
+            "improvising and which",
+            "improvising. Which",
+            "improvising, which"
+        ]
     },
     {
         "id": 20,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "In her Silueta sculpture series, the Cuban American artist Ana _____ to access what she called an “omnipresent female force,” utilized a variety of natural materials to create outlines—or silhouettes—of her own body.",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "abandoning",
-            "developing",
-            "ignoring",
-            "criticizing"
-        ],
-        "correct": 1
+            "Mendieta was hoping",
+            "Mendieta hoped",
+            "Mendieta had hoped",
+            "Mendieta, hoping"
+        ]
     },
     {
         "id": 21,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "As volcanologists like Tamsin Mather are apt to make clear, not all volcanoes are the same. Tendürek in Turkey, for example, is a shield volcano, a type of volcano named for its low profile, resembling a warrior’s shield lying on the ground. Opala in Russia, _____ is a caldera, a large cauldron-like hollow that forms shortly after the emptying of a magma chamber in a volcanic eruption.",
+        "question": "Which choice completes the text with the most logical transition?",
         "options": [
-            "enhance",
-            "hinder",
-            "misrepresent",
-            "aggravate"
-        ],
-        "correct": 1
+            "in any case,",
+            "in contrast,",
+            "in conclusion,",
+            "in fact,"
+        ]
     },
     {
         "id": 22,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "The United Nations’ Trade and Development organization divides exports into five key categories: food items, agricultural materials, fuels, ores and raw metals, and manufactured goods (i.e., most nonfood goods made by machinery or by hand). In 2022, the majority (62 percent) of Belgium’s exports were manufactured goods. _____ vaccines, medicines, and cars were its top exports.",
+        "question": "Which choice completes the text with the most logical transition?",
         "options": [
-            "validates",
-            "complicates",
-            "simplifies",
-            "contradicts"
-        ],
-        "correct": 1
+            "In a broader sense,",
+            "Within this category,",
+            "In the future,",
+            "Despite this majority,"
+        ]
     },
     {
         "id": 23,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "A research team led by Gal Badhii has discovered that chimpanzees communicate through exchanges of gestures occurring at a pace similar to that of human conversations. _____ chimpanzee gesture exchanges have short pauses of about 120 milliseconds between communications, comparable to the 200–millisecond average pause between turns in human speech.",
+        "question": "Which choice completes the text with the most logical transition?",
         "options": [
-            "prediction ",
-            "hypothesis ",
-            "fallacy ",
-            "conjecture "
-        ],
-        "correct": 1
+            "Specifically,",
+            "As a result,",
+            "By contrast,",
+            "Nevertheless,"
+        ]
     },
     {
         "id": 24,
         "type": "rw",
-        "passage": "The architecture of ancient Rome is renowned for its durability, primarily due to their use of volcanic ash in concrete. This material ________ structures like the Pantheon to survive for millennia. ",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "While researching a topic, a student has taken the following notes:\n<ul>\n<li>\nThe Great Salt Lake in Utah is one of the world’s saltiest bodies of water.\n</li>\n<li>\nThe northern portion of the lake has a higher concentration of salt than the southern portion.\n</li>\n<li>\nCrustaceans called Artemia franciscana live in the southern portion.\n</li>\n<li>\nBacteria called Nodularia live in the southern portion.\n</li>\n</ul>\n",
+        "question": "The student wants to emphasize a difference between <i>Artemia franciscana</i> and <i>Nodularia</i>. Which choice most effectively uses the relevant information to accomplish this goal?",
         "options": [
-            "allowed ",
-            "forced ",
-            "prohibited ",
-            "encouraged "
-        ],
-        "correct": 1
+            "<i>Artemia franciscana</i> are crustaceans that live in the southern portion of the Great Salt Lake.",
+            "<i>Artemia franciscana</i> and <i>Nodularia</i> both live in the Great Salt Lake’s southern portion.",
+            "The northern portion of the Great Salt Lake has a higher concentration of salt than does the southern portion.",
+            "<i>Artemia franciscana</i> and <i>Nodularia</i> are different types of organisms: <i>Artemia franciscana</i> are crustaceans, whereas <i>Nodularia</i> are bacteria. "
+        ]
     },
     {
         "id": 25,
         "type": "rw",
-        "passage": "Quantum computing poses a significant threat to modern encryption methods. As a result, cryptographers are currently ________ new algorithms designed to withstand quantum attacks. ",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "While researching a topic, a student has taken the following notes:\n<ul>\n<li>\nExtravehicular activities (EVAs) are activities performed outside a spacecraft by astronauts in outer space.\n</li>\n<li>\nEVAs are also known as spacewalks.\n</li>\n<li>\nRichard Mastracchio is a former US astronaut who has performed 9 spacewalks.\n</li>\n<li>\nThe total time of Mastracchio’s spacewalks was 53 hours and 4 minutes.\n</li>\n<li>\nGarrett Reisman is a former US astronaut who has performed 3 spacewalks.\n</li>\n<li>\nThe total time of Reisman’s spacewalks was 21 hours and 21 minutes.\n</li>\n</ul>\n",
+        "question": "The student wants to emphasize a similarity between the astronauts Mastracchio and Reisman. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
-            "abandoning ",
-            "developing ",
-            "ignoring ",
-            "criticizing "
-        ],
-        "correct": 1
+            "Reisman has spent less time performing spacewalks than Mastracchio has.",
+            "EVAs, also known as spacewalks, are activities done by astronauts outside a spacecraft. ",
+            "Mastracchio and Reisman have each performed multiple spacewalks.",
+            "Mastracchio has performed spacewalks, but Reisman has performed EVAs.\n"
+        ]
     },
     {
         "id": 26,
         "type": "rw",
-        "passage": "Although critics believed that customers would never agree to pay to pick their own produce on farms, such concerns didn't ________ Booker T. Whatley's efforts to promote the practice. ",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "While researching a topic, a student has taken the following notes:\n<ul>\n<li>\nThe Tijuana Slough National Wildlife Refuge (NWR) is a protected natural area in California.\n</li>\n<li>\nIt encompasses 1,\n023 acres.\n</li>\n<li>\nThe Tijuana Slough NWR was established to safeguard the habitat of the light-footed clapper rail, an endangered species.\n</li>\n<li>\nThe Tijuana Slough NWR is managed by the US Fish & Wildlife Service.\n</li>\n<li>\nThe US Fish & Wildlife Service limits human activities in the area.\n</li>\n</ul>\n",
+        "question": "The student wants to emphasize the role the US Fish & Wildlife Service plays in safeguarding the habitat of the light-footed clapper rail. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
-            "enhance ",
-            "hinder ",
-            "misrepresent ",
-            "aggravate "
-        ],
-        "correct": 1
+            "By limiting human activities in the Tijuana Slough NWR, the US Fish & Wildlife Service safeguards the habitat of the light-footed clapper rail.",
+            "Human activities are limited in the Tijuana Slough NWR, a protected natural area in California.",
+            "Home to the light-footed clapper rail, the Tijuana Slough NWR is located in California, where it encompasses 1,\n023 acres.",
+            "The 1,\n023-acre Tijuana Slough NWR was established to safeguard the habitat of the light-footed clapper rail, an endangered species."
+        ]
     },
     {
         "id": 27,
         "type": "rw",
-        "passage": "Researchers have recently discovered that certain species of fungi can communicate via electrical signals across fungal networks. This ________ the traditional view of fungi as completely passive organisms. ",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "While researching a topic, a student has taken the following notes:\n\n<ul>\n<li>\nThe cuneiform script is the earliest known set of symbols used for writing.\n</li>\n<li>\nSumerian was one of the first languages to be written using the cuneiform script.\n</li>\n<li>\nSumerian was a language in ancient Mesopotamia (present-day Iraq).\n</li>\n<li>\nClay tablets with Sumerian writing have been found there.\n</li>\n<li>\nSome of these tablets are almost 5,\n000 years old.</li>\n</ul>\n",
+        "question": "The student wants to identify a language that was written using the cuneiform script. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
-            "validates ",
-            "complicates ",
-            "simplifies ",
-            "contradicts "
-        ],
-        "correct": 1
+            "Examples of Mesopotamian writing that are nearly 5,\n000 years old have been found.",
+            "A language in ancient Mesopotamia used the cuneiform script for writing.",
+            "\nClay tablets with cuneiform script have been found in present-day Iraq.",
+            "Sumerian, an ancient Mesopotamian language, was written using the cuneiform script."
+        ]
     },
     {
         "id": 28,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance—a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction ",
@@ -418,7 +391,7 @@
     {
         "id": 33,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance—a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction",
@@ -483,7 +456,7 @@
     {
         "id": 38,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance—a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction",
@@ -548,7 +521,7 @@
     {
         "id": 43,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance—a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction",
@@ -613,7 +586,7 @@
     {
         "id": 48,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance—a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction",
@@ -678,7 +651,7 @@
     {
         "id": 53,
         "type": "rw",
-        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance\u2014a ________ that has proven terrifyingly accurate. ",
+        "passage": "In 1928, Alexander Fleming discovered penicillin, fundamentally changing modern medicine. However, he warned that misuse of the drug could lead to antibiotic resistance—a ________ that has proven terrifyingly accurate. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "prediction",
@@ -702,490 +675,458 @@
         "correct": 1
     },
     {
-        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
-        "question": "Which equation represents a total cost of 35.00?",
+        "passage": "A local bakery sells muffins for $2.50$ each and croissants for $3.00$ each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of $35.00$?",
         "options": [
-            "2.50$M$ + 3.00$C$ = 35",
-            "3.00$M$ + 2.50$C$ = 35",
-            "2.50$M$ - 3.00$C$ = 35",
-            "5.50($M$ + $C$) = 35"
+            "$2.50M + 3.00C = 35$",
+            "$3.00M + 2.50C = 35$",
+            "$2.50M - 3.00C = 35$",
+            "$5.50(M + C) = 35$"
         ],
-        "correct": 0,
         "id": 55,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "question": "The function $f$ is defined by $f(x) = 8\\sqrt{x}$. For what value of $x$ does $f(x) = 48$?",
         "options": [
-            "6",
-            "8",
-            "36",
-            "64"
+            "$6$",
+            "$8$",
+            "$36$",
+            "$64$"
         ],
-        "correct": 0,
         "id": 56,
         "type": "math"
     },
     {
-        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
-        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "passage": "In triangle $ABC$, the measure of angle $A$ is $45$ degrees, and the measure of angle $B$ is $45$ degrees.",
+        "question": "If the length of side $BC$ is $10$, what is the length of side $AC$?",
         "options": [
-            "10",
-            "20",
-            "5",
-            "15"
+            "$10$",
+            "$20$",
+            "$5$",
+            "$15$"
         ],
-        "correct": 0,
         "id": 57,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "question": "If $2x - 4y = 12$ and $x + 2y = 8$, what is the value of $x + y$?",
         "options": [
-            "6.0",
-            "4.4",
-            "5.5",
-            "7.2"
+            "$6.0$",
+            "$4.4$",
+            "$5.5$",
+            "$7.2$"
         ],
-        "correct": 0,
         "id": 58,
         "type": "math"
     },
     {
-        "passage": "A rectangular tank has a width of 5 meters, a length of 10 meters, and a height of 12 meters.",
-        "question": "If the water level is rising at a rate of 0.5 cubic meters per minute, how many minutes will it take to fill the tank?",
+        "passage": "A rectangular tank has a width of $5$ meters, a length of $10$ meters, and a height of $12$ meters.",
+        "question": "If the water level is rising at a rate of $0.5$ cubic meters per minute, how many minutes will it take to fill the tank?",
         "options": [
-            "1200",
-            "600",
-            "300",
-            "240"
+            "$1200$",
+            "$600$",
+            "$300$",
+            "$240$"
         ],
-        "correct": 0,
         "id": 59,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x)$ = $m$$x$ - 28, where $m$ is a constant. What is the value of $m$?",
+        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x) = mx - 28$, where $m$ is a constant. What is the value of $m$?",
         "id": 60,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 3($x$ - 2) + 5 = 2$x$ + 10, what is the value of $x$?",
+        "question": "If $3(x - 2) + 5 = 2x + 10$, what is the value of $x$?",
         "options": [
-            "11",
-            "7",
-            "5",
-            "3"
+            "$11$",
+            "$7$",
+            "$5$",
+            "$3$"
         ],
-        "correct": 0,
         "id": 61,
         "type": "math"
     },
     {
-        "passage": "A population of bacteria doubles every 4 hours.",
-        "question": "If the initial population is 100, what will be the population after 12 hours?",
+        "passage": "A population of bacteria doubles every $4$ hours.",
+        "question": "If the initial population is $100$, what will be the population after $12$ hours?",
         "options": [
-            "800",
-            "400",
-            "600",
-            "1200"
+            "$800$",
+            "$400$",
+            "$600$",
+            "$1200$"
         ],
-        "correct": 0,
         "id": 62,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 3$x$ + 4$x$ = 21, what is the value of $x$?",
+        "question": "If $3x + 4x = 21$, what is the value of $x$?",
         "id": 63,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "A square has an area of 16. What is its perimeter?",
+        "question": "A square has an area of $16$. What is its perimeter?",
         "id": 64,
         "type": "math"
     },
     {
-        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
-        "question": "Which equation represents a total cost of 35.00?",
+        "passage": "A local bakery sells muffins for $2.50$ each and croissants for $3.00$ each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of $35.00$?",
         "options": [
-            "2.50$M$ + 3.00$C$ = 35",
-            "3.00$M$ + 2.50$C$ = 35",
-            "2.50$M$ - 3.00$C$ = 35",
-            "5.50($M$ + $C$) = 35"
+            "$2.50M + 3.00C = 35$",
+            "$3.00M + 2.50C = 35$",
+            "$2.50M - 3.00C = 35$",
+            "$5.50(M + C) = 35$"
         ],
-        "correct": 0,
         "id": 65,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "question": "The function $f$ is defined by $f(x) = 8\\sqrt{x}$. For what value of $x$ does $f(x) = 48$?",
         "options": [
-            "6",
-            "8",
-            "36",
-            "64"
+            "$6$",
+            "$8$",
+            "$36$",
+            "$64$"
         ],
-        "correct": 0,
         "id": 66,
         "type": "math"
     },
     {
-        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
-        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "passage": "In triangle $ABC$, the measure of angle $A$ is $45$ degrees, and the measure of angle $B$ is $45$ degrees.",
+        "question": "If the length of side $BC$ is $10$, what is the length of side $AC$?",
         "options": [
-            "10",
-            "20",
-            "5",
-            "15"
+            "$10$",
+            "$20$",
+            "$5$",
+            "$15$"
         ],
-        "correct": 0,
         "id": 67,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "question": "If $2x - 4y = 12$ and $x + 2y = 8$, what is the value of $x + y$?",
         "options": [
-            "6.0",
-            "4.4",
-            "5.5",
-            "7.2"
+            "$6.0$",
+            "$4.4$",
+            "$5.5$",
+            "$7.2$"
         ],
-        "correct": 0,
         "id": 68,
         "type": "math"
     },
     {
-        "passage": "A rectangular tank has a width of 5 meters, a length of 10 meters, and a height of 12 meters.",
-        "question": "If the water level is rising at a rate of 0.5 cubic meters per minute, how many minutes will it take to fill the tank?",
+        "passage": "A rectangular tank has a width of $5$ meters, a length of $10$ meters, and a height of $12$ meters.",
+        "question": "If the water level is rising at a rate of $0.5$ cubic meters per minute, how many minutes will it take to fill the tank?",
         "options": [
-            "1200",
-            "600",
-            "300",
-            "240"
+            "$1200$",
+            "$600$",
+            "$300$",
+            "$240$"
         ],
-        "correct": 0,
         "id": 69,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x)$ = $m$$x$ - 28, where $m$ is a constant. What is the value of $m$?",
+        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x) = mx - 28$, where $m$ is a constant. What is the value of $m$?",
         "id": 70,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 3($x$ - 2) + 5 = 2$x$ + 10, what is the value of $x$?",
+        "question": "If $3(x - 2) + 5 = 2x + 10$, what is the value of $x$?",
         "options": [
-            "11",
-            "7",
-            "5",
-            "3"
+            "$11$",
+            "$7$",
+            "$5$",
+            "$3$"
         ],
-        "correct": 0,
         "id": 71,
         "type": "math"
     },
     {
-        "passage": "A population of bacteria doubles every 4 hours.",
-        "question": "If the initial population is 100, what will be the population after 12 hours?",
+        "passage": "A population of bacteria doubles every $4$ hours.",
+        "question": "If the initial population is $100$, what will be the population after $12$ hours?",
         "options": [
-            "800",
-            "400",
-            "600",
-            "1200"
+            "$800$",
+            "$400$",
+            "$600$",
+            "$1200$"
         ],
-        "correct": 0,
         "id": 72,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 3$x$ + 4$x$ = 39, what is the value of $x$?",
+        "question": "If $3x + 4x = 39$, what is the value of $x$?",
         "id": 73,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "A square has an area of 16. What is its perimeter?",
+        "question": "A square has an area of $16$. What is its perimeter?",
         "id": 74,
         "type": "math"
     },
     {
-        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
-        "question": "Which equation represents a total cost of 35.00?",
+        "passage": "A local bakery sells muffins for $2.50$ each and croissants for $3.00$ each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of $35.00$?",
         "options": [
-            "2.50$M$ + 3.00$C$ = 35",
-            "3.00$M$ + 2.50$C$ = 35",
-            "2.50$M$ - 3.00$C$ = 35",
-            "5.50($M$ + $C$) = 35"
+            "$2.50M + 3.00C = 35$",
+            "$3.00M + 2.50C = 35$",
+            "$2.50M - 3.00C = 35$",
+            "$5.50(M + C) = 35$"
         ],
-        "correct": 0,
         "id": 75,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "question": "The function $f$ is defined by $f(x) = 8\\sqrt{x}$. For what value of $x$ does $f(x) = 48$?",
         "options": [
-            "6",
-            "8",
-            "36",
-            "64"
+            "$6$",
+            "$8$",
+            "$36$",
+            "$64$"
         ],
-        "correct": 0,
         "id": 76,
         "type": "math"
     },
     {
-        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
-        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "passage": "In triangle $ABC$, the measure of angle $A$ is $45$ degrees, and the measure of angle $B$ is $45$ degrees.",
+        "question": "If the length of side $BC$ is $10$, what is the length of side $AC$?",
         "options": [
-            "10",
-            "20",
-            "5",
-            "15"
+            "$10$",
+            "$20$",
+            "$5$",
+            "$15$"
         ],
-        "correct": 0,
         "id": 77,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "question": "If $2x - 4y = 12$ and $x + 2y = 8$, what is the value of $x + y$?",
         "options": [
-            "6.0",
-            "4.4",
-            "5.5",
-            "7.2"
+            "$6.0$",
+            "$4.4$",
+            "$5.5$",
+            "$7.2$"
         ],
-        "correct": 0,
         "id": 78,
         "type": "math"
     },
     {
-        "passage": "A rectangular tank has a width of 5 meters, a length of 10 meters, and a height of 12 meters.",
-        "question": "If the water level is rising at a rate of 0.5 cubic meters per minute, how many minutes will it take to fill the tank?",
+        "passage": "A rectangular tank has a width of $5$ meters, a length of $10$ meters, and a height of $12$ meters.",
+        "question": "If the water level is rising at a rate of $0.5$ cubic meters per minute, how many minutes will it take to fill the tank?",
         "options": [
-            "1200",
-            "600",
-            "300",
-            "240"
+            "$1200$",
+            "$600$",
+            "$300$",
+            "$240$"
         ],
-        "correct": 0,
         "id": 79,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x)$ = $m$$x$ - 28, where $m$ is a constant. What is the value of $m$?",
+        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x) = mx - 28$, where $m$ is a constant. What is the value of $m$?",
         "id": 80,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 3($x$ - 2) + 5 = 2$x$ + 10, what is the value of $x$?",
+        "question": "If $3(x - 2) + 5 = 2x + 10$, what is the value of $x$?",
         "options": [
-            "11",
-            "7",
-            "5",
-            "3"
+            "$11$",
+            "$7$",
+            "$5$",
+            "$3$"
         ],
-        "correct": 0,
         "id": 81,
         "type": "math"
     },
     {
-        "passage": "A population of bacteria doubles every 4 hours.",
-        "question": "If the initial population is 100, what will be the population after 12 hours?",
+        "passage": "A population of bacteria doubles every $4$ hours.",
+        "question": "If the initial population is $100$, what will be the population after $12$ hours?",
         "options": [
-            "800",
-            "400",
-            "600",
-            "1200"
+            "$800$",
+            "$400$",
+            "$600$",
+            "$1200$"
         ],
-        "correct": 0,
         "id": 82,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 3$x$ + 4$x$ = 49, what is the value of $x$?",
+        "question": "If $3x + 4x = 49$, what is the value of $x$?",
         "id": 83,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "A square has an area of 16. What is its perimeter?",
+        "question": "A square has an area of $16$. What is its perimeter?",
         "id": 84,
         "type": "math"
     },
     {
-        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
-        "question": "Which equation represents a total cost of 35.00?",
+        "passage": "A local bakery sells muffins for $2.50$ each and croissants for $3.00$ each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of $35.00$?",
         "options": [
-            "2.50$M$ + 3.00$C$ = 35",
-            "3.00$M$ + 2.50$C$ = 35",
-            "2.50$M$ - 3.00$C$ = 35",
-            "5.50($M$ + $C$) = 35"
+            "$2.50M + 3.00C = 35$",
+            "$3.00M + 2.50C = 35$",
+            "$2.50M - 3.00C = 35$",
+            "$5.50(M + C) = 35$"
         ],
-        "correct": 0,
         "id": 85,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "question": "The function $f$ is defined by $f(x) = 8\\sqrt{x}$. For what value of $x$ does $f(x) = 48$?",
         "options": [
-            "6",
-            "8",
-            "36",
-            "64"
+            "$6$",
+            "$8$",
+            "$36$",
+            "$64$"
         ],
-        "correct": 0,
         "id": 86,
         "type": "math"
     },
     {
-        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
-        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "passage": "In triangle $ABC$, the measure of angle $A$ is $45$ degrees, and the measure of angle $B$ is $45$ degrees.",
+        "question": "If the length of side $BC$ is $10$, what is the length of side $AC$?",
         "options": [
-            "10",
-            "20",
-            "5",
-            "15"
+            "$10$",
+            "$20$",
+            "$5$",
+            "$15$"
         ],
-        "correct": 0,
         "id": 87,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "question": "If $2x - 4y = 12$ and $x + 2y = 8$, what is the value of $x + y$?",
         "options": [
-            "6.0",
-            "4.4",
-            "5.5",
-            "7.2"
+            "$6.0$",
+            "$4.4$",
+            "$5.5$",
+            "$7.2$"
         ],
-        "correct": 0,
         "id": 88,
         "type": "math"
     },
     {
-        "passage": "A rectangular tank has a width of 5 meters, a length of 10 meters, and a height of 12 meters.",
-        "question": "If the water level is rising at a rate of 0.5 cubic meters per minute, how many minutes will it take to fill the tank?",
+        "passage": "A rectangular tank has a width of $5$ meters, a length of $10$ meters, and a height of $12$ meters.",
+        "question": "If the water level is rising at a rate of $0.5$ cubic meters per minute, how many minutes will it take to fill the tank?",
         "options": [
-            "1200",
-            "600",
-            "300",
-            "240"
+            "$1200$",
+            "$600$",
+            "$300$",
+            "$240$"
         ],
-        "correct": 0,
         "id": 89,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x)$ = $m$$x$ - 28, where $m$ is a constant. What is the value of $m$?",
+        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x) = mx - 28$, where $m$ is a constant. What is the value of $m$?",
         "id": 90,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 3($x$ - 2) + 5 = 2$x$ + 10, what is the value of $x$?",
+        "question": "If $3(x - 2) + 5 = 2x + 10$, what is the value of $x$?",
         "options": [
-            "11",
-            "7",
-            "5",
-            "3"
+            "$11$",
+            "$7$",
+            "$5$",
+            "$3$"
         ],
-        "correct": 0,
         "id": 91,
         "type": "math"
     },
     {
-        "passage": "A population of bacteria doubles every 4 hours.",
-        "question": "If the initial population is 100, what will be the population after 12 hours?",
+        "passage": "A population of bacteria doubles every $4$ hours.",
+        "question": "If the initial population is $100$, what will be the population after $12$ hours?",
         "options": [
-            "800",
-            "400",
-            "600",
-            "1200"
+            "$800$",
+            "$400$",
+            "$600$",
+            "$1200$"
         ],
-        "correct": 0,
         "id": 92,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 3$x$ + 4$x$ = 59, what is the value of $x$?",
+        "question": "If $3x + 4x = 59$, what is the value of $x$?",
         "id": 93,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "A square has an area of 16. What is its perimeter?",
+        "question": "A square has an area of $16$. What is its perimeter?",
         "id": 94,
         "type": "math"
     },
     {
-        "passage": "A local bakery sells muffins for 2.50 each and croissants for 3.00 each. A customer buys $M$ muffins and $C$ croissants.",
-        "question": "Which equation represents a total cost of 35.00?",
+        "passage": "A local bakery sells muffins for $2.50$ each and croissants for $3.00$ each. A customer buys $M$ muffins and $C$ croissants.",
+        "question": "Which equation represents a total cost of $35.00$?",
         "options": [
-            "2.50$M$ + 3.00$C$ = 35",
-            "3.00$M$ + 2.50$C$ = 35",
-            "2.50$M$ - 3.00$C$ = 35",
-            "5.50($M$ + $C$) = 35"
+            "$2.50M + 3.00C = 35$",
+            "$3.00M + 2.50C = 35$",
+            "$2.50M - 3.00C = 35$",
+            "$5.50(M + C) = 35$"
         ],
-        "correct": 0,
         "id": 95,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The function $f(x)$ is defined by $f(x)$ = 8$x$. For what value of $x$ does $f(x)$ = 48?",
+        "question": "The function $f$ is defined by $f(x) = 8\\sqrt{x}$. For what value of $x$ does $f(x) = 48$?",
         "options": [
-            "6",
-            "8",
-            "36",
-            "64"
+            "$6$",
+            "$8$",
+            "$36$",
+            "$64$"
         ],
-        "correct": 0,
         "id": 96,
         "type": "math"
     },
     {
-        "passage": "In triangle $ABC$, the measure of angle $A$ is 45 degrees, and the measure of angle $B$ is 45 degrees.",
-        "question": "If the length of side $BC$ is 10, what is the length of side $AC$?",
+        "passage": "In triangle $ABC$, the measure of angle $A$ is $45$ degrees, and the measure of angle $B$ is $45$ degrees.",
+        "question": "If the length of side $BC$ is $10$, what is the length of side $AC$?",
         "options": [
-            "10",
-            "20",
-            "5",
-            "15"
+            "$10$",
+            "$20$",
+            "$5$",
+            "$15$"
         ],
-        "correct": 0,
         "id": 97,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "If 2$x$ - 4$y$ = 12 and $x$ + 2$y$ = 8, what is the value of $x$ + $y$?",
+        "question": "If $2x - 4y = 12$ and $x + 2y = 8$, what is the value of $x + y$?",
         "options": [
-            "6.0",
-            "4.4",
-            "5.5",
-            "7.2"
+            "$6.0$",
+            "$4.4$",
+            "$5.5$",
+            "$7.2$"
         ],
-        "correct": 0,
         "id": 98,
         "type": "math"
     }

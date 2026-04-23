@@ -57,26 +57,33 @@ import os
 import json
 from django.conf import settings
 
-# Cache questions data in memory at module load
+# Load questions data dynamically and cache in memory
 QUESTIONS_FILE = os.path.join(settings.BASE_DIR, 'ui', 'data', 'questions.json')
-try:
-    with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
-        all_questions = json.load(f)
-    rw_questions_cached = [q for q in all_questions if q['type'] == 'rw']
-    math_questions_cached = [q for q in all_questions if q['type'] == 'math']
-    
-    cached_modules = [
-        {"title": "Section 1, Module 1: Reading and Writing", "count": 27, "questions": rw_questions_cached[0:27]},
-        {"title": "Section 1, Module 2: Reading and Writing", "count": 27, "questions": rw_questions_cached[27:54]},
-        {"title": "Section 2, Module 1: Math", "count": 22, "questions": math_questions_cached[0:22]},
-        {"title": "Section 2, Module 2: Math", "count": 22, "questions": math_questions_cached[22:44]},
-    ]
-except Exception:
-    cached_modules = []
+_CACHED_MODULES_JSON = None
+
+def get_cached_modules_json():
+    global _CACHED_MODULES_JSON
+    if _CACHED_MODULES_JSON is None:
+        try:
+            with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
+                all_questions = json.load(f)
+            rw_questions_cached = [q for q in all_questions if q.get('type') == 'rw']
+            math_questions_cached = [q for q in all_questions if q.get('type') == 'math']
+            
+            cached_modules = [
+                {"title": "Section 1, Module 1: Reading and Writing", "count": 27, "questions": rw_questions_cached[0:27]},
+                {"title": "Section 1, Module 2: Reading and Writing", "count": 27, "questions": rw_questions_cached[27:54]},
+                {"title": "Section 2, Module 1: Math", "count": 22, "questions": math_questions_cached[0:22]},
+                {"title": "Section 2, Module 2: Math", "count": 22, "questions": math_questions_cached[22:44]},
+            ]
+            _CACHED_MODULES_JSON = json.dumps(cached_modules)
+        except Exception:
+            _CACHED_MODULES_JSON = "[]"
+    return _CACHED_MODULES_JSON
 
 @login_required
 def test_interface_view(request):
     return render(request, 'test_interface.html', {
         'view_locked': True, 
-        'modules_json': json.dumps(cached_modules)
+        'modules_json': get_cached_modules_json()
     })
