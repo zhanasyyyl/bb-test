@@ -7,5 +7,11 @@ class UserProfile(models.Model):
     test_center_address = models.TextField(blank=True, null=True)
     contact_email = models.EmailField(blank=True, null=True)
 
+    @property
+    def first_name(self):
+        if self.full_name:
+            return self.full_name.split()[0]
+        return ""
+
     def __str__(self):
         return self.user.username

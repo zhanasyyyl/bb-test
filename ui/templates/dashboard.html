@@ -16,7 +16,7 @@
         </div>
 
         <div class="welcome-message">
-            Welcome, {{ request.user.userprofile.full_name }}. Good luck on test day!
+            Welcome, {{ request.user.userprofile.first_name }}. Good luck on test day!
         </div>
     </div>
 
@@ -44,13 +44,13 @@
                             <div id="custom-test-center"></div>
                             {{ request.user.userprofile.test_center_address|json_script:"test-center-address-data" }}
                             <script>
-                                (function() {
+                                (function () {
                                     const dataEl = document.getElementById('test-center-address-data');
                                     let address = '';
                                     if (dataEl) {
                                         try {
                                             address = JSON.parse(dataEl.textContent);
-                                        } catch (e) {}
+                                        } catch (e) { }
                                     }
                                     if (address) {
                                         const lines = address.split('\n');
@@ -58,7 +58,7 @@
                                         const strong = document.createElement('strong');
                                         strong.textContent = lines[0];
                                         container.appendChild(strong);
-                                        
+
                                         if (lines.length > 1) {
                                             const p = document.createElement('p');
                                             p.style.whiteSpace = 'pre-wrap';
@@ -79,12 +79,12 @@
                         <a class="reg-link">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="10"></circle>
-                                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                                <polygon points="11 9.5 15 12 11 14.5 11 9.5" style="fill: currentColor;"></polygon>
                             </svg>
                             Exam Overview
                         </a>
                         <a class="reg-link">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                             Test Day Checklist
@@ -154,8 +154,10 @@
                     style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
             </div>
             <div style="text-align: left;">
-                <label for="contact_email" style="display: block; font-weight: 600; margin-bottom: 5px;">Contact Email</label>
-                <input type="email" id="contact_email" name="contact_email" value="{{ request.user.userprofile.contact_email }}"
+                <label for="contact_email" style="display: block; font-weight: 600; margin-bottom: 5px;">Contact
+                    Email</label>
+                <input type="email" id="contact_email" name="contact_email"
+                    value="{{ request.user.userprofile.contact_email }}"
                     placeholder="Enter contact email for test start code"
                     style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
             </div>

@@ -14,7 +14,7 @@
     {
         "id": 2,
         "type": "rw",
-        "passage": "The following text is adapted from Willa Cather's 1912 novel Alexander's Bridge.<br><br>For the next few days Alexander was very busy. He took a desk in the office of a [Scottish] engineering firm on Henrietta Street, and was at work almost constantly. He avoided the clubs and usually dined alone at his hotel.",
+        "passage": "The following text is adapted from Willa Cather's 1912 novel Alexander's Bridge.<br><br><div style='margin-left: 12px;'>For the next few days Alexander was very busy. He took a desk in the office of a [Scottish] engineering firm on Henrietta Street, and was at work almost constantly. He avoided the clubs and usually dined alone at his hotel.</div>",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "Enough",
@@ -98,7 +98,7 @@
     {
         "id": 9,
         "type": "rw",
-        "passage": "The following text is adapted from Emily Dickinson's circa 1873 poem “There is no Frigate like a Book.” A frigate is a light, fast ship; coursers are swift horses.<br><br>\nThere is no Frigate like a Book<br>\nTo take us Lands away<br>\nNor any Coursers like a Page<br>\nOf prancing Poetry—<br>\nThis Traverse may the poorest take<br>\nWithout oppress of Toll—<br>\nHow frugal is the Chariot\nThat bears the Human soul.",
+        "passage": "The following text is adapted from Emily Dickinson's circa 1873 poem “There is no Frigate like a Book.”<br><br><div style='margin-left: 12px;'>A frigate is a light, fast ship; coursers are swift horses.</div style='margin-left: 12px;'>><br><br>\nThere is no Frigate like a Book<br>\nTo take us Lands away<br>\nNor any Coursers like a Page<br>\nOf prancing Poetry—<br>\nThis Traverse may the poorest take<br>\nWithout oppress of Toll—<br>\nHow frugal is the Chariot\nThat bears the Human soul.</div>",
         "question": "Which choice best states the main idea of the text?",
         "options": [
             "Poetry can forge connections between people from different cultures.",

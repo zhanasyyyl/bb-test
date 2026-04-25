@@ -144,6 +144,9 @@ DEFAULT_FROM_EMAIL = "messages@bbtest.space"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Expire sessions when the user closes their browser
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True

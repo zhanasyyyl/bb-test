@@ -473,11 +473,12 @@ body {
 /* Registration Card Styles */
 .registration-card {
     background: #fff;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 24px 28px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    width: 460px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 500px;
     font-size: 16px;
+    line-height: 1.1;
     text-align: left;
     display: flex;
     flex-direction: column;
@@ -529,7 +530,7 @@ body {
 .reg-link {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     color: #324dc7;
     text-decoration: underline;
     font-weight: 500;
@@ -929,24 +930,16 @@ input[type="radio"] {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 4px;
     cursor: pointer;
     font-size: 12px;
     font-weight: 500;
+    height: 42px;
 }
 
 .tool-item:hover {
     background-color: #f0f0f0;
-}
-
-.tool-item .practice-banner {
-    background: #1e1e4a;
-    color: #fff;
-    text-align: center;
-    padding: 8px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
 }
 
 .test-workspace {
@@ -1079,6 +1072,7 @@ input[type="radio"] {
 .option-letter {
     width: 24px !important;
     height: 24px;
+    flex-shrink: 0;
     border: 2px solid #505050;
     border-radius: 50%;
     display: flex;

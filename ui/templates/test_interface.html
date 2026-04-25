@@ -251,18 +251,6 @@
         pointer-events: none;
     }
 
-    .overlay-practice-banner {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 48px;
-        /* hides practice banner */
-        background: #fff;
-        z-index: 10;
-        pointer-events: none;
-    }
-
     .overlay-cross-btns {
         position: absolute;
         right: 20px;
@@ -354,6 +342,20 @@
         animation: spin 1s linear infinite;
     }
 
+    .desmos-window-control {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .desmos-window-control:hover {
+        background-color: #505050 !important;
+    }
+
     @keyframes spin {
         0% {
             transform: rotate(0deg);
@@ -385,20 +387,21 @@
         <button id="timer-btn-1" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
     </div>
 
-    <div class="test-tools" style="display: flex; align-items: center; gap: 8px; margin-top: 12px;">
-        <div id="ui-tools-reading-1" style="display: flex; gap: 8px; align-items: center;">
+    <div class="test-tools"
+        style="display: flex; align-items: center; gap: 16px; margin-top: 12px; margin-right: 18px;">
+        <div id="ui-tools-reading-1" style="display: flex; align-items: flex-end;">
             <div class="tool-item">
-                <img src="{% static 'images/highlights.svg' %}" alt="">
+                <img src="{% static 'images/highlights.svg' %}" style="height: 16px;" alt="">
                 Highlights & Notes
             </div>
         </div>
-        <div id="ui-tools-math-1" style="display: none; gap: 8px; align-items: center;">
-            <div class="tool-item" onclick="app.toggleCalculator()">
-                <img src="{% static 'images/calculator.svg' %}" style="width: 16px; height: 16px;" alt="">
+        <div id="ui-tools-math-1" style="display: none; gap: 16px; align-items: flex-end;">
+            <div class="tool-item" id="tool-calculator" onclick="app.toggleCalculator()">
+                <img src="{% static 'images/calculator.svg' %}" style="height: 16px;" alt="">
                 Calculator
             </div>
             <div class="tool-item">
-                <img src="{% static 'images/reference.svg' %}" style="width: 16px; height: 12px;" alt="">
+                <img src="{% static 'images/reference.svg' %}" style="height: 14px; padding: 1px 0;" alt="">
                 Reference
             </div>
         </div>
@@ -782,48 +785,37 @@
 
 <!-- Desmos Modal -->
 <div id="calc-modal"
-    style="position:absolute; top:80px; left:60px; width:680px; height:650px; background:#fff; z-index:2000; display:none; flex-direction:column; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid #777; overflow: hidden;">
+    style="position:absolute; width:660px; height:650px; background:#fff; z-index:2000; display:none; flex-direction:column; box-shadow: 0 4px 20px rgba(0,0,0,0.2); border: 1px solid #505050; overflow: hidden;">
     <div id="calc-header"
-        style="background:#202124; color:#fff; height:44px; display:flex; align-items:center; justify-content:space-between; cursor:move; user-select:none; padding: 0;">
-        <div style="display:flex; height: 100%;">
+        style="background:#1e1e1e; color:#fff; height:44px; display:flex; align-items:center; justify-content:space-between; cursor:grab; user-select:none; padding: 6px;">
+        <div
+            style="display:flex; height: 100%; border: 0.5px solid #fff; gap: 0; padding: 0; border-radius: 6px; margin-left: 6px;">
             <!-- Tabs -->
             <div
-                style="display:flex; align-items:center; background:#fff; color:#1e1e1e; font-family:'Roboto', sans-serif; font-size: 12px; font-weight:600; padding: 0 4px; margin-top: 6px; margin-left: 12px; border-radius: 6px;">
-                <img src="{% static 'images/calculator.svg' %}"
-                    style="width: 16px; height: 16px; padding: 0; margin: 0; margin-right: 6px;" alt=""> Graphing
+                style="display:flex; align-items:center; background:#fff; color:#1e1e1e; font-family:'Roboto', sans-serif; font-size: 12px; font-weight:600; padding: 0 4px; border-radius: 4px; text-decoration: underline; cursor: pointer;">
+                <img src="{% static 'images/graphing.png' %}"
+                    style="height: 16px; padding: 0; margin: 0; margin-right: 3px;" alt="">
+                Graphing
             </div>
             <div
-                style="display:flex; align-items:center; color:#fff; font-family:'Roboto', sans-serif; font-size: 12px; font-weight:600; padding: 0 4px; margin-top: 6px;">
-                <img src="{% static 'images/calculator.svg' %}"
-                    style="width: 16px; height: 16px; padding: 0; margin: 0; margin-right: 6px;" alt=""> Scientific
+                style="display:flex; align-items:center; color:#fff; font-family:'Roboto', sans-serif; font-size: 12px; font-weight:600; padding: 0 4px; cursor: pointer;">
+                <img src="{% static 'images/scientific.png' %}"
+                    style="height: 16px; padding: 0; margin: 0; margin-right: 3px; color: #fff;" alt="">
+                Scientific
             </div>
         </div>
-        <div
-            style="display:flex; align-items:center; opacity: 0.8; position:absolute; left:50%; transform:translateX(-50%); pointer-events:none;">
-            <svg width="24" height="16" viewBox="0 0 16 24" fill="#fff" stroke="#fff" stroke-width="2">
-                <circle cx="12" cy="6" r="1.5"></circle>
-                <circle cx="12" cy="18" r="1.5"></circle>
-                <circle cx="18" cy="6" r="1.5"></circle>
-                <circle cx="18" cy="18" r="1.5"></circle>
-                <circle cx="6" cy="6" r="1.5"></circle>
-                <circle cx="6" cy="18" r="1.5"></circle>
-            </svg>
-        </div>
+        <img src="{% static 'images/move.png' %}"
+            style="width: 24px; position: absolute; left: 50%; transform: translateX(-50%);" alt="">
         <div style="display:flex; align-items:center; padding-right: 12px; gap: 16px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
-                style="cursor:pointer;">
-                <line x1="19" y1="5" x2="5" y2="19"></line>
-                <line x1="19" y1="19" x2="5" y2="5"></line>
-                <line x1="19" y1="5" x2="19" y2="11"></line>
-                <line x1="19" y1="5" x2="13" y2="5"></line>
-                <line x1="5" y1="19" x2="11" y2="19"></line>
-                <line x1="5" y1="19" x2="5" y2="13"></line>
-            </svg>
-            <svg onclick="app.toggleCalculator()" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
-                stroke-width="2" style="cursor:pointer;">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <div class="desmos-window-control">
+                <img src="{% static 'images/minimize.svg' %}" style="height: 16px;" alt="">
+            </div>
+            <div class="desmos-window-control" onclick="app.toggleCalculator()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f7f7f7" stroke-width="1.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
         </div>
     </div>
     <div style="flex:1; background:#fff; position: relative;">
@@ -831,7 +823,7 @@
     </div>
 </div>
 
-<script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=cc7d38617f9948c0b905a5347a83aee0"></script>
 
 <script>
     const staticUrl = "{% static 'questions/' %}";
@@ -870,7 +862,7 @@
 
             if (isMath && !isSPR) {
                 if (this.isCalculatorOpen) {
-                    const offset = (workspace.offsetWidth - questionPane.offsetWidth) / 2;
+                    const offset = (workspace.offsetWidth - questionPane.offsetWidth) / 2 - 120;
                     questionPane.style.transform = `translateX(${offset}px)`;
                 } else {
                     questionPane.style.transform = 'translateX(0)';
@@ -882,13 +874,16 @@
 
         toggleCalculator() {
             const modal = document.getElementById('calc-modal');
+            const toolItem = document.getElementById('tool-calculator');
             if (modal.style.display === 'flex') {
                 modal.style.display = 'none';
                 this.isCalculatorOpen = false;
+                toolItem.style.borderBottom = 'none';
                 this.updateQuestionPanePosition();
             } else {
                 modal.style.display = 'flex';
                 this.isCalculatorOpen = true;
+                toolItem.style.borderBottom = '2px solid #1e1e1e';
                 this.updateQuestionPanePosition();
                 if (!this.desmosCalc) {
                     const elt = document.getElementById('calculator-container');
@@ -896,7 +891,7 @@
                         keypad: true,
                         expressions: true,
                         settingsMenu: true,
-                        zoomButtons: true
+                        zoomButtons: true,
                     });
                 }
             }
