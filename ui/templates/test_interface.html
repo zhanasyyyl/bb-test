@@ -56,7 +56,7 @@
 
     .directions-modal p {
         font-size: 16px;
-        font-family: 'Georgia', serif;
+        font-family: 'Noto Serif', serif;
         color: #202124;
         line-height: 1.6;
         margin-bottom: 16px;
@@ -1006,20 +1006,16 @@
             document.getElementById('ui-q-nav').innerText = `Question ${this.qIdx + 1} of ${mod.count}`;
             document.getElementById('ui-q-num').innerText = this.qIdx + 1;
 
-            if (isMath) {
-                document.getElementById('ui-question').innerHTML = qData.passage + " " + qData.question;
-            } else {
-                document.getElementById('ui-question').innerHTML = qData.question;
-            }
+            document.getElementById('ui-question').innerHTML = qData.question;
 
             const passagePane = document.getElementById('ui-passage');
             const resizer = document.querySelector('.resizer');
             const questionPane = document.querySelector('.question-pane');
 
             const sprRulesHtml = `
-                <div style="padding: 20px; font-family: 'Georgia', serif; color: #1e1e1e">
+                <div style="padding: 20px; font-family: 'Noto Serif', serif; color: #1e1e1e">
                     <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; margin-left: -20px; padding-left: 0;">Student-produced response directions</h2>
-                    <ul style="font-size: 16px; margin-bottom: 24px; padding-left: 20px; line-height: 1.5; font-family: 'CMU Serif Roman', 'Georgia', serif;">
+                    <ul style="font-size: 16px; margin-bottom: 24px; magrin-left: 0; line-height: 1.5; font-family: 'Noto Serif', serif;">
                         <li>If you find <b>more than one correct answer</b>, enter only one answer.</li>
                         <li>You can enter up to 5 characters for a <b>positive</b> answer and up to 6 characters (including the negative sign) for a <b>negative</b> answer.</li>
                         <li>If your answer is a <b>fraction</b> that doesn't fit in the provided space, enter the decimal equivalent.</li>
@@ -1071,7 +1067,7 @@
                 questionPane.style.transition = 'none';
                 if (isSPR) {
                     passagePane.innerHTML = sprRulesHtml;
-                    passagePane.style.fontFamily = 'Georgia';
+                    passagePane.style.fontFamily = 'Noto Serif';
                 } else {
                     passagePane.innerHTML = qData.passage;
                 }
@@ -1089,10 +1085,10 @@
                 const state = moduleState[this.modIdx][this.qIdx];
                 optionsList.innerHTML = `
                     <div style="margin-top: 12px;">
-                        <input type="text" id="spr-input" maxlength="6" value="${state.answer || ''}" oninput="app.setSPRAnswer(this.value)" style="width: 100px; height: 50px; font-size: 24px; border: 1px solid #1e1e1e; border-radius: 6px; padding-left: 10px; margin-bottom: 42px; font-family: 'CMU';" />
+                        <input type="text" id="spr-input" maxlength="6" value="${state.answer || ''}" oninput="app.setSPRAnswer(this.value)" style="width: 100px; height: 50px; font-size: 24px; border: 1px solid #1e1e1e; border-radius: 6px; padding-left: 10px; margin-bottom: 42px; font-family: 'Courier Prime';" />
                         <br>
-                        <h4 style="font-size: 20px; color: #202124; font-family: 'Georgia'; display: inline-block;">Answer Preview:</h4>
-                        <div id="spr-preview" style="font-size: 22px; font-family: 'CMU'; font-weight: 600; display: inline-block;">${state.answer || ''}</div>
+                        <h4 style="font-size: 20px; color: #202124; font-family: 'Noto Serif'; display: inline-block;">Answer Preview:</h4>
+                        <div id="spr-preview" style="font-size: 22px; font-family: 'Noto Serif'; font-weight: 600; display: inline-block;">${state.answer || ''}</div>
                     </div>
                 `;
             } else {
@@ -1102,7 +1098,7 @@
                     const optRow = document.createElement('div');
                     optRow.className = 'option-row';
                     optRow.id = 'opt-row-' + optLetter;
-                    optRow.onclick = () => this.selectOption(optLetter);
+                    optRow.setAttribute('onclick', `app.selectOption('${optLetter}')`);
                     optRow.innerHTML = `
                         <div class="option-box">
                             <div class="option-letter">${optLetter}</div>
@@ -1148,9 +1144,6 @@
                 previewEl.innerHTML = '';
             } else {
                 previewEl.innerHTML = `<span class="mq-math">${val}</span>`;
-                if (window.MQ) {
-                    MQ.StaticMath(previewEl.querySelector('.mq-math'));
-                }
             }
             this.syncSelections();
         },

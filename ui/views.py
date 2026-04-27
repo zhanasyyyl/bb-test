@@ -43,43 +43,43 @@ def start_code_view(request):
         
     return render(request, 'start_code.html', {'view_locked': True})
 
+from django.views.decorators.http import require_POST
+from .forms import UserProfileForm
+
 @login_required
+@require_POST
 def update_profile_view(request):
-    if request.method == 'POST':
-        profile, _ = UserProfile.objects.get_or_create(user=request.user)
-        profile.full_name = request.POST.get('full_name', profile.full_name)
-        profile.test_center_address = request.POST.get('test_center_address', profile.test_center_address)
-        profile.contact_email = request.POST.get('contact_email', profile.contact_email)
-        profile.save()
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    form = UserProfileForm(request.POST, instance=profile)
+    if form.is_valid():
+        form.save()
     return redirect('dashboard')
 
 import os
 import json
+import functools
 from django.conf import settings
 
 # Load questions data dynamically and cache in memory
 QUESTIONS_FILE = os.path.join(settings.BASE_DIR, 'ui', 'data', 'questions.json')
-_CACHED_MODULES_JSON = None
 
+@functools.lru_cache(maxsize=1)
 def get_cached_modules_json():
-    global _CACHED_MODULES_JSON
-    if _CACHED_MODULES_JSON is None:
-        try:
-            with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
-                all_questions = json.load(f)
-            rw_questions_cached = [q for q in all_questions if q.get('type') == 'rw']
-            math_questions_cached = [q for q in all_questions if q.get('type') == 'math']
-            
-            cached_modules = [
-                {"title": "Section 1, Module 1: Reading and Writing", "count": 27, "questions": rw_questions_cached[0:27]},
-                {"title": "Section 1, Module 2: Reading and Writing", "count": 27, "questions": rw_questions_cached[27:54]},
-                {"title": "Section 2, Module 1: Math", "count": 22, "questions": math_questions_cached[0:22]},
-                {"title": "Section 2, Module 2: Math", "count": 22, "questions": math_questions_cached[22:44]},
-            ]
-            _CACHED_MODULES_JSON = json.dumps(cached_modules)
-        except Exception:
-            _CACHED_MODULES_JSON = "[]"
-    return _CACHED_MODULES_JSON
+    try:
+        with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
+            all_questions = json.load(f)
+        rw_questions_cached = [q for q in all_questions if q.get('type') == 'rw']
+        math_questions_cached = [q for q in all_questions if q.get('type') == 'math']
+        
+        cached_modules = [
+            {"title": "Section 1, Module 1: Reading and Writing", "count": 27, "questions": rw_questions_cached[0:27]},
+            {"title": "Section 1, Module 2: Reading and Writing", "count": 27, "questions": rw_questions_cached[27:54]},
+            {"title": "Section 2, Module 1: Math", "count": 22, "questions": math_questions_cached[0:22]},
+            {"title": "Section 2, Module 2: Math", "count": 22, "questions": math_questions_cached[22:44]},
+        ]
+        return json.dumps(cached_modules)
+    except Exception:
+        return "[]"
 
 @login_required
 def test_interface_view(request):

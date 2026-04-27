@@ -1,39 +1,80 @@
 /* Global & Reset */
 @font-face {
-    font-family: 'CMU Serif Roman';
+    font-family: "Courier Prime";
     font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/CourierPrime-Regular.woff2) format("woff2");
+}
+
+/* regular */
+@font-face {
+    font-family: "Noto Serif";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/NotoSerif-Regular.woff2) format("woff2");
+}
+
+/* bold */
+@font-face {
+    font-family: "Noto Serif";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(../fonts/NotoSerif-Bold.woff2) format("woff2");
+}
+
+/* italic */
+@font-face {
+    font-family: "Noto Serif";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/NotoSerif-Italic.woff2) format("woff2");
+}
+
+/* bold & italic */
+@font-face {
+    font-family: "Noto Serif";
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url(../fonts/NotoSerif-BoldItalic.woff2) format("woff2");
+}
+
+@font-face {
+    font-family: "Noto Serif SC";
+    src: url(../fonts/NotoSerifSC-Medium.woff2) format("woff2");
     font-weight: 500;
-    src: local('CMU Serif Roman'), url('../fonts/CMU-Regular.woff') format('woff');
-    unicode-range: U+30-39;
-}
-
-@font-face {
-    font-family: 'Georgia';
-    src: url('../fonts/georgia-2-webfont/georgia.woff') format('woff');
-    font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Georgia';
-    src: url('../fonts/georgia-2-webfont/georgiab.woff') format('woff');
+    font-family: "Noto Serif SC";
+    src: url(../fonts/NotoSerifSC-Bold.woff2) format("woff2");
     font-weight: 700;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Georgia';
-    src: url('../fonts/georgia-2-webfont/georgiai.woff') format('woff');
-    font-weight: 400;
-    font-style: italic;
+    font-family: "Noto Serif JP";
+    src: url(../fonts/NotoSerifJP-Medium.woff2) format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Georgia';
-    src: url('../fonts/georgia-2-webfont/georgiaz.woff') format('woff');
+    font-family: "Noto Serif JP";
+    src: url(../fonts/NotoSerifJP-Bold.woff2) format("woff2");
     font-weight: 700;
-    font-style: italic;
+    font-style: normal;
+    font-display: swap;
 }
+
 
 * {
     margin: 0;
@@ -955,7 +996,7 @@ input[type="radio"] {
     font-size: 16px;
     line-height: 1.5;
     color: #1e1e1e;
-    font-family: 'CMU Serif Roman', 'Georgia', serif;
+    font-family: 'Noto Serif', serif;
 }
 
 .passage-pane ul {
@@ -1033,11 +1074,26 @@ input[type="radio"] {
     font-size: 16px;
     margin-bottom: 12px;
     line-height: 1.5;
-    font-family: 'Georgia', serif;
+    font-family: 'Noto Serif', serif;
 }
 
 .math-mode .question-text {
     font-size: 16px;
+}
+
+.question-text table {
+    margin: 0 auto;
+    border: 1px solid #505050 !important;
+    border-collapse: collapse !important;
+}
+
+.question-text table tr,
+.question-text table td,
+.question-text table th {
+    text-align: center;
+    border: 1px solid #505050 !important;
+    border-collapse: collapse !important;
+    padding: 6px;
 }
 
 .options-list {
@@ -1087,11 +1143,11 @@ input[type="radio"] {
 .option-text {
     font-size: 16px;
     line-height: 1.6;
-    font-family: 'CMU Serif Roman', 'Georgia', serif;
+    font-family: 'Noto Serif', serif;
 }
 
 .math-mode .option-text {
-    font-family: 'Georgia', serif;
+    font-family: 'Noto Serif', serif;
     font-size: 15px;
 }
 
