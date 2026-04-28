@@ -390,7 +390,7 @@
         "type": "math"
     },
     {
-        "question": "<div style=\"text-align:center; margin: 0; padding: 0\">$(z+4)(z−6)=0$</div><br>What are all possible solutions to the given equation?",
+        "question": "$(z+4)(z − 6)=0$<br>What are all possible solutions to the given equation?",
         "options": [
             "$-4$ and $-6$",
             "$-4$ and $6$",
@@ -401,12 +401,12 @@
         "type": "math"
     },
     {
-        "question": "<div style=\"text-align:center; margin: 0; padding: 0\">$7x-8y=x^2$<br><br>$7x-8y=36$</div><br>A solution to the given system of equations is $(x,y)$, where $x$ is positive. What is the value of $x$?",
+        "question": "<div style=\"width: 100%; text-align: center;\">$7x-8y=x^2$<br>$7x-8y=36$</div><br>A solution to the given system of equations is $(x,y)$, where $x$ is positive. What is the value of $x$?",
         "id": 36,
         "type": "math"
     },
     {
-        "question": "The table shows four values of x and their corresponding values of y. There is a linear relationship between x and y. Which of the following equations represents this relationship?<br><br><table><tr><td>$x$</td><td>$y$</td></tr><tr><td>$-6$</td><td>$48$</td></tr><tr><td>$-3$</td><td>$39$</td></tr><tr><td>$3$</td><td>$21$</td></tr><tr><td>$6$</td><td>$12$</td></tr></table><br>",
+        "question": "The table shows four values of $x$ and their corresponding values of $y$. There is a linear relationship between $x$ and $y$. Which of the following equations represents this relationship?<br><br><table style=\"border:1px solid #1e1e1e;\"><tr><td>$x$</td><td>$y$</td></tr><tr><td>$-6$</td><td>$48$</td></tr><tr><td>$-3$</td><td>$39$</td></tr><tr><td>$3$</td><td>$21$</td></tr><tr><td>$6$</td><td>$12$</td></tr></table>",
         "options": [
             "$9x + 3y = 90$",
             "$9x + 3y = 3$",
@@ -441,16 +441,16 @@
     {
         "question": "The graph of the polynomial function $f$ in the $xy$-plane includes the $x$-intercept at $(3,0)$. Which of the following must be a factor of $f(x)$?",
         "options": [
-            "x - 3",
-            "x + 3",
-            "3x - 1",
-            "3x + 1"
+            "$x - 3$",
+            "$x + 3$",
+            "$3x - 1$",
+            "$3x + 1$"
         ],
         "id": 40,
         "type": "math"
     },
     {
-        "question": "For the linear function $f$, $f(0)=220$ and $f(8)=1820$. Which equation represents $f(x)$?",
+        "question": "For the linear function $f,$ $f(0)=220$ and $f(8)=1820$. Which equation represents $f(x)$?",
         "options": [
             "$f(x)=197x-220$",
             "$f(x)=220x-197$",
@@ -461,34 +461,34 @@
         "type": "math"
     },
     {
-        "question": "The function $f$ is defined by $f(x) = 8\\sqrt{x}$. For what value of $x$ does $f(x) = 48$?",
+        "question": "<img src=\"/static/images/scatter-plot.png\" alt=\"Scatter plot\" style=\"width: 350px; height: auto; margin: 0 auto; display: block\">The scatterplot shows the relationship between two variables, $x$ and $y$. A line of best fit for the data is also shown. Which of the following is closest to the difference between the $y$-coordinate of the data point with $x=1$ and the $y$-value predicted by the line of best fit at $x=1$?",
         "options": [
-            "$6$",
-            "$8$",
-            "$36$",
-            "$64$"
+            "$1$",
+            "$2$",
+            "$5$",
+            "$12$"
         ],
         "id": 42,
         "type": "math"
     },
     {
-        "question": "In triangle $ABC$, the measure of angle $A$ is $45$ degrees, and the measure of angle $B$ is $45$ degrees.",
+        "question": "Quadrilaterals $PQRS$ and $WXYZ$ are similar, where $P$, $Q$, and $R$ correspond to $W$, $X$, and $Y$, respectively. The measure of angle $S$ is $135^\\circ$, $PS=45$, and $WZ=9$. What is the measure of angle $Z$?",
         "options": [
-            "$10$",
-            "$20$",
-            "$5$",
-            "$15$"
+            "$5^\\circ$",
+            "$27^\\circ$",
+            "$45^\\circ$",
+            "$135^\\circ$"
         ],
         "id": 43,
         "type": "math"
     },
     {
-        "question": "If $2x - 4y = 12$ and $x + 2y = 8$, what is the value of $x + y$?",
+        "question": "On January 1, there were 237 views of a video posted on a social media site. Every 2 days after January 1, the number of views of the video had increased by 70% of the number of views 2 days earlier. The function $f$ gives the predicted number of views $x$ days after January 1. Which equation defines $f$?",
         "options": [
-            "$6.0$",
-            "$4.4$",
-            "$5.5$",
-            "$7.2$"
+            "$f(x) = 237(0.70)^{x}$",
+            "$f(x) = 237(0.70)^{x/2}$",
+            "$f(x) = 237(1.70)^{x}$",
+            "$f(x) = 237(1.70)^{x/2}$"
         ],
         "id": 44,
         "type": "math"
@@ -516,34 +516,34 @@
         "type": "math"
     },
     {
-        "question": "If $3(x - 2) + 5 = 2x + 10$, what is the value of $x$?",
+        "question": "The solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$? <br><div style=\"width: 100%; text-align: center\">$7(5x)+9(8y)=189$<br>$7(5x)-9(8y)=-819$<br></div><br>",
         "options": [
+            "$-101$",
+            "$75$",
             "$11$",
-            "$7$",
-            "$5$",
-            "$3$"
+            "$56$"
         ],
         "id": 47,
         "type": "math"
     },
     {
-        "question": "If the initial population is $100$, what will be the population after $12$ hours?",
+        "question": "For the polynomial function, when $f(x)$ is divided by $x−8$, the remainder is $9$. Which of the following must be true about the graph of $y=f(x)$ in the $xy$-plane?",
         "options": [
-            "$800$",
-            "$400$",
-            "$600$",
-            "$1200$"
+            "It passes through the point $(9,−8)$.",
+            "It passes through the point $(-8,9)$.",
+            "It passes through the point $(9,8)$.",
+            "It passes through the point $(8,9)$."
         ],
         "id": 48,
         "type": "math"
     },
     {
-        "question": "If $3x + 4x = 39$, what is the value of $x$?",
+        "question": "In the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$? <br><div style=\"width: 100%; text-align: center\">$\\frac{−22x−29+m}{2}=k(x+5)$</div><br>",
         "options": [
-            "$5.57$",
-            "$13.00$",
-            "$16.63$",
-            "$273.00$"
+            "$39$",
+            "$-11$",
+            "$-26$",
+            "$-81$"
         ],
         "id": 49,
         "type": "math"
@@ -950,12 +950,12 @@
         "type": "math"
     },
     {
-        "question": "$7x-8y=x^2$<br>$7x-8y=36$<br>A solution to the given system of equations is $(x,y)$, where $x$ is positive. What is the value of $x$?",
+        "question": "<div style=\"width: 100%; text-align: center;\">$7x-8y=x^2$<br>$7x-8y=36$</div><br>A solution to the given system of equations is $(x,y)$, where $x$ is positive. What is the value of $x$?",
         "id": 85,
         "type": "math"
     },
     {
-        "question": "The table shows four values of x and their corresponding values of y. There is a linear relationship between x and y. Which of the following equations represents this relationship?<br><br><table style=\"border:1px solid #1e1e1e;\"><tr><td>$x$</td><td>$y$</td></tr><tr><td>$-6$</td><td>$48$</td></tr><tr><td>$-3$</td><td>$39$</td></tr><tr><td>$3$</td><td>$21$</td></tr><tr><td>$6$</td><td>$12$</td></tr></table>",
+        "question": "The table shows four values of $x$ and their corresponding values of $y$. There is a linear relationship between $x$ and $y$. Which of the following equations represents this relationship?<br><br><table style=\"border:1px solid #1e1e1e;\"><tr><td>$x$</td><td>$y$</td></tr><tr><td>$-6$</td><td>$48$</td></tr><tr><td>$-3$</td><td>$39$</td></tr><tr><td>$3$</td><td>$21$</td></tr><tr><td>$6$</td><td>$12$</td></tr></table>",
         "options": [
             "$9x + 3y = 90$",
             "$9x + 3y = 3$",
@@ -990,10 +990,10 @@
     {
         "question": "The graph of the polynomial function $f$ in the $xy$-plane includes the $x$-intercept at $(3,0)$. Which of the following must be a factor of $f(x)$?",
         "options": [
-            "x - 3",
-            "x + 3",
-            "3x - 1",
-            "3x + 1"
+            "$x - 3$",
+            "$x + 3$",
+            "$3x - 1$",
+            "$3x + 1$"
         ],
         "id": 89,
         "type": "math"
@@ -1010,34 +1010,34 @@
         "type": "math"
     },
     {
-        "question": "The function $f$ is defined by $f(x) = 8\\sqrt{x}$. For what value of $x$ does $f(x) = 48$?",
+        "question": "<img src=\"/static/images/scatter-plot.png\" alt=\"Scatter plot\" style=\"width: 350px; height: auto; margin: 0 auto; display: block\">The scatterplot shows the relationship between two variables, $x$ and $y$. A line of best fit for the data is also shown. Which of the following is closest to the difference between the $y$-coordinate of the data point with $x=1$ and the $y$-value predicted by the line of best fit at $x=1$?",
         "options": [
-            "$6$",
-            "$8$",
-            "$36$",
-            "$64$"
+            "$1$",
+            "$2$",
+            "$5$",
+            "$12$"
         ],
         "id": 91,
         "type": "math"
     },
     {
-        "question": "In triangle $ABC$, the measure of angle $A$ is $45$ degrees, and the measure of angle $B$ is $45$ degrees.",
+        "question": "Quadrilaterals $PQRS$ and $WXYZ$ are similar, where $P$, $Q$, and $R$ correspond to $W$, $X$, and $Y$, respectively. The measure of angle $S$ is $135^\\circ$, $PS=45$, and $WZ=9$. What is the measure of angle $Z$?",
         "options": [
-            "$10$",
-            "$20$",
-            "$5$",
-            "$15$"
+            "$5^\\circ$",
+            "$27^\\circ$",
+            "$45^\\circ$",
+            "$135^\\circ$"
         ],
         "id": 92,
         "type": "math"
     },
     {
-        "question": "If $2x - 4y = 12$ and $x + 2y = 8$, what is the value of $x + y$?",
+        "question": "On January 1, there were 237 views of a video posted on a social media site. Every 2 days after January 1, the number of views of the video had increased by 70% of the number of views 2 days earlier. The function $f$ gives the predicted number of views $x$ days after January 1. Which equation defines $f$?",
         "options": [
-            "$6.0$",
-            "$4.4$",
-            "$5.5$",
-            "$7.2$"
+            "$f(x) = 237(0.70)^{x}$",
+            "$f(x) = 237(0.70)^{x/2}$",
+            "$f(x) = 237(1.70)^{x}$",
+            "$f(x) = 237(1.70)^{x/2}$"
         ],
         "id": 93,
         "type": "math"
@@ -1065,34 +1065,34 @@
         "type": "math"
     },
     {
-        "question": "If $3(x - 2) + 5 = 2x + 10$, what is the value of $x$?",
+        "question": "The solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$? <br><div style=\"width: 100%; text-align: center\">$7(5x)+9(8y)=189$<br>$7(5x)-9(8y)=-819$<br></div><br>",
         "options": [
+            "$-101$",
+            "$75$",
             "$11$",
-            "$7$",
-            "$5$",
-            "$3$"
+            "$56$"
         ],
         "id": 96,
         "type": "math"
     },
     {
-        "question": "If the initial population is $100$, what will be the population after $12$ hours?",
+        "question": "For the polynomial function, when $f(x)$ is divided by $x−8$, the remainder is $9$. Which of the following must be true about the graph of $y=f(x)$ in the $xy$-plane?",
         "options": [
-            "$800$",
-            "$400$",
-            "$600$",
-            "$1200$"
+            "It passes through the point $(9,−8)$.",
+            "It passes through the point $(-8,9)$.",
+            "It passes through the point $(9,8)$.",
+            "It passes through the point $(8,9)$."
         ],
         "id": 97,
         "type": "math"
     },
     {
-        "question": "If $3x + 4x = 39$, what is the value of $x$?",
+        "question": "In the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$? <br><div style=\"width: 100%; text-align: center\">$\\frac{−22x−29+m}{2}=k(x+5)$</div><br>",
         "options": [
-            "$5.57$",
-            "$13.00$",
-            "$16.63$",
-            "$273.00$"
+            "$39$",
+            "$-11$",
+            "$-26$",
+            "$-81$"
         ],
         "id": 98,
         "type": "math"

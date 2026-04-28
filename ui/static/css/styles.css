@@ -1227,6 +1227,11 @@ input[type="radio"] {
     z-index: 9999;
 }
 
+.spr-table p {
+    display: inline;
+    background-color: #f0f0f0;
+}
+
 .modal-content.profile-edit-modal {
     background-color: white;
     padding: 30px;
@@ -1237,6 +1242,11 @@ input[type="radio"] {
 }
 
 /* MathQuill Font Customization */
+.mq-math-mode {
+    position: relative;
+    top: -1px;
+}
+
 .mq-math-mode,
 .mq-math-mode var,
 .mq-math-mode .mq-nonSymbola,
