@@ -6,6 +6,7 @@ class UserProfile(models.Model):
     full_name = models.CharField(max_length=255, blank=True, null=True)
     test_center_address = models.TextField(blank=True, null=True)
     contact_email = models.EmailField(blank=True, null=True)
+    start_code = models.CharField(max_length=50, blank=True, null=True)
 
     @property
     def first_name(self):

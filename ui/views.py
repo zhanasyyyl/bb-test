@@ -31,6 +31,12 @@ from django.core.mail import send_mail
 def start_code_view(request):
     if request.method == 'POST':
         full_code = request.POST.get('full_code', '')
+        
+        # Save start code to user profile
+        if hasattr(request.user, 'userprofile'):
+            request.user.userprofile.start_code = full_code
+            request.user.userprofile.save()
+
         # Try to get contact email
         if hasattr(request.user, 'userprofile') and request.user.userprofile.contact_email:
             try:
