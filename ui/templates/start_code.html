@@ -3,28 +3,6 @@
 {% block body_class %}body-startcode{% endblock %}
 
 {% block content %}
-<!-- Fullscreen Enforcement Overlay -->
-<div id="fs-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center; text-align: center;">
-   <h1 style="margin-bottom: 20px;">Secure Test Environment</h1>
-   <p style="margin-bottom: 40px; font-size: 18px;">You must be in full screen mode to take this test.</p>
-   <button type="button" onclick="document.documentElement.requestFullscreen().catch(e=>console.log(e))" class="btn-yellow" style="padding: 16px 32px; font-size: 20px; border-radius: 40px; cursor: pointer; width: auto;">Enter Full Screen</button>
-</div>
-<script>
-    function checkFS() {
-        const isFS = document.fullscreenElement || (window.innerWidth === screen.width && window.innerHeight === screen.height);
-        if (isFS) {
-            document.getElementById('fs-overlay').style.display = 'none';
-        } else {
-            document.getElementById('fs-overlay').style.display = 'flex';
-        }
-    }
-    document.addEventListener('fullscreenchange', checkFS);
-    window.addEventListener('resize', checkFS);
-    // Hide initially if somehow already in fullscreen
-    checkFS();
-</script>
-
-
 <div class="startcode-main">
     <h1>Start Code</h1>
     <p>Once the proctor shares the start code, enter it here to begin testing.</p>
