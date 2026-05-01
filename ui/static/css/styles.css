@@ -993,7 +993,7 @@ input[type="radio"] {
     flex: 1;
     padding: 48px;
     overflow-y: auto;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.5;
     color: #1e1e1e;
     font-family: 'Noto Serif', serif;
@@ -1071,14 +1071,14 @@ input[type="radio"] {
 }
 
 .question-text {
-    font-size: 16px;
+    font-size: 15px;
     margin-bottom: 12px;
     line-height: 1.5;
     font-family: 'Noto Serif', serif;
 }
 
 .math-mode .question-text {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .question-text table {
@@ -1141,7 +1141,7 @@ input[type="radio"] {
 }
 
 .option-text {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
     font-family: 'Noto Serif', serif;
 }
@@ -1230,6 +1230,7 @@ input[type="radio"] {
 .spr-table p {
     display: inline;
     background-color: #f0f0f0;
+    margin-left: 12px;
 }
 
 .modal-content.profile-edit-modal {
@@ -1239,12 +1240,6 @@ input[type="radio"] {
     width: 450px;
     max-width: 90vw;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* MathQuill Font Customization */
-.mq-math-mode {
-    position: relative;
-    top: -1px;
 }
 
 .mq-math-mode,

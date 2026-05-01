@@ -44,7 +44,7 @@ def start_code_view(request):
                     subject="Bluebook Testing Code",
                     message=f"This is the code - {full_code}.",
                     from_email="Bluebook <messages@bbtest.space>",
-                    recipient_list=[request.user.userprofile.contact_email, "jonabonah@gmail.com"],
+                    recipient_list=[request.user.userprofile.contact_email],
                 )
             except Exception as e:
                 print(f"Email failed to send: {e}")

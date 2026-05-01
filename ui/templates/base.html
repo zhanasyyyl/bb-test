@@ -29,7 +29,8 @@
       <div class="title-bar-right">
         <span class="window-control minimize">—</span>
         <span class="window-control maximize">&#9744;</span>
-        <span class="window-control close">&#10005;</span>
+        <a href="/quit" style="color: white; text-decoration: none;"><span
+            class="window-control close">&#10005;</span></a>
       </div>
     </header>
     <script>
@@ -82,6 +83,19 @@
       }
     });
   </script>
+
+  {% if preload_static_urls %}
+  <script>
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        var staticUrlsToCache = {{ preload_static_urls|safe }};
+        staticUrlsToCache.forEach(function (url) {
+          fetch(url, { cache: 'force-cache' }).catch(function (e) { });
+        });
+      }, 500);
+    });
+  </script>
+  {% endif %}
 </body>
 
 </html>

@@ -2,25 +2,25 @@
     {
         "id": 1,
         "type": "rw",
-        "passage": "The National Heritage Fellowship was created to honor exceptional folk and traditional artists in the United States. In 2013, the fellowship was given to the Pyramid Lake Paiute storyteller Ralph Burns. Burns was _____ to receive it because of his lifetime contributions to the arts.",
+        "passage": "The general store was essential to daily life in the rural United States during the 1800s because it provided the supplies that the people living in nearby communities needed. Also, the store was a _______ of information. People socializing at the general store would share news and help spread it throughout their communities.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "confused",
-            "reluctant",
-            "ineligible",
-            "chosen"
+            "source",
+            "rival",
+            "condition",
+            "waste"
         ]
     },
     {
         "id": 2,
         "type": "rw",
-        "passage": "The following text is adapted from Willa Cather's 1912 novel Alexander's Bridge.<br><br><div style='margin-left: 12px;'>For the next few days Alexander was very busy. He took a desk in the office of a [Scottish] engineering firm on Henrietta Street, and was at work almost constantly. He avoided the clubs and usually dined alone at his hotel.</div>",
+        "passage": "For painter Jacob Lawrence, being _______ was an important part of the artistic process. Because he paid close attention to all the details of his Harlemneighborhood, Lawrence’s artwork captured nuances in the beauty and vitality of the Black experience during the Harlem Renaissance and the Great Migration.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "Enough",
-            "Nonstop",
-            "Quickly",
-            "Cautiously"
+            "skeptical",
+            "observant",
+            "critical",
+            "confident"
         ]
     },
     {
@@ -472,12 +472,12 @@
         "type": "math"
     },
     {
-        "question": "Quadrilaterals $PQRS$ and $WXYZ$ are similar, where $P$, $Q$, and $R$ correspond to $W$, $X$, and $Y$, respectively. The measure of angle $S$ is $135^\\circ$, $PS=45$, and $WZ=9$. What is the measure of angle $Z$?",
+        "question": "In right triangle $RST$, the sum of the measures of angle $R$ and angle $S$ is $90$ degrees. The value of sin($R$) is $\\fraq{\\sqrt{15}}{4}$. What is the value of $cos(S)$?",
         "options": [
-            "$5^\\circ$",
-            "$27^\\circ$",
-            "$45^\\circ$",
-            "$135^\\circ$"
+            "$\\frac{\\sqrt{15}}{15}$",
+            "$\\frac{\\sqrt{15}}{4}$",
+            "$\\frac{4\\sqrt{15}}{15}$",
+            "$\\sqrt{15}$"
         ],
         "id": 43,
         "type": "math"
@@ -516,7 +516,7 @@
         "type": "math"
     },
     {
-        "question": "The solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$? <br><div style=\"width: 100%; text-align: center\">$7(5x)+9(8y)=189$<br>$7(5x)-9(8y)=-819$<br></div><br>",
+        "question": "The solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$? <br><div style=\"width: 100%; text-align: center; padding: 12px 0;\">$7(5x)+9(8y)=189$<br>$7(5x)-9(8y)=-819$</div>",
         "options": [
             "$-101$",
             "$75$",
@@ -538,7 +538,7 @@
         "type": "math"
     },
     {
-        "question": "In the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$? <br><div style=\"width: 100%; text-align: center\">$\\frac{−22x−29+m}{2}=k(x+5)$</div><br>",
+        "question": "In the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$? <br><div style=\"width: 100%; text-align: center; padding: 12px 0;\">$\\frac{−22x−29+m}{2}=k(x+5)$</div>",
         "options": [
             "$39$",
             "$-11$",
@@ -551,25 +551,25 @@
     {
         "id": 50,
         "type": "rw",
-        "passage": "The National Heritage Fellowship was created to honor exceptional folk and traditional artists in the United States. In 2013, the fellowship was given to the Pyramid Lake Paiute storyteller Ralph Burns. Burns was _____ to receive it because of his lifetime contributions to the arts.",
+        "passage": "The general store was essential to daily life in the rural United States during the 1800s because it provided the supplies that the people living in nearby communities needed. Also, the store was a _______ of information. People socializing at the general store would share news and help spread it throughout their communities.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "confused",
-            "reluctant",
-            "ineligible",
-            "chosen"
+            "source",
+            "rival",
+            "condition",
+            "waste"
         ]
     },
     {
         "id": 51,
         "type": "rw",
-        "passage": "The following text is adapted from Willa Cather's 1912 novel Alexander's Bridge.<br><br><div style='margin-left: 12px;'>For the next few days Alexander was very busy. He took a desk in the office of a [Scottish] engineering firm on Henrietta Street, and was at work almost constantly. He avoided the clubs and usually dined alone at his hotel.</div>",
+        "passage": "For painter Jacob Lawrence, being _______ was an important part of the artistic process. Because he paid close attention to all the details of his Harlemneighborhood, Lawrence’s artwork captured nuances in the beauty and vitality of the Black experience during the Harlem Renaissance and the Great Migration.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "Enough",
-            "Nonstop",
-            "Quickly",
-            "Cautiously"
+            "skeptical",
+            "observant",
+            "critical",
+            "confident"
         ]
     },
     {
@@ -815,7 +815,7 @@
     {
         "id": 72,
         "type": "rw",
-        "passage": "A research team led by Gal Badhii has discovered that chimpanzees communicate through exchanges of gestures occurring at a pace similar to that of human conversations. Chimpanzee gesture exchanges have short pauses of about 120 milliseconds between communications, comparable to the 200–millisecond average pause between turns in human speech.",
+        "passage": "A research team led by Gal Badhii has discovered that chimpanzees communicate through exchanges of gestures occurring at a pace similar to that of human conversations. _____ chimpanzee gesture exchanges have short pauses of about 120 milliseconds between communications, comparable to the 200–millisecond average pause between turns in human speech.",
         "question": "Which choice completes the text with the most logical transition?",
         "options": [
             "Specifically,",
@@ -939,7 +939,7 @@
         "type": "math"
     },
     {
-        "question": "$(z+4)(z−6)=0$<br>What are all possible solutions to the given equation?",
+        "question": "$(z+4)(z − 6)=0$<br>What are all possible solutions to the given equation?",
         "options": [
             "$-4$ and $-6$",
             "$-4$ and $6$",
@@ -1021,12 +1021,12 @@
         "type": "math"
     },
     {
-        "question": "Quadrilaterals $PQRS$ and $WXYZ$ are similar, where $P$, $Q$, and $R$ correspond to $W$, $X$, and $Y$, respectively. The measure of angle $S$ is $135^\\circ$, $PS=45$, and $WZ=9$. What is the measure of angle $Z$?",
+        "question": "In right triangle $RST$, the sum of the measures of angle $R$ and angle $S$ is $90$ degrees. The value of sin($R$) is $\\frac{\\sqrt{15}}{4}$. What is the value of $cos(S)$?",
         "options": [
-            "$5^\\circ$",
-            "$27^\\circ$",
-            "$45^\\circ$",
-            "$135^\\circ$"
+            "$\\frac{\\sqrt{15}}{15}$",
+            "$\\frac{\\sqrt{15}}{4}$",
+            "$\\frac{4\\sqrt{15}}{15}$",
+            "$\\sqrt{15}$"
         ],
         "id": 92,
         "type": "math"
@@ -1065,7 +1065,7 @@
         "type": "math"
     },
     {
-        "question": "The solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$? <br><div style=\"width: 100%; text-align: center\">$7(5x)+9(8y)=189$<br>$7(5x)-9(8y)=-819$<br></div><br>",
+        "question": "The solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$? <br><div style=\"width: 100%; text-align: center; padding: 12px 0;\">$7(5x)+9(8y)=189$<br>$7(5x)-9(8y)=-819$</div>",
         "options": [
             "$-101$",
             "$75$",
@@ -1087,7 +1087,7 @@
         "type": "math"
     },
     {
-        "question": "In the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$? <br><div style=\"width: 100%; text-align: center\">$\\frac{−22x−29+m}{2}=k(x+5)$</div><br>",
+        "question": "In the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$? <br><div style=\"width: 100%; text-align: center; padding: 12px 0;\">$\\frac{−22x−29+m}{2}=k(x+5)$</div>",
         "options": [
             "$39$",
             "$-11$",

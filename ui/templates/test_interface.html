@@ -37,7 +37,6 @@
         background: #fff;
         width: 860px;
         height: 600px;
-        border-radius: 8px;
         padding: 32px;
         position: relative;
         top: -17px;
@@ -55,7 +54,7 @@
     }
 
     .directions-modal p {
-        font-size: 16px;
+        font-size: 15px;
         font-family: 'Noto Serif', serif;
         color: #202124;
         line-height: 1.6;
@@ -483,7 +482,7 @@
             answer.</p>
         <div style="text-align: right; position: absolute; bottom: 24px; right: 24px;">
             <button class="btn-yellow"
-                style="width: auto; padding: 10px 24px; border-radius: 20px; font-size: 14px; border: none; display: inline-block;"
+                style="width: auto; padding: 10px 22px; border-radius: 20px; font-size: 14px; border: none; display: inline-block;"
                 onclick="document.getElementById('modal-directions').style.display='none'">Close</button>
         </div>
     </div>
@@ -850,6 +849,29 @@
             this.renderQuestion();
             this.initDraggable();
             this.startBatteryTimer();
+
+            if (this.modIdx === 0) {
+                document.getElementById('modal-directions').style.display = 'flex';
+            }
+
+            document.getElementById('modal-directions').addEventListener('mousedown', function (e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('mousedown', function (e) {
+                const navModal = document.getElementById('modal-nav');
+                const navContent = document.querySelector('.nav-modal');
+                const navBtn = document.querySelector('.test-q-nav');
+
+                if (navModal && navModal.style.display === 'flex') {
+                    if (navContent && !navContent.contains(e.target) && navBtn && !navBtn.contains(e.target)) {
+                        document.getElementById('arrow').style.transform = 'rotate(0deg)';
+                        navModal.style.display = 'none';
+                    }
+                }
+            });
         },
 
         startBatteryTimer() {
@@ -1036,8 +1058,8 @@
 
             const sprRulesHtml = `
                 <div style="padding: 20px; font-family: 'Noto Serif', serif; color: #1e1e1e">
-                    <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; margin-left: -20px; padding-left: 0;">Student-produced response directions</h2>
-                    <ul style="font-size: 16px; margin-bottom: 24px; magrin-left: 0; line-height: 1.5; font-family: 'Noto Serif', serif;">
+                    <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; margin-left: -20px; padding-left: 0;">Student-produced response directions</h2>
+                    <ul style="font-size: 15px; margin-bottom: 24px; margin-left: 24px; line-height: 1.5; font-family: 'Noto Serif', serif;">
                         <li>If you find <b>more than one correct answer</b>, enter only one answer.</li>
                         <li>You can enter up to 5 characters for a <b>positive</b> answer and up to 6 characters (including the negative sign) for a <b>negative</b> answer.</li>
                         <li>If your answer is a <b>fraction</b> that doesn't fit in the provided space, enter the decimal equivalent.</li>
@@ -1045,27 +1067,27 @@
                         <li>If your answer is a <b>mixed number</b> (such as $3\\frac{1}{2}$), enter it as an improper fraction (7/2) or its decimal equivalent (3.5).</li>
                         <li>Don't enter <b>symbols</b> such as a percent sign, comma, or dollar sign.</li>
                     </ul>
-                    <div style="text-align: center; width: 100%; margin-bottom: 4px; font-size: 16px;">Examples</div>
-                    <table class="spr-table" style="width: 70%; text-align: center; border-collapse: collapse; font-size: 14px; margin: 0 auto;">
+                    <div style="text-align: center; width: 100%; margin-bottom: 4px; font-size: 15px;">Examples</div>
+                    <table class="spr-table" style="width: 70%; border-collapse: collapse; font-size: 14px; margin: 0 auto; color: #1e1e1e;">
                         <tr>
-                            <th style="border: 1px solid #505050; padding: 12px; font-weight: 500; font-size: 16px;">Answer</th>
-                            <th style="border: 1px solid #505050; padding: 12px; font-weight: 500; font-size: 16px;">Acceptable ways to<br>enter answer</th>
-                            <th style="border: 1px solid #505050; padding: 12px; font-weight: 500; font-size: 16px;">Unacceptable: will<br>NOT receive credit</th>
+                            <th style="border: 1px solid #505050; padding: 24px 12px; font-weight: 500; font-size: 15px; text-align: center;"><br>Answer</th>
+                            <th style="border: 1px solid #505050; padding: 24px 4px; font-weight: 500; font-size: 15px; text-align: center;">Acceptable ways to<br>enter answer</th>
+                            <th style="border: 1px solid #505050; padding: 24px 4px; font-weight: 500; font-size: 15px; text-align: center;">Unacceptable: will<br>NOT receive credit</th>
                         </tr>
                         <tr>
-                            <td style="border: 1px solid #505050; padding: 12px; font-weight: 500;">$3.5$</td>
-                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;"><p>3.5</p><br><p>3.50</p><br><p>7/2</p></td>
-                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;"><p>31/2</p><br><p>3 1/2</p></td>
+                            <td style="border: 1px solid #505050; padding: 36px; text-align: center; font-weight: 500;">$3.5$</td>
+                            <td style="border: 1px solid #505050; padding: 24px 18px 24px 54px; text-align: left; font-family: monospace;"><p>3.5</p><br><p>3.50</p><br><p>7/2</p></td>
+                            <td style="border: 1px solid #505050; padding: 24px 18px 24px 54px; text-align: left; font-family: monospace;"><p>31/2</p><br><p>3 1/2</p></td>
                         </tr>
                         <tr>
-                            <td style="border: 1px solid #505050; padding: 12px; font-weight: 500;">$\\frac{2}{3}$</td>
-                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;"><p>2/3</p><br><p>.666</p><br><p>.667</p><br><p>0.666</p><br><p>0.667</p></td>
-                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;"><p>0.66</p><br><p>.66</p><br><p>0.67</p><br><p>.67</p></td>
+                            <td style="border: 1px solid #505050; padding: 36px; text-align: center; font-weight: 500;">$\\frac{2}{3}$</td>
+                            <td style="border: 1px solid #505050; padding: 24px 18px 24px 54px; text-align: left; font-family: monospace;"><p>2/3</p><br><p>.666</p><br><p>.667</p><br><p>0.666</p><br><p>0.667</p></td>
+                            <td style="border: 1px solid #505050; padding: 24px 18px 24px 54px; text-align: left; font-family: monospace;"><p>0.66</p><br><p>.66</p><br><p>0.67</p><br><p>.67</p></td>
                         </tr>
                         <tr>
-                            <td style="border: 1px solid #505050; padding: 12px; font-weight: 500;">$-\\frac{1}{3}$</td>
-                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;"><p>-1/3</p><br><p>-.3333</p><br><p>-0.333</p></td>
-                            <td style="border: 1px solid #505050; padding: 12px; font-family: monospace;"><p>-.33</p><br><p>-0.33</p></td>
+                            <td style="border: 1px solid #505050; padding: 36px; text-align: center; font-weight: 500;">$-\\frac{1}{3}$</td>
+                            <td style="border: 1px solid #505050; padding: 24px 18px 24px 54px; text-align: left; font-family: monospace;"><p>-1/3</p><br><p>-.3333</p><br><p>-0.333</p></td>
+                            <td style="border: 1px solid #505050; padding: 24px 18px 24px 54px; text-align: left; font-family: monospace;"><p>-.33</p><br><p>-0.33</p></td>
                         </tr>
                     </table>
                 </div>
@@ -1107,10 +1129,10 @@
                 const state = moduleState[this.modIdx][this.qIdx];
                 optionsList.innerHTML = `
                     <div style="margin-top: 12px;">
-                        <input type="text" id="spr-input" maxlength="6" value="${state.answer || ''}" oninput="app.setSPRAnswer(this.value)" style="width: 100px; height: 50px; font-size: 24px; border: 1px solid #1e1e1e; border-radius: 6px; padding-left: 10px; margin-bottom: 42px; font-family: 'Courier Prime';" />
+                        <input type="text" id="spr-input" maxlength="6" value="${state.answer || ''}" oninput="app.setSPRAnswer(this.value)" style="width: 96px; height: 50px; font-size: 24px; border: 1px solid #1e1e1e; border-radius: 6px; padding-left: 10px; margin-bottom: 42px; font-family: 'Courier Prime'; background-image: linear-gradient(#1e1e1e, #1e1e1e); background-size: calc(100% - 20px) 1px; background-position: center bottom 8px; background-repeat: no-repeat;" />
                         <br>
-                        <h4 style="font-size: 20px; color: #202124; font-family: 'Noto Serif'; display: inline-block;">Answer Preview:</h4>
-                        <div id="spr-preview" style="font-size: 22px; font-family: 'Noto Serif'; font-weight: 600; display: inline-block;">${state.answer || ''}</div>
+                        <h4 style="font-size: 19px; color: #202124; font-family: 'Noto Serif'; display: inline-block;">Answer Preview:</h4>
+                        <div id="spr-preview" style="font-size: 22px; font-family: 'Noto Serif'; font-weight: 500; display: inline-block;">${state.answer || ''}</div>
                     </div>
                 `;
             } else {

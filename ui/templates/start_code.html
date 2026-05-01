@@ -1,8 +1,18 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block body_class %}body-startcode{% endblock %}
 
 {% block content %}
+<div class="setup-top-bar">
+    <button class="btn-icon-text">
+        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
+        Help
+    </button>
+    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
+        Return to Home
+        <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
+    </a>
+</div>
 <div class="startcode-main">
     <h1>Start Code</h1>
     <p>Once the proctor shares the start code, enter it here to begin testing.</p>
