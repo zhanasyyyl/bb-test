@@ -88,10 +88,11 @@
   <script>
     window.addEventListener('load', function () {
       setTimeout(function () {
-        var staticUrlsToCache = {{ preload_static_urls|safe }};
-        staticUrlsToCache.forEach(function (url) {
-          fetch(url, { cache: 'force-cache' }).catch(function (e) { });
-        });
+        var staticUrlsToCache = {{ preload_static_urls| safe
+      }};
+    staticUrlsToCache.forEach(function (url) {
+      fetch(url, { cache: 'force-cache' }).catch(function (e) { });
+    });
       }, 500);
     });
   </script>

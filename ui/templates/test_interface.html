@@ -380,8 +380,7 @@
     <div class="test-timer"
         style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
         <img id="timer-icon-1" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
-        <div id="timer-text-1" onclick="app.skipModule()"
-            style="font-size:22px; font-weight:600; line-height: 1; margin-top:2px;">--:--
+        <div id="timer-text-1" style="font-size:22px; font-weight:600; line-height: 1; margin-top:2px;">--:--
         </div>
         <button id="timer-btn-1" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
     </div>
@@ -647,7 +646,7 @@
         <div style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
             <div class="break-timer-card">
                 <h3>Remaining Break Time:</h3>
-                <div class="time" id="break-time-display" onclick="app.skipBreak()">10:00</div>
+                <div class="time" id="break-time-display">10:00</div>
             </div>
             <button id="btn-resume-break" class="btn-yellow"
                 style="display: none; padding: 16px 32px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
@@ -1357,7 +1356,7 @@
                     // Show congrats screen
                     const congratsHtml = `
                     <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #fff; z-index: 5000; overflow: hidden;">
-                        <a href="{% url 'dashboard' %}" style="cursor: default;"><img src="{% static 'images/congrats.jpeg' %}?v=2" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" /></a>
+                        <a href="{% url 'dashboard' %}" style="cursor: default;"><img src="{% static 'images/congrats.jpeg' %}" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" /></a>
                     </div>`;
                     document.body.insertAdjacentHTML('beforeend', congratsHtml);
                 }
