@@ -8,41 +8,41 @@
         <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
         Help
     </button>
-    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">Return to Home <svg width="20" height="20"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg></a>
+    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
+        Return to Home
+        <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
+    </a>
 </div>
 
-<h1 class="setup-title">Digital Test Security</h1>
-<div class="setup-card" style="width: 800px; padding: 40px; text-align: left; margin: 0 auto; box-sizing: border-box;">
-    <p style="font-weight: bold; margin-bottom: 20px; font-size: 16px; color: #1e1e1e;">You're bound by the following rules for today's exam:</p>
-    <ul style="margin-left: 20px; margin-bottom: 30px; line-height: 1.6; display: flex; flex-direction: column; gap: 15px; color: #333; font-size: 15px;">
-        <li style="padding-left: 10px;">You may not give or receive help during the exam. You may not share or post anything related to this exam.</li>
-        <li style="padding-left: 10px;">Your answers must be entirely your own. College Board will review your responses.</li>
-        <li style="padding-left: 10px;">If you attempt to cheat, your score will be canceled, college admissions offices may be notified, and you will be disqualified from taking any AP Exams, SAT or PSAT-related assessments, or CLEP exams.</li>
-    </ul>
+<h1 class="setup-title">Test Overview</h1>
+<div class="setup-card" style="width: 650px; padding: 40px; text-align: left; margin: 0 auto; box-sizing: border-box;">
+    <div style="font-size: 15px; color: #333; line-height: 1.6;">
+        <p style="margin-bottom: 20px;">The digital SAT, PSAT/NMSQT, PSAT 10, and PSAT 8/9 each consist of a Reading
+            and<br>
+            Writing section and a Math section.</p>
 
-    <div style="display: flex; gap: 20px; justify-content: space-between;">
-        <div style="flex: 1; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: white;">
-            <div style="padding: 15px; text-align: center; font-weight: bold; border-bottom: 1px solid #e0e0e0; font-size: 15px; color: #222;">
-                Test Security Pledge
-            </div>
-            <div style="padding: 20px; color: #333; font-size: 15px; line-height: 1.5;">
-                I am the person who is supposed to take this exam. I agree to follow the rules above and understand what will happen if I break them.
-            </div>
-        </div>
-        <div style="flex: 1; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; background-color: #f7f7f7;">
-            <div style="padding: 15px; text-align: center; font-weight: bold; border-bottom: 1px solid #e0e0e0; font-size: 15px; color: #222;">
-                Retype the Test Security Pledge:
-            </div>
-            <textarea style="flex: 1; border: none; padding: 20px; resize: none; outline: none; width: 100%; box-sizing: border-box; background-color: white; font-family: inherit; font-size: 15px;"></textarea>
-        </div>
+        <strong style="font-size: 18px; display: block; margin-bottom: 6px; color: #1e1e1e;">Section 1: Reading and
+            Writing (54 Questions)</strong>
+        <p style="margin-bottom: 20px;">There are two modules in the Reading and Writing section. Each module has 27<br>
+            questions.</p>
+
+        <strong style="font-size: 18px; display: block; margin-bottom: 6px; color: #1e1e1e;">Section 2: Math (44
+            Questions)</strong>
+        <p style="margin-bottom: 20px;">There are two modules in the Math section. Each module has 22 questions.</p>
+
+        <strong style="font-size: 18px; display: block; margin-bottom: 6px; color: #1e1e1e;">Modules</strong>
+        <p style="margin-bottom: 20px;">Within each section, the two modules are timed separately. If time permits, you
+            can<br>review your answers in a given module. When the timer reaches zero, you will<br>automatically move
+            on. Once
+            you move on from any module, you cannot return to it.</p>
+
+        <strong style="font-size: 18px; display: block; margin-bottom: 6px; color: #1e1e1e;">Directions</strong>
+        <p style="margin-bottom: 0;">Directions for answering questions appear at the start of each section. You
+            can<br>find these directions at the top-left corner of every question screen.</p>
     </div>
 </div>
 <div class="bottom-nav">
-    <button class="btn-secondary" onclick="window.location.href='/setup_step2/'">Back</button>
+    <button class="btn-secondary" onclick="window.location.href='/setup_step5/'">Back</button>
     <div class="progress-container"><span class="progress-text">Step 3 of 9</span>
         <div class="progress-bar">
             <div class="progress-fill" style="width: 33%"></div>

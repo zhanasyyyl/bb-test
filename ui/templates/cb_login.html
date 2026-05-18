@@ -9,12 +9,7 @@
 
 <div class="login-header">
     <button class="btn-pill">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-        </svg>
+        <img src="{% static 'images/test-device.png' %}" style="height:13px; width: auto; margin-bottom: 2px;">
         Test Your Device
     </button>
 </div>
@@ -25,7 +20,7 @@
     </div>
 
     <div class="login-card"
-        style="text-align: left; width: 450px; display: flex; flex-direction: column; align-items: center;">
+        style="text-align: left; width: 450px; display: flex; flex-direction: column; align-items: center; padding-top: 12px;">
         <button class="btn-back"
             style="cursor: pointer; background: none; border: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 4px 12px; margin-bottom: 24px; align-self: flex-start; margin-left: -12px;"
             onclick="window.location.href='/'">
@@ -37,13 +32,13 @@
             Back
         </button>
 
-        <h1 style="font-size: 26px; font-weight: 700; margin-bottom: 28px; color: #1e1e1e; align-self: flex-start;">
+        <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 28px; color: #1e1e1e; align-self: flex-start;">
             Sign In with
             a Student
             Account
         </h1>
 
-        <form method="POST" action="/cb_login/" style="width: 100%; text-align: left; margin-top: 24px;">
+        <form method="POST" action="/cb_login/" style="width: 100%; text-align: left; margin-top: 18px;">
             {% csrf_token %}
 
             <div style="margin-bottom: 20px;">
@@ -54,7 +49,7 @@
                     style="width: 100%; padding: 12px 14px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
             </div>
 
-            <div style="margin-bottom: 12px; position: relative;">
+            <div style="margin-bottom: 4px; position: relative;">
                 <label for="password"
                     style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 16px; color: #111;">Password</label>
                 <input type="password" id="password" name="password" required
@@ -70,7 +65,7 @@
                 </svg>
             </div>
 
-            <div style="margin-bottom: 32px;">
+            <div style="margin-bottom: 38px;">
                 <a href="#" style="color: #324dc7; text-decoration: underline; font-size: 14px;">Forgot password?</a>
             </div>
 
@@ -82,7 +77,7 @@
             </div>
         </form>
 
-        <div class="login-links" style="text-align: center; margin-top: 32px;">
+        <div class="login-links" style="text-align: center; margin-top: 36px; margin-bottom: 8px;">
             <a>Need help signing in?</a>
         </div>
     </div>
@@ -91,7 +86,7 @@
 <img src="{% static 'images/login-background.svg' %}" alt=""
     style="position: absolute; bottom: 0; left: -12vw; width: 124vw; overflow-x: hidden; z-index: 0;">
 
-<div class="version-info">VSN-0.9.605 BT-2026-03-12 20:36</div>
+<div class="version-info">VSN-0.9.651 BT-2026 05-10 15:02</div>
 
 <script>
     const emailInput = document.getElementById('email');
