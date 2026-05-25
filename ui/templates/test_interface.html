@@ -1345,8 +1345,29 @@
                     document.getElementById('screen-loading').style.display = 'none';
                     // Show congrats screen
                     const congratsHtml = `
-                    <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #fff; z-index: 5000; overflow: hidden;">
-                        <a href="{% url 'dashboard' %}" style="cursor: default;"><img src="{% static 'images/congrats.jpeg' %}" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" /></a>
+                    <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #324dc7; z-index: 5000; overflow: hidden; display: flex; flex-direction: column; align-items: center; color: #1e1e1e; padding: 24px;">
+                        <div class="setup-top-bar" style="position: absolute; z-index: 9999; top: 0; left: 0; width: 100%;">
+                            <button class="btn-icon-text">
+                                <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
+                                Help
+                            </button>
+                            <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
+                                Return to Home
+                                <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
+                            </a>
+                        </div>
+                        <img src="{% static 'images/confetti.png' %}" style="position: absolute; z-index: 1; top: 20px; left: 50%; transform: translateX(-50%); height: 112%; overflow: hidden">
+                        <h1 style='font-size: 28px; font-weight: 500; margin-top: 120px; margin-bottom: 16px; color: #fff; text-align: center;'>Congratulations!</h1>
+                        <p style='font-size: 18px; font-weight: 600; color: #fff; text-align: center;'>Your test is complete, and your answers have been submitted.</p>
+                        <div style='display: flex; margin-top: 16px; font-size: 16px; color: #1e1e1e; background-color: #fff; border-radius: 8px; padding: 36px; width: 700px; gap: 96px; align-items: center; justify-content: center;'>
+                            <img src='{% static "images/congrats-laptop.svg" %}' style='width: 240px;'>
+                            <div style='display: flex; gap: 16px; flex-direction: column; text-align: left; line-height: 1.5;'>
+                                <p><b>Raise your hand</b>, and your<br>proctor will dismiss you.</p>
+                                <p><b>Please be quiet</b>; other<br>students may still be testing.</p>
+                                <p>Go to <b>My SAT</b> to see when<br>your scores will be available.</p>
+                            </div>
+                        </div>
+                        <button class="btn-yellow" style="display: relative; z-index: 2; width: fit-content; margin-top: 24px; cursor: pointer;" onclick="window.location.href='/dashboard/'">Return to Homepage</button>
                     </div>`;
                     document.body.insertAdjacentHTML('beforeend', congratsHtml);
                 }

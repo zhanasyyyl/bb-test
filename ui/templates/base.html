@@ -49,50 +49,14 @@
     </main>
   </div>
 
-  <script>
-    // Prevent right-click context menu
-    document.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-    });
-
-    // Prevent F12 developer tools
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'F12') {
-        e.preventDefault();
-      }
-    });
-
-    // Prevent Ctrl+Shift+I
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-        e.preventDefault();
-      }
-    });
-
-    // Prevent Ctrl+Shift+J
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-        e.preventDefault();
-      }
-    });
-
-    // Prevent Ctrl+U
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.key === 'u') {
-        e.preventDefault();
-      }
-    });
-  </script>
-
   {% if preload_static_urls %}
   <script>
     window.addEventListener('load', function () {
       setTimeout(function () {
-        var staticUrlsToCache = {{ preload_static_urls| safe
-      }};
-    staticUrlsToCache.forEach(function (url) {
-      fetch(url, { cache: 'force-cache' }).catch(function (e) { });
-    });
+        var staticUrlsToCache = {{ preload_static_urls| safe }};
+        staticUrlsToCache.forEach(function (url) {
+          fetch(url, { cache: 'force-cache' }).catch(function (e) { });
+        });
       }, 500);
     });
   </script>
