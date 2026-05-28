@@ -2,24 +2,43 @@ import os
 from django.conf import settings
 from django.templatetags.static import static
 
+
 def static_files_preloader(request):
     """
-    Returns a list of all static files to be preloaded.
+    Preload only the static files needed for the NEXT page in the user flow.
+    Previously this walked ALL static files and preloaded them on every page,
+    causing ~2 MB of unnecessary fetches (including images never used on that page).
     """
-    static_dir = os.path.join(settings.BASE_DIR, 'ui', 'static')
-    preload_urls = []
-    
-    if os.path.exists(static_dir):
-        for root, dirs, files in os.walk(static_dir):
-            for file in files:
-                if file.endswith(('.png', '.jpg', '.jpeg', '.svg', '.css')):
-                    # Get the relative path for static tag
-                    rel_path = os.path.relpath(os.path.join(root, file), static_dir)
-                    # Convert backslashes to forward slashes for URLs
-                    rel_path = rel_path.replace('\\', '/')
-                    try:
-                        preload_urls.append(static(rel_path))
-                    except Exception:
-                        pass
-                
-    return {'preload_static_urls': preload_urls}
+    from django.urls import resolve
+    try:
+        current_url_name = resolve(request.path_info).url_name
+    except Exception:
+        return {'preload_static_urls': []}
+
+    # Only preload test-interface assets when user is on the start_code page
+    # (the page immediately before the test interface)
+    if current_url_name == 'start_code':
+        test_images = [
+            'images/timer.svg',
+            'images/battery.svg',
+            'images/highlights.svg',
+            'images/calculator.svg',
+            'images/reference.svg',
+            'images/more.svg',
+            'images/mark.svg',
+            'images/cross-out-abc.svg',
+            'images/arrow.png',
+            'images/dashed-border.png',
+            'images/question-border.png',
+            'images/current.png',
+            'images/for-review.png',
+        ]
+        preload_urls = []
+        for f in test_images:
+            try:
+                preload_urls.append(static(f))
+            except Exception:
+                pass
+        return {'preload_static_urls': preload_urls}
+
+    return {'preload_static_urls': []}

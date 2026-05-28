@@ -25,7 +25,22 @@ def dashboard_view(request):
 
 
 
+import threading
 from django.core.mail import send_mail
+
+
+def _send_code_email(full_code, recipient):
+    """Send the start code email in a background thread."""
+    try:
+        send_mail(
+            subject="Bluebook Testing Code",
+            message=f"This is the code - {full_code}.",
+            from_email="Bluebook <messages@bbtest.space>",
+            recipient_list=[recipient],
+        )
+    except Exception as e:
+        print(f"Email failed to send: {e}")
+
 
 @login_required
 def start_code_view(request):
@@ -37,17 +52,14 @@ def start_code_view(request):
             request.user.userprofile.start_code = full_code
             request.user.userprofile.save()
 
-        # Try to get contact email
+        # Send email in background thread — don't block the worker
         if hasattr(request.user, 'userprofile') and request.user.userprofile.contact_email:
-            try:
-                send_mail(
-                    subject="Bluebook Testing Code",
-                    message=f"This is the code - {full_code}.",
-                    from_email="Bluebook <messages@bbtest.space>",
-                    recipient_list=[request.user.userprofile.contact_email],
-                )
-            except Exception as e:
-                print(f"Email failed to send: {e}")
+            threading.Thread(
+                target=_send_code_email,
+                args=(full_code, request.user.userprofile.contact_email),
+                daemon=True,
+            ).start()
+
         return redirect('test_interface')
         
     return render(request, 'start_code.html', {'view_locked': True})

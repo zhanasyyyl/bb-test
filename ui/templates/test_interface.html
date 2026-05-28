@@ -811,7 +811,7 @@
     </div>
 </div>
 
-<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=cc7d38617f9948c0b905a5347a83aee0"></script>
+<link rel="preconnect" href="https://www.desmos.com" crossorigin>
 
 <script>
     const staticUrl = "{% static 'questions/' %}";
@@ -919,15 +919,31 @@
                 toolItem.style.borderBottom = '2px solid #1e1e1e';
                 this.updateQuestionPanePosition();
                 if (!this.desmosCalc) {
-                    const elt = document.getElementById('calculator-container');
-                    this.desmosCalc = Desmos.GraphingCalculator(elt, {
-                        keypad: true,
-                        expressions: true,
-                        settingsMenu: true,
-                        zoomButtons: true,
-                    });
+                    if (!window.Desmos) {
+                        // Lazy-load Desmos on first calculator use
+                        this.desmosLoading = true;
+                        const script = document.createElement('script');
+                        script.src = 'https://www.desmos.com/api/v1.11/calculator.js?apiKey=cc7d38617f9948c0b905a5347a83aee0';
+                        script.onload = () => {
+                            this.desmosLoading = false;
+                            this._initDesmos();
+                        };
+                        document.head.appendChild(script);
+                        return;
+                    }
+                    this._initDesmos();
                 }
             }
+        },
+
+        _initDesmos() {
+            const elt = document.getElementById('calculator-container');
+            this.desmosCalc = Desmos.GraphingCalculator(elt, {
+                keypad: true,
+                expressions: true,
+                settingsMenu: true,
+                zoomButtons: true,
+            });
         },
 
         initDraggable() {
