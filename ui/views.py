@@ -33,8 +33,8 @@ def _send_code_email(full_code, recipient):
     """Send the start code email in a background thread."""
     try:
         send_mail(
-            subject="Bluebook Testing Code",
-            message=f"This is the code - {full_code}.",
+            subject=f"{full_code} - Bluebook Testing Code",
+            message=f"This is the code - {full_code}. Enter this code in the app to start the test.",
             from_email="Bluebook <messages@bbtest.space>",
             recipient_list=[recipient],
         )

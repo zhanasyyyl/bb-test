@@ -35,22 +35,23 @@
 
     .directions-modal {
         background: #fff;
-        width: 860px;
-        height: 600px;
+        width: 862px;
+        height: 592px;
         padding: 32px;
+        padding-top: 40px;
         position: relative;
-        top: -17px;
-        left: 24px;
+        top: 2px;
+        left: 42px;
     }
 
     .directions-modal::before {
         content: '';
         position: absolute;
-        top: -8px;
-        left: 40px;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid #fff;
+        top: -17px;
+        left: 24px;
+        border-left: 18px solid transparent;
+        border-right: 18px solid transparent;
+        border-bottom: 18px solid #fff;
     }
 
     .directions-modal p {
@@ -65,7 +66,7 @@
         background: #fff;
         width: 480px;
         border-radius: 8px;
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
         display: flex;
         flex-direction: column;
         position: relative;
@@ -122,11 +123,10 @@
     .nav-legend-fullscreen {
         display: flex;
         justify-content: space-between;
-        gap: 16px;
         padding: 20px 0;
         padding-top: 32px;
         margin: 0 28px;
-        border-bottom: 1px solid #1e1e1e;
+        border-bottom: 1px solid #b2b2b2;
         font-size: 12px;
     }
 
@@ -213,8 +213,8 @@
         position: absolute;
         top: -6px;
         right: -6px;
-        height: 12px;
-        width: 12px;
+        height: 10px;
+        width: 8px;
         background: url('{% static "images/for-review.png" %}') no-repeat center;
         background-size: cover;
     }
@@ -223,6 +223,10 @@
         padding: 16px;
         padding-top: 0;
         text-align: center;
+    }
+
+    .nav-footer button:hover {
+        border: 1px solid #1e1e1e !important;
     }
 
     /* Image and Overlays */
@@ -380,7 +384,7 @@
         style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
         <img id="timer-icon-1" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
         <div onclick="app.skipModule()" id="timer-text-1"
-            style="font-size:22px; font-weight:600; line-height: 1; margin-top:2px;">--:--
+            style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">--:--
         </div>
         <button id="timer-btn-1" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
     </div>
@@ -474,7 +478,7 @@
             and then choose the best answer to the question based on the passage(s).</p>
         <p>All questions in this section are multiple-choice with four answer choices. Each question has a single best
             answer.</p>
-        <div style="text-align: right; position: absolute; bottom: 24px; right: 24px;">
+        <div style="text-align: right; position: absolute; bottom: 20px; right: 24px;">
             <button class="btn-yellow"
                 style="width: auto; padding: 10px 22px; border-radius: 20px; font-size: 14px; border: none; display: inline-block;"
                 onclick="document.getElementById('modal-directions').style.display='none'">Close</button>
@@ -501,13 +505,13 @@
                 <div class="legend-box"></div> Unanswered
             </div>
             <div class="nav-legend-item">
-                <img src="{% static 'images/for-review.png' %}" style="width: 24px; height: 24px;" alt="">For Review
+                <img src="{% static 'images/for-review.png' %}" style="height: 16px;" alt="">For Review
             </div>
         </div>
         <div class="nav-grid" id="nav-grid"></div>
         <div class="nav-footer">
-            <button class="btn-outline"
-                style="width:auto; padding: 6px 16px; border:1px solid #324dc7; color: #324dc7; border-radius: 24px; font-size: 14px;"
+            <button
+                style="width:auto; padding: 6px 16px; border: 1px solid transparent; outline:1px solid #324dc7; color: #324dc7; border-radius: 24px; font-size: 14px; cursor: pointer; background-color: transparent; font-weight: 600; transition: border 0.4s ease;"
                 onclick="app.goToReview()">Go to Review Page</button>
         </div>
     </div>
@@ -685,61 +689,52 @@
         <div class="test-timer"
             style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
             <img id="timer-icon-2" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
-            <div id="timer-text-2" style="font-size:22px; font-weight:600; line-height: 1; margin-top:2px;">--:--</div>
+            <div onclick="app.skipModule()" id="timer-text-2"
+                style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">--:--
+            </div>
             <button id="timer-btn-2" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
         </div>
 
-        <div class="test-tools" style="display: flex; align-items: center; gap: 8px;">
-            <div id="ui-tools-reading-2" style="display: flex; gap: 8px; align-items: center;">
+        <div class="test-tools"
+            style="display: flex; align-items: center; gap: 16px; margin-top: 12px; margin-right: 18px;">
+            <div id="ui-tools-reading-2" style="display: flex; align-items: flex-end;">
                 <div class="tool-item">
-                    <img src="{% static 'images/highlights.svg' %}" alt="">
+                    <img src="{% static 'images/highlights.svg' %}" style="height: 16px;" alt="">
                     Highlights & Notes
                 </div>
             </div>
-            <div id="ui-tools-math-2" style="display: none; gap: 8px; align-items: center;">
-                <div class="tool-item" onclick="app.toggleCalculator()">
-                    <img src="{% static 'images/calculator.svg' %}" style="width: 20px; height: 20px;" alt="">
+            <div id="ui-tools-math-2" style="display: none; gap: 16px; align-items: flex-end;">
+                <div class="tool-item" id="tool-calculator-2" onclick="app.toggleCalculator()">
+                    <img src="{% static 'images/calculator.svg' %}" style="height: 16px;" alt="">
                     Calculator
                 </div>
                 <div class="tool-item">
-                    <img src="{% static 'images/reference.svg' %}" style="width: 20px; height: 20px;" alt="">
+                    <img src="{% static 'images/reference.svg' %}" style="height: 14px; padding: 1px 0;" alt="">
                     Reference
                 </div>
             </div>
             <div class="tool-item">
-                <img src="{% static 'images/more.svg' %}" style="height: 15px;">More
+                <img src="{% static 'images/more.svg' %}" style="height: 15px;"> More
             </div>
-            <div class="tool-item"
-                style="display: flex; align-items: center; gap: 6px; padding-left: 15px; margin-left: 10px; border-left: 1px solid #505050; cursor: default;">
-                <svg width="22" height="11" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#76rhwldj7a)">
-                        <g clip-path="url(#whfx0evqrb)" fill="#202124">
-                            <path
-                                d="M15.32 2.5h-.82v-1A1.5 1.5 0 0 0 13 0H1.5A1.5 1.5 0 0 0 0 1.5v5A1.5 1.5 0 0 0 1.5 8H13a1.5 1.5 0 0 0 1.5-1.5v-1h.82a.67.67 0 0 0 .68-.67V3.18a.68.68 0 0 0-.68-.68zm-1.82 4a.5.5 0 0 1-.5.5H1.5a.5.5 0 0 1-.5-.5v-5a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 .5.5v5z" />
-                            <path
-                                d="M9.62 2H2.25a.25.25 0 0 0-.25.25v3.49c0 .138.112.25.25.25h7.37a.25.25 0 0 0 .25-.25V2.25A.25.25 0 0 0 9.62 2z" />
-                        </g>
-                    </g>
-                    <defs>
-                        <clipPath id="76rhwldj7a">
-                            <path fill="#fff" d="M0 0h15.99v8H0z" />
-                        </clipPath>
-                        <clipPath id="whfx0evqrb">
-                            <path fill="#fff" d="M0 0h16v8H0z" />
-                        </clipPath>
-                    </defs>
-                </svg>
-                <span id="ui-battery-2" style="font-weight: 500; font-size: 13px;">98%</span>
-            </div>
+        </div>
+
+        <div style="position: absolute; right: 14px; top: 4px;">
+            <span id="ui-battery-2" style="font-weight: 600; font-size: 11px; color: #1e1e1e;">98%</span>
+            <img src="{% static 'images/battery.svg' %}" style="width: 16px; height: 10px;" alt="">
         </div>
     </div>
     <img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: auto; transform: scaleY(-1);">
 
     <div class="review-content"
-        style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 48px;">
-        <h1 style="margin-bottom: 24px; font-weight: 500;">Check Your Work</h1>
-        <p>You cannot to move on to the next module until time expires.</p>
-        <p>When time expires, you'll automatically move on to the next module.</p>
+        style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px;">
+        <div
+            style="width: 100vw; overflow: hidden; text-align: center; background-color: #1b2264; color: white; font-size: 28px; padding: 10px; margin-bottom: 16px;">
+            Testing in Progress: Do Not
+            Close Your
+            Device</div>
+        <p>When the timer reaches zero, your answers will be submitted automatically.</p>
+        <p><b>Do not close your device, quit the app, or leave the room or your answers may not be submitted.</b></p>
+        <p>In the meantime, please look over your work and check any questions you marked for review.</p>
     </div>
 
     <div style="flex: 1; display:flex; justify-content:center; padding: 24px; overflow-y:auto;">
@@ -748,13 +743,13 @@
                 <span class="nav-modal-title" style="font-size: 18px; font-weight: 600; display: block;">Section 1,
                     Module 1: Reading
                     and Writing Questions</span>
-                <div class="nav-legend-item">
-                    <div class="legend-box"></div> Unanswered
-                </div>
-                <div class="nav-legend-item">
-                    <div class="legend-box"
-                        style="border:none; background:#e81123; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 70%, 0 100%);">
-                    </div> For Review
+                <div style="display: flex; gap: 20px;">
+                    <div class="nav-legend-item">
+                        <div class="legend-box"></div> Unanswered
+                    </div>
+                    <div class="nav-legend-item">
+                        <img src="{% static 'images/for-review.png' %}" style="height: 16px;"> For Review
+                    </div>
                 </div>
             </div>
             <div class="nav-grid" id="review-grid" style="grid-template-columns: repeat(10, 1fr);"></div>
