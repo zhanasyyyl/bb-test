@@ -18,5 +18,6 @@ urlpatterns = [
     path('setup_step8/', login_required(TemplateView.as_view(template_name='setup_step8.html')), name='setup_step8'),
     path('start-code/', views.start_code_view, name='start_code'),
     path('test/', views.test_interface_view, name='test_interface'),
+    path('api/mark-test-completed/', views.mark_test_completed_view, name='mark_test_completed'),
     path('quit/', views.dashboard_view, name='quit'),
 ]

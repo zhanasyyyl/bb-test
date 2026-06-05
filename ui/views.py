@@ -14,6 +14,10 @@ def cb_login_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
+                # Reset test_completed so registration card shows on every login
+                if hasattr(user, 'userprofile'):
+                    user.userprofile.test_completed = False
+                    user.userprofile.save()
                 return redirect('dashboard')
             else:
                 return render(request, 'cb_login.html', {'error': 'Invalid email or password'})
@@ -65,6 +69,16 @@ def start_code_view(request):
     return render(request, 'start_code.html', {'view_locked': True})
 
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
+@login_required
+@require_POST
+def mark_test_completed_view(request):
+    if hasattr(request.user, 'userprofile'):
+        request.user.userprofile.test_completed = True
+        request.user.userprofile.save()
+    return JsonResponse({'status': 'ok'})
+
 from .forms import UserProfileForm
 
 @login_required

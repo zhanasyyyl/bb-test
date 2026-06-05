@@ -14,10 +14,10 @@
                     style="width: 36px; height: 36px; cursor: pointer;">
             </div>
         </div>
+    </div>
 
-        <div class="welcome-message">
-            Welcome, {{ request.user.userprofile.first_name }}. Good luck on test day!
-        </div>
+    <div class="welcome-message">
+        Welcome, {{ request.user.userprofile.first_name }}. Good luck on test day!
     </div>
 
     <div class="dashboard-main">
@@ -25,17 +25,26 @@
             <div class="section-header">
                 <h2>Your Tests</h2>
                 <div class="toggle-switch">
-                    <div class="toggle-option active">&#10003; Active</div>
+                    <div class="toggle-option active"><img style="width: 13px; margin-left: -8px"
+                            src="{% static 'images/active-tick.png' %}">Active</div>
                     <div class="toggle-option">Past</div>
                 </div>
                 <a class="header-link">Don't see your test here?</a>
             </div>
 
+            {% if request.user.userprofile.test_completed %}
+            <div class="registration-card no-upcoming-tests-card">
+                <h3 class="no-tests-title">You Have No Upcoming Tests</h3>
+                <p class="no-tests-description">Tests appear here a few weeks before test day. <strong>If you got a
+                        paper ticket from your school, <a href="{% url 'login' %}" class="no-tests-link">sign out</a>
+                        and sign in with<br>it.</strong></p>
+            </div>
+            {% else %}
             <div class="registration-card">
                 <div class="reg-title">SAT</div>
                 <div class="reg-details">
                     <div class="reg-left">
-                        <p><strong>Date:</strong> Sat, June 6, 2026</p>
+                        <p><strong>Date:</strong> Sat, Jun 6, 2026</p>
                         <p><strong>Arrival Time:</strong> 7:45 a.m. +05</p>
                         <p><strong>Doors Close:</strong> 8:00 a.m. +05</p>
 
@@ -77,15 +86,15 @@
                     </div>
                     <div class="reg-right">
                         <a class="reg-link">
-                            <img src="{% static 'images/ticket-blue.svg' %}" style="width: 18px;">
+                            <img src="{% static 'images/ticket-blue.svg' %}" style="width: 16px;">
                             Admission Ticket
                         </a>
                         <a class="reg-link">
-                            <img src="{% static 'images/exam-overview.svg' %}" style="width: 18px;">
+                            <img src="{% static 'images/exam-overview.svg' %}" style="width: 16px;">
                             Exam Overview
                         </a>
                         <a class="reg-link">
-                            <img src="{% static 'images/checklist.svg' %}" style="width: 18px;">
+                            <img src="{% static 'images/checklist.svg' %}" style="width: 16px;">
                             Test Day Checklist
                         </a>
                     </div>
@@ -93,7 +102,7 @@
 
                 <div class="reg-accommodations">
                     <strong>Testing Accommodations:</strong>
-                    <p>You have no approved accommodations for this test.</p>
+                    <p style="margin-top: 4px;">You have no approved accommodations for this test.</p>
                 </div>
 
                 <div class="reg-divider"></div>
@@ -109,13 +118,15 @@
                     <button class="btn-yellow reg-btn" onclick="window.location.href='/setup/'">Check In Now</button>
                 </div>
             </div>
+            {% endif %}
         </div>
 
         <div class="split-section">
             <div class="section-header">
                 <h2>Practice and Prepare</h2>
                 <div class="toggle-switch">
-                    <div class="toggle-option active">&#10003; Active</div>
+                    <div class="toggle-option active"><img style="width: 14px;"
+                            src="{% static 'images/active-tick.png' %}">Active</div>
                     <div class="toggle-option">Past</div>
                 </div>
                 <a class="header-link">Learn more about practice</a>
@@ -137,8 +148,17 @@
             </div>
         </div>
     </div>
+    <div class="dashboard-bottom"></div>
     <div class="version-info" style="background-color: #fefefe;">VSN-0.9.651 BT-2026 05-10 15:02</div>
 </div>
+
+<script>
+    (function () {
+        if (navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.userAgent.toUpperCase().indexOf('MAC') >= 0) {
+            document.querySelector('.version-info').textContent = 'VSN-1.14.2 BT-2026-04-30 20:12';
+        }
+    })();
+</script>
 
 <!-- Profile Edit Modal -->
 <div id="profile-modal" class="profile-modal-overlay" style="display: none;">

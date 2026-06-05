@@ -91,7 +91,7 @@ body {
 
 .title-bar {
     height: 23px;
-    background-color: #241e20;
+    background-color: #202020;
     color: #e8eaed;
     display: flex;
     justify-content: space-between;
@@ -342,14 +342,13 @@ body {
 }
 
 .version-info {
-    position: absolute;
+    position: fixed;
+    right: 10px;
     bottom: 0;
-    right: 8px;
     background: #eceffa;
     padding: 8px 4px;
     font-size: 12px;
     color: #1e1e1e;
-    z-index: 2;
 }
 
 /* ========================================================= */
@@ -368,10 +367,21 @@ body {
 }
 
 .dashboard-top {
+    position: sticky;
+    top: 0;
     background-color: #e6edf8;
     margin-left: -20vw;
     width: 100vw;
     padding: 18px 20vw;
+}
+
+.dashboard-bottom {
+    position: fixed;
+    bottom: 0;
+    background-color: #fafafa;
+    margin-left: -20vw;
+    width: 100vw;
+    height: 32px;
 }
 
 .dashboard-header {
@@ -415,7 +425,11 @@ body {
 
 .welcome-message {
     font-size: 40px;
-    margin-top: 48px;
+    background-color: #e6edf8;
+    margin-left: -20vw;
+    width: 100vw;
+    padding: 22px 20vw;
+    padding-top: 30px;
     color: #324dc7;
     font-weight: 300;
 }
@@ -447,19 +461,27 @@ body {
 }
 
 .toggle-switch {
+    width: 160px;
+    height: 32px;
     display: flex;
-    background: #fff;
+    background: transparent;
     border: 1px solid #888888;
     border-radius: 8px;
     overflow: hidden;
 }
 
 .toggle-option {
-    padding: 6px 28px;
+    width: 50%;
+    height: 100%;
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
     color: #1e1e1e;
+    text-align: center;
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
 }
 
 .toggle-option:hover {
@@ -469,7 +491,6 @@ body {
 .toggle-option.active {
     background: #505050;
     color: #fff;
-    padding: 6px 12px;
 }
 
 .header-link {
@@ -484,10 +505,10 @@ body {
 .registration-card {
     background: #fff;
     border-radius: 16px;
-    padding: 24px 28px;
+    padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 500px;
-    font-size: 16px;
+    width: 450px;
+    font-size: 14px;
     line-height: 1.2;
     text-align: left;
     display: flex;
@@ -495,9 +516,9 @@ body {
 }
 
 .reg-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     color: #1e1e1e;
 }
 
@@ -522,7 +543,7 @@ body {
 
 .reg-location p {
     color: #1e1e1e;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .reg-accommodations {
@@ -532,9 +553,9 @@ body {
 .reg-right {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 18px;
     padding-top: 4px;
-    padding-right: 50px;
+    padding-right: 32px;
     height: min-content;
 }
 
@@ -545,20 +566,15 @@ body {
     color: #324dc7;
     text-decoration: underline;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     white-space: nowrap;
 }
 
-.reg-link svg {
-    width: 20px;
-    height: 20px;
-}
-
 .reg-divider {
-    height: 1px;
+    height: 0.5px;
     background: #dadce0;
-    margin: 20px 0;
+    margin: 24px 0 16px 0;
 }
 
 .reg-footer {
@@ -573,7 +589,7 @@ body {
     gap: 8px;
     color: #188038;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .status-icon {
@@ -584,7 +600,7 @@ body {
 .reg-btn {
     max-width: 140px;
     padding: 10px !important;
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 24px;
 }
 
@@ -616,6 +632,40 @@ body {
 
 .card-icon {
     text-align: center;
+}
+
+/* No Upcoming Tests Card */
+.no-upcoming-tests-card {
+    text-align: center;
+    padding: 26px auto;
+    width: 450px;
+}
+
+.no-tests-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e1e1e;
+    margin-bottom: 16px;
+}
+
+.no-tests-description {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #1e1e1e;
+}
+
+.no-tests-description strong {
+    color: #1e1e1e;
+}
+
+.no-tests-link {
+    color: #324dc7;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.no-tests-link:hover {
+    text-decoration: none;
 }
 
 /* ========================================================= */

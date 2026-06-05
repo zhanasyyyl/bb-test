@@ -7,6 +7,7 @@ class UserProfile(models.Model):
     test_center_address = models.TextField(blank=True, null=True)
     contact_email = models.EmailField(blank=True, null=True)
     start_code = models.CharField(max_length=50, blank=True, null=True)
+    test_completed = models.BooleanField(default=False)
 
     @property
     def first_name(self):

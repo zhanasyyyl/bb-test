@@ -86,7 +86,14 @@
 <img src="{% static 'images/login-background.svg' %}" alt=""
     style="position: absolute; bottom: 0; left: -12vw; width: 124vw; overflow-x: hidden; z-index: 0;">
 
-<div class="version-info">VSN-0.9.651 BT-2026 05-10 15:02</div>
+<div class="version-info" style="background-color: #fefefe;">VSN-0.9.651 BT-2026 05-10 15:02</div>
+<script>
+    (function () {
+        if (navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.userAgent.toUpperCase().indexOf('MAC') >= 0) {
+            document.querySelector('.version-info').textContent = 'VSN-1.14.2 BT-2026-04-30 20:12';
+        }
+    })();
+</script>
 
 <script>
     const emailInput = document.getElementById('email');
