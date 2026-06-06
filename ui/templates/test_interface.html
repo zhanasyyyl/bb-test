@@ -1319,7 +1319,7 @@
                 if (this.breakTimeRemaining <= 0) {
                     clearInterval(this.breakInterval);
                     timerEl.innerText = '0:00';
-                    btnEl.style.display = 'block';
+                    this.resumeTesting();
                 }
             }, 1000);
         },
