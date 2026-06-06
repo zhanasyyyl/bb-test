@@ -383,7 +383,8 @@
     <div class="test-timer"
         style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
         <img id="timer-icon-1" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
-        <div id="timer-text-1" style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">--:--
+        <div onclick="Module()" id="timer-text-1"
+            style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">--:--
         </div>
         <button id="timer-btn-1" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
     </div>
@@ -646,7 +647,7 @@
                 <h3>Remaining Break Time:</h3>
                 <div class="time" id="break-time-display">10:00</div>
             </div>
-            <button id=" btn-resume-break" class="btn-yellow"
+            <button id="btn-resume-break" class="btn-yellow"
                 style="display: none; padding: 16px 32px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
                 onclick="app.resumeTesting()">Resume Testing Now</button>
         </div>
@@ -690,7 +691,8 @@
         <div class="test-timer"
             style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
             <img id="timer-icon-2" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
-            <div id="timer-text-2" style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">
+            <div onclick="Module()" id="timer-text-2"
+                style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">
                 --:--
             </div>
             <button id="timer-btn-2" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
@@ -1319,7 +1321,7 @@
                 if (this.breakTimeRemaining <= 0) {
                     clearInterval(this.breakInterval);
                     timerEl.innerText = '0:00';
-                    this.resumeTesting();
+                    btnEl.style.display = 'block';
                 }
             }, 1000);
         },
