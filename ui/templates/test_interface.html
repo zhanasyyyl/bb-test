@@ -383,7 +383,7 @@
     <div class="test-timer"
         style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
         <img id="timer-icon-1" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
-        <div onclick="Module()" id="timer-text-1"
+        <div onclick="app.skipModule()" id="timer-text-1"
             style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">--:--
         </div>
         <button id="timer-btn-1" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
@@ -645,7 +645,7 @@
         <div style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
             <div class="break-timer-card">
                 <h3>Remaining Break Time:</h3>
-                <div class="time" id="break-time-display">10:00</div>
+                <div onclick="app.skipBreak()" class="time" id="break-time-display">10:00</div>
             </div>
             <button id="btn-resume-break" class="btn-yellow"
                 style="display: none; padding: 16px 32px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
@@ -691,7 +691,7 @@
         <div class="test-timer"
             style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
             <img id="timer-icon-2" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
-            <div onclick="Module()" id="timer-text-2"
+            <div onclick="app.skipModule()" id="timer-text-2"
                 style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">
                 --:--
             </div>
@@ -1368,7 +1368,7 @@
                     }).catch(() => { });
                     // Show congrats screen
                     const congratsHtml = `
-                    <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #324dc7; z-index: 5000; overflow: hidden; display: flex; flex-direction: column; align-items: center; color: #1e1e1e; padding: 24px;">
+                    <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: #1a2263; z-index: 5000; overflow: hidden; display: flex; flex-direction: column; align-items: center; color: #1e1e1e; padding: 24px;">
                         <div class="setup-top-bar" style="position: absolute; z-index: 9999; top: 0; left: 0; width: 100%;">
                             <button class="btn-icon-text">
                                 <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">

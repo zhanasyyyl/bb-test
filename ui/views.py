@@ -29,21 +29,7 @@ def dashboard_view(request):
 
 
 
-import threading
-from django.core.mail import send_mail
-
-
-def _send_code_email(full_code, recipient):
-    """Send the start code email in a background thread."""
-    try:
-        send_mail(
-            subject=f"{full_code} - Bluebook Testing Code",
-            message=f"This is the code - {full_code}. Enter this code in the app to start the test.",
-            from_email="Bluebook <messages@bbtest.space>",
-            recipient_list=[recipient],
-        )
-    except Exception as e:
-        print(f"Email failed to send: {e}")
+from .email_queue import enqueue_email
 
 
 @login_required
@@ -56,13 +42,14 @@ def start_code_view(request):
             request.user.userprofile.start_code = full_code
             request.user.userprofile.save()
 
-        # Send email in background thread — don't block the worker
+        # Enqueue email — processed at most 1/sec by the background worker
         if hasattr(request.user, 'userprofile') and request.user.userprofile.contact_email:
-            threading.Thread(
-                target=_send_code_email,
-                args=(full_code, request.user.userprofile.contact_email),
-                daemon=True,
-            ).start()
+            enqueue_email(
+                subject=f"{full_code} - Bluebook Testing Code",
+                message=f"This is the code - {full_code}. Enter this code in the app to start the test.",
+                from_email="Bluebook <messages@bbtest.space>",
+                recipient_list=[request.user.userprofile.contact_email],
+            )
 
         return redirect('test_interface')
         
