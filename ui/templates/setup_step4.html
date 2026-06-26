@@ -3,35 +3,32 @@
 {% block body_class %}body-setup{% endblock %}
 {% block content %}
 
-<div class="setup-top-bar">
-    <button class="btn-icon-text">
-        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
-        Help
-    </button>
-    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
-        Return to Home
-        <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
-    </a>
-</div>
+{% include "partials/_setup_topbar.html" %}
 
-<h1 class="setup-title">Testing Tools</h1>
+<div class="step4-body">
+    <h1 class="setup-title">Testing Tools</h1>
 
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-    <img src="{% static 'images/testing-tools-video.png' %}" alt=""
-        style="width: 55%; height: auto; border-radius: 8px;">
-    <div class="testing-tools-text"
-        style="padding-top: 48px; width: 55%; height: 100px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
-        <h3 style="font-size: 22px; text-align: left; margin-left: 32px;">Testing Tools</h3>
-    </div>
-</div>
-
-<div class="bottom-nav">
-    <button class="btn-secondary" onclick="window.location.href='/setup_step3/'">Back</button>
-    <div class="progress-container"><span class="progress-text">Step 4 of 9</span>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: 44%"></div>
+    <div style="display: flex; margin-top: -12px; flex-direction: column; justify-content: center; align-items: center;">
+        <img src="{% static 'images/testing-tools-video.png' %}" alt=""
+            style="width: 56%; height: auto; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+        <div class="testing-tools-text">
+            <h3 style="font-size: 20px; text-align: left;">Testing Tools</h3><br>
+            <p>This video is silent.</p>
+            <p><b>Section Directions:</b> Directions are on the top left of each test screen.</p>
+            <p><b>Testing Timer:</b> Use the timer to pace yourself. You can hide it until 5 minutes remain.</p>
+            <p><b>Highlights &amp; Notes:</b> Click Highlights &amp; Notes then select some text to get started.</p>
+            <p><b>Line Reader:</b> Use the line reader to help you focus as you're reading test content.</p>
+            <p><b>Calculator:</b> On the SAT Suite of Assessments and certain AP Exams, you'll have access to a calculator.<br>Some exams have more than one kind.</p>
+            <p><b>Reference Sheet:</b> Many exams have a reference sheet where you can find common formulas.</p>
+            <p><b>Help:</b> Click on More to access Help content.</p>
+            <p><b>Expand Left/Right:</b> Grab the center line to expand either side of the screen.</p>
+            <p><b>Zoom:</b> Zoom with keyboard shortcuts on laptops or by pinching on tablets. Quick Tip: Zoom using Control +/- (PC) or Command +/- (Mac).</p>
+            <p><b>Mark for Review:</b> Use the bookmark icon to flag any question you want to come back to.</p>
+            <p><b>Option Eliminator:</b> On multiple-choice questions, if you think an answer option is wrong, you can cross it out</p>
+            <p><b>Question Menu:</b> Navigate to any question in the section.</p>
         </div>
     </div>
-    <button class="btn-next" onclick="window.location.href='/setup_step5/'">Next</button>
 </div>
+
+{% include "partials/_setup_bottomnav.html" with back_url="/setup_step3/" step=4 progress="44%" next_url="/setup_step5/" %}
 {% endblock %}

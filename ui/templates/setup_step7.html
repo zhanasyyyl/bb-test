@@ -3,32 +3,15 @@
 {% block body_class %}body-setup{% endblock %}
 {% block content %}
 
-<div class="setup-top-bar">
-    <button class="btn-icon-text">
-        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
-        Help
-    </button>
-    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
-        Return to Home
-        <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
-    </a>
-</div>
+{% include "partials/_setup_topbar.html" %}
 
 <h1 class="setup-title">Exam Download</h1>
 <div class="setup-card"
-    style="width: 450px; padding: 10px; text-align: left; display: flex; align-items: center; gap: 20px;">
-    <img id="loading-exam" style="width: 100%; height: auto;;" src="{% static 'images/loading-exam.png' %}" alt="">
-    <img id="loaded" style="width: 100%; height: auto; display: none" src="{% static 'images/loaded.png' %}" alt="">
+    style="height: 98px; width: min-content; display: flex; align-items: center; justify-content: center; gap: 20px;">
+    <img id="loading-exam" style="width: 435px; border-radius: 8px;" src="{% static 'images/loading-exam.png' %}" alt="">
+    <img id="loaded" style="width: 411px; display: none; border-radius: 8px" src="{% static 'images/loaded.png' %}" alt="">
 </div>
-<div class="bottom-nav">
-    <button class="btn-secondary" onclick="window.location.href='/setup_step6/'">Back</button>
-    <div class="progress-container"><span class="progress-text">Step 7 of 9</span>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: 77%"></div>
-        </div>
-    </div>
-    <button id="next-btn" class="btn-secondary" onclick="window.location.href='/setup_step8/'" disabled>Next</button>
-</div>
+{% include "partials/_setup_bottomnav.html" with back_url="/setup_step6/" step=7 progress="77%" next_url="/setup_step8/" next_id="next-btn" next_disabled=True %}
 <script>
     setTimeout(() => {
         const nextBtn = document.getElementById('next-btn');

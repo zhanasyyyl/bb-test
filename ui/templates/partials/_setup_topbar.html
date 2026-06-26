@@ -1,0 +1,11 @@
+{% load static %}
+<div class="setup-top-bar{% if extra_class %} {{ extra_class }}{% endif %}">
+    <button class="btn-icon-text">
+        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
+        Help
+    </button>
+    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
+        Return to Home
+        <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
+    </a>
+</div>

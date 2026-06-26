@@ -110,13 +110,13 @@
     {
         "id": 10,
         "type": "rw",
-        "passage": "Darcie Little Badger is a novelist and a member of the Lipan Apache Tribe of Texas. Critics and fellow writers have praised her work for combining traditional Apache stories with popular genres of literature, such as fantasy and horror fiction. But Little Badger is not the only Indigenous writer to blend traditional stories with popular literature. In the 2016 novel Wrist, Nathan Adler successfully blended the oral storytelling tradition of their people, the Anishinaabe, with horror fiction.",
-        "question": "Which choice best states the main idea of the text?",
+        "passage": "<div class=\"question-image\"><img src=\"/static/images/q15.svg\"></div>\nA team of researchers used bacteria to create a biofuel (a renewable fuel produced from plants, algae, or other living materials). The team called the new fuel POP biofuel. To determine how much energy is stored in POP biofuel compared to other fuels, the team calculated the fuels’ energy density, in megajoules per liter (MJ/L). The team found that the fuel with the highest energy density is _______",
+        "question": "Which choice most effectively uses data from the graph to complete the sentence?",
         "options": [
-            "Several famous Indigenous writers increased their book sales when they began incorporating traditional stories.",
-            "Recent Indigenous fiction writers are mixing traditional stories with popular literary genres.",
-            "The success of Darcie Little Badger has influenced non Indigenous authors who write in popular literary genres.",
-            "Non Indigenous authors should consider the expectations of Indigenous readers."
+            "jet fuel.",
+            "POP biofuel.",
+            "ethanol.",
+            "gasoline."
         ]
     },
     {
@@ -390,7 +390,7 @@
         "type": "math"
     },
     {
-        "question": "$(z+4)(z − 6)=0$<br>What are all possible solutions to the given equation?",
+        "question": "<div style=\"display: flex; justify-content: center; margin-bottom: 12px\">$(z+4)(z − 6)=0$</div>What are all possible solutions to the given equation?",
         "options": [
             "$-4$ and $-6$",
             "$-4$ and $6$",
@@ -461,12 +461,12 @@
         "type": "math"
     },
     {
-        "question": "<img src=\"/static/images/scatter-plot.png\" alt=\"Scatter plot\" style=\"width: 350px; height: auto; margin: 0 auto; display: block\">The scatterplot shows the relationship between two variables, $x$ and $y$. A line of best fit for the data is also shown. Which of the following is closest to the difference between the $y$-coordinate of the data point with $x=1$ and the $y$-value predicted by the line of best fit at $x=1$?",
+        "question": "The scatterplot shows the relationship between x and y. A line of best fit is also shown.\n<div class=\"question-image\"><img src=\"/static/images/scatter-plot.svg\"></div>\nWhich of the following is closest to the slope of this line of best fit?",
         "options": [
-            "$1$",
-            "$2$",
-            "$5$",
-            "$12$"
+            "$0.60$",
+            "$2.50$",
+            "$7.80$",
+            "$8.00$"
         ],
         "id": 42,
         "type": "math"
@@ -516,7 +516,7 @@
         "type": "math"
     },
     {
-        "question": "The solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$? <br><div style=\"width: 100%; text-align: center; padding: 12px 0;\">$7(5x)+9(8y)=189$<br>$7(5x)-9(8y)=-819$</div>",
+        "question": "<div style=\"width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 12px\"><div>$7(5x)+9(8y)=189$</div><div>$7(5x)-9(8y)=-819$</div></div>\nThe solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$?",
         "options": [
             "$-101$",
             "$75$",
@@ -538,7 +538,7 @@
         "type": "math"
     },
     {
-        "question": "In the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$? <br><div style=\"width: 100%; text-align: center; padding: 12px 0;\">$\\frac{−22x−29+m}{2}=k(x+5)$</div>",
+        "question": "<div style=\"width: 100%; text-align: center; padding: 12px 0;\">$\\frac{−22x−29+m}{2}=k(x+5)$</div>\nIn the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$?",
         "options": [
             "$39$",
             "$-11$",
@@ -551,334 +551,340 @@
     {
         "id": 50,
         "type": "rw",
-        "passage": "The general store was essential to daily life in the rural United States during the 1800s because it provided the supplies that the people living in nearby communities needed. Also, the store was a _______ of information. People socializing at the general store would share news and help spread it throughout their communities.",
+        "passage": "Ancient Inca inhabiting the Andes Mountains used terraces, rows of flattened land with builtin irrigation systems, to grow crops at different altitudes. This method of farming proved to be highly _______, as evidenced by the great number and variety of crops grown at that time.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "source",
-            "rival",
-            "condition",
-            "waste"
+            "chaotic",
+            "uniform",
+            "effective",
+            "burdensome"
         ]
     },
     {
         "id": 51,
         "type": "rw",
-        "passage": "For painter Jacob Lawrence, being _______ was an important part of the artistic process. Because he paid close attention to all the details of his Harlemneighborhood, Lawrence’s artwork captured nuances in the beauty and vitality of the Black experience during the Harlem Renaissance and the Great Migration.",
+        "passage": "Since the Hubble Space Telescope was launched into space in 1990, astronauts have needed to complete regular missions to repair the telescope and keep it working smoothly. Researchers hope that robots will soon be able to make these repairs. Employing robots instead of humans to make repairs will be helpful, as _______ astronauts to maintain the telescope can be expensive.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "skeptical",
-            "observant",
-            "critical",
-            "confident"
+            "straightening",
+            "forgetting about",
+            "relying on",
+            "reducing"
         ]
     },
     {
         "id": 52,
         "type": "rw",
-        "passage": "Though it does not guarantee a book's commercial success, _____ can play a big role in that success—a well-executed marketing campaign helped to make Danielle Steel's novel The Gift the fourth-best-selling novel of 1994.",
+        "passage": "There are many famous examples of election pollsters making inaccurate predictions in presidential elections. But neuroscientist and election pollster Sam Wang has said that these prediction failures should not lead campaigns to _______ election polling entirely. Polling is about more than just predicting the winner; throughout campaigns, it helps strategists identify where their efforts are most likely to be effective.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "originality",
-            "publicity",
-            "complexity",
-            "practicality"
+            "distort",
+            "enact",
+            "neglect",
+            "supplement"
         ]
     },
     {
         "id": 53,
         "type": "rw",
-        "passage": "According to a team of neuroeconomists from the University of Zurich, ease of decision making may be linked to communication between two brain regions, the prefrontal cortex and the parietal cortex. Individuals tend to be more decisive if the information flow between the regions is intensified, whereas they make choices more slowly when information flow is _____.",
+        "passage": "Steiger Butte Drum, a family ensemble from the Klamath Tribes of the Pacific Northwest, collaborated with composer Michael Gordon to create <i>Natural History</i>, a work featuring traditional drumming and vocals alongside an orchestra and chorus. Steiger Butte Drum’s participation is _______ to the piece: members not only contributed\nto its composition but also must be included in all performances.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
-            "reduced",
-            "evaluated",
-            "determined",
-            "acquired"
+            "tangential",
+            "subsequent",
+            "analogous",
+            "integral"
         ]
     },
     {
         "id": 54,
         "type": "rw",
-        "passage": "Ecologist Exequiel Ezcurra and colleagues found that the inhabitants of the Mexica empire used natural landmarks to track time with a high degree of _____. By observing the sun’s position in relation to various points on the mountains surrounding the Basin of Mexico, the Mexica were able to precisely identify the dates when significant events such as solstices occurred.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "passage": "In the past, historians who wanted to examine Frederick Douglass’s diary and other personal papers had to visit the Library of Congress in Washington, DC, to view them on microfilm (<u>film containing scaled-down reproductions of documents</u>). But traveling to the library often added time and costs to research projects. Now, by going to the library’s website, researchers can access digitized versions of Douglass’s papers without physically going anywhere.",
+        "question": "Which choice best describes the function of the\nunderlined portion in the text as a whole?",
         "options": [
-            "precariousness",
-            "exactitude",
-            "resilience",
-            "inconspicuousness"
+            "It gives information about a famous person.",
+            "It explains the meaning of a word.",
+            "It describes a debate among historians.",
+            "It summarizes an unexpected finding."
         ]
     },
     {
         "id": 55,
         "type": "rw",
-        "passage": "The Old Manse in Concord, Massachusetts, is the house where Ralph Waldo Emerson lived for a few years and wrote his essay “Nature.” Now the house is a museum dedicated to Emerson’s life and writings. Visitors travel to this museum to feel more connected to an author they admire. To encourage that sense of connection, the museum’s curators recommend nearby hiking trails and organize outdoor activities. Such activities help visitors appreciate the natural scenery that inspired Emerson.",
-        "question": "Which choice best states the main purpose of the text?",
+        "passage": "Following the eradication of the gray wolf in Yellowstone National Park in 1926, the population of elk—a primary prey of the gray wolf—exceeded a healthy size for the park’s ecosystem. Elk overpopulation led to overgrazing of areas that a multitude of other animals relied on for food and shelter. As scientists began to see how essential the gray wolf was to the Yellowstone food chain, ecological restoration strategies were employed to reintroduce the gray wolf to the park in 1996. The rebound effect in the park’s natural ecosystem was noticed almost immediately.",
+        "question": "Which choice best describes the overall structure of the text?",
         "options": [
-            "To summarize Emerson's biography.",
-            "To explain why readers enjoy Emerson's works.",
-            "To describe a museum focused on Emerson's life and works.",
-            "To compare the Old Manse with other museums."
+            "It summarizes a problem that developed in Yellowstone National Park in the 1920s and then offers potential solutions to that problem.",
+            "It mentions the elimination of the gray wolf from Yellowstone National Park and then explains why the wolf was eventually restored to the park.",
+            "It presents a claim about the health of the Yellowstone National Park gray wolf population and then gives specific examples to support that claim.",
+            "It explains why Yellowstone National Park allowed the eradication of the gray wolf and then discusses the consequences of reintroducing the wolf to the park."
         ]
     },
     {
         "id": 56,
         "type": "rw",
-        "passage": "Horses and toads can see in three dimensions (3D), which helps them perceive distance and depth. Octopuses and squid are thought to lack 3D vision. Many researchers once thought the same about cuttlefish, but Trevor Wardill and his team wanted to test whether this assumption was true. The team studied how cuttlefish wearing 3D glasses reacted to 3D images of shrimp (a favorite prey) projected on a tank wall. <span style='text-decoration:underline;'>Cuttlefish changed their striking position to match the 3D images, suggesting that their vision is more like that of horses and toads than that of octopuses or squid.<span>",
-        "question": "Which choice best states the function of the underlined sentence in the text as a whole?",
+        "passage": "A team of researchers discovered that Matabele ants can identify an infected wound in a member of the colony and then treat the infection by covering the wound with antimicrobial secretions that the ants produce. The team found that the mortality rate for Matabele ants with infected injuries was reduced by 90% with this treatment, and they are hopeful that this discovery could aid in the development of new antibiotics for human use.",
+        "question": "Which choice best describes the overall structure of the text?",
         "options": [
-            "It explains how 3D vision in horses and toads differs from the type of 3D vision discussed in the text.",
-            "It offers a suggestion for future research on the aspect of 3D vision discussed in the text.",
-            "It presents the results of the study of 3D vision discussed in the text.",
-            "It explains why the animals discussed in the text were once thought to lack 3D vision."
+            "It summarizes research findings on Matabele ants and then identifies an area for further research.",
+            "It introduces a study of Matabele ants and then explains the research methods used in the study",
+            "It describes unique properties of Matabele ants and then speculates on how those properties evolved.",
+            "It identifies an issue concerning Matabele ants and then proposes a solution to address the issue."
         ]
     },
     {
         "id": 57,
         "type": "rw",
-        "passage": "Boston has high pedestrian traffic, but simply replicating a feature of Boston associated with walkability—e.g., its high number of intersections—may be insufficient to induce increased walking in other cities. As urbanist Mariela Alfonzo argues, our understanding of individuals’ decision-making about whether to walk is insufficiently robust: some studies emphasize the role of <span style='text-decoration:underline;'>population density</span>, others the role of <span style='text-decoration:underline;'>individual physical fitness</span>, and so on, but walking decisions are made in complex contexts in which multiple conditions and needs inform individuals’ choices.",
-        "question": "Which choice best describes the function of the references to \"population density\" and \"individual physical fitness\" in the text as a whole?",
+        "passage": "Built in the 1970s, Raccoon Mountain is a pumpedstorage hydropower facility (a “water-battery”) located in the United States along the Tennessee River. When energy demand is low, excess power from the regional electric utility’s nuclear plants is used to pump water (from a lower reservoir filled from the Tennessee River) up a shaft to the summit lake, where the water is stored as gravitational potential energy. When energy demand peaks, the water drains down from the summit lake, spinning turbines and generating upward of 1,700 megawatts of power—enough to power one million homes for twenty hours.",
+        "question": "Which choice best states the main purpose of the text?",
         "options": [
-            "They represent factors that have been identified as important influences on walking decisions but that the text suggests are merely some of the many factors that may contribute to people’s decision-making about walking.",
-            "They are examples of factors that studies suggest are important in people's decision making about walking but that the text claims most people rarely consider when making walking decisions.",
-            "They identify factors that Alfonzo argues have been overemphasized in studies of decision-making about walking but that the text asserts are relevant to most people’s walking decisions.",
-            "They illustrate factors that researchers believe people consider when making walking decisions in most contexts but that the text argues are unique to walking decisions made by people in Boston."
+            "To point out the differences between two methods of energy generation",
+            "To explain the basics of how a specific energy technology works",
+            "To encourage regional electric utilities to build energy storage facilities",
+            "To discuss the benefits of a new energy technology"
         ]
     },
     {
         "id": 58,
         "type": "rw",
-        "passage": "The following text is adapted from Emily Dickinson's circa 1873 poem “There is no Frigate like a Book.”<br><br><div style='margin-left: 12px;'>There is no Frigate like a Book<br>\nTo take us Lands away<br>\nNor any Coursers like a Page<br>\nOf prancing Poetry—<br>\nThis Traverse may the poorest take<br>\nWithout oppress of Toll—<br>\nHow frugal is the Chariot\nThat bears the Human soul.</div>",
+        "passage": "Ruth Asawa was an accomplished artist who worked in many art forms, including her unique tied-wire sculptures, but she was dedicated to more than the creation of art. Asawa also wanted to bring art to children in her hometown of San Francisco, California. To that end, in 1968 she cofounded the Alvarado School Arts Workshop, which brought works of art and artists into public schools, and in 1982 she helped found a San Francisco public arts high school, which was later named after her.",
         "question": "Which choice best states the main idea of the text?",
         "options": [
-            "Poetry can forge connections between people from different cultures.",
-            "Reading is a way of defying the modern world’s emphasis on money.",
-            "Literature can metaphorically transport people to new places regardless of their means.",
-            "People can learn more about distant places by reading books than by traveling to those places."
+            "Asawa inspired many other artists to share their work with students in public schools.",
+            "Asawa’s unique sculptures were appreciated more by local art communities than they were nationwide.",
+            "Asawa’s interest in art education prompted her to create art programs for students in San Francisco.",
+            "Asawa left a promising career as a sculptor to work as an art teacher in San Francisco schools."
         ]
     },
     {
         "id": 59,
         "type": "rw",
-        "passage": "Darcie Little Badger is a novelist and a member of the Lipan Apache Tribe of Texas. Critics and fellow writers have praised her work for combining traditional Apache stories with popular genres of literature, such as fantasy and horror fiction. But Little Badger is not the only Indigenous writer to blend traditional stories with popular literature. In the 2016 novel Wrist, Nathan Adler successfully blended the oral storytelling tradition of their people, the Anishinaabe, with horror fiction.",
-        "question": "Which choice best states the main idea of the text?",
+        "passage": "<div class=\"question-image\"><img src=\"/static/images/q11.svg\"></div>\nThe first national census in Canada was conducted in 1871. The graph shows the population sizes of some of the largest Canadian cities from each of the first four national censuses, which occurred every ten years.",
+        "question": "According to the graph, which city had the largest population in 1891?",
         "options": [
-            "Several famous Indigenous writers increased their book sales when they began incorporating traditional stories.",
-            "Recent Indigenous fiction writers are mixing traditional stories with popular literary genres.",
-            "The success of Darcie Little Badger has influenced non Indigenous authors who write in popular literary genres.",
-            "Non Indigenous authors should consider the expectations of Indigenous readers."
+            "Toronto",
+            "Montréal",
+            "Québec City",
+            "Halifax"
         ]
     },
     {
         "id": 60,
         "type": "rw",
-        "passage": "Uncle Vanya: Scenes from Country Life in Four Acts is an 1898 play by Anton Chekhov, originally written in Russian. In the play, Professor Serebrakoff and his wife Helena have come to stay at their country estate, which Vanya manages with the help of Sonia, the professor's daughter from a previous marriage. Chekhov portrays the professor as being unable to adjust to living at the country estate, as is evident when ______",
-        "question": "Which quotation from a translation of Uncle Vanya most effectively illustrates the claim?",
+        "passage": "<div class=\"question-image\"><img src=\"/static/images/q12.svg\"></div>\nResearchers Kate Howlett and Edgar Turner asked 401 schoolchildren in the United Kingdom to draw and label local wildlife. The researchers suggest that the children may be more aware of mammals than of other animals in their environments.",
+        "question": "Which choice best describes data from the graph that support the researchers’ conclusion?",
         "options": [
-            "Vanya says to Professor Serebrakoff, “We used to think of you as almost superhuman, but now the scales have fallen from my eyes and I see you as you are!”.",
-            "Professor Serebrakoff says, “I am a book worm and a scholar, and am unfamiliar with practical affairs. I cannot. I find dispense with the help of well-informed people.”.",
-            "Professor Serebrakoff says to Helena, “I am used to my library and the lecture hall and to the esteem and admiration of my colleagues. Now I suddenly find myself plunged into this wilderness [the estate], condemned to see the same stupid people from morning till night and listen to their futile conversations.”.",
-            "Professor Serebrakoff says to Helena and Sonia, “No, no, no! Don't leave me alone with [Vanya\n    ]! Oh, don't He will begin to lecture me.”."
+            "There were about as many drawings with an example of an insect as there were with an example of a bird.",
+            "The fewest number of drawings contained an example of a bird.",
+            "More of the drawings had an example of an insect than an example of a mammal.",
+            "More of the drawings had an example of a mammal than either an example of a bird or an example of an insect."
         ]
     },
     {
         "id": 61,
         "type": "rw",
-        "passage": "Fish whose DNA has been modified to include genetic material from other species are known as transgenic. Some transgenic fish have genes from jellyfish that result in fluorescence (that is, they glow in the dark). Although these fish were initially engineered for research purposes in the 1990s, they were sold as pets in the 2000s and can now be found in the wild in creeks in Brazil. A student in a biology seminar who is writing a paper on these fish asserts that their escape from Brazilian fish farms into the wild may have significant negative long-term ecological effects.",
-        "question": "Which quotation from a researcher would best support the student's assertion?",
+        "passage": "<div class=\"question-image\"><img src=\"/static/images/q13.svg\"></div>\nSince the nation’s earliest days, both houses of the United States Congress have counted many military veterans among their elected officials, including Hiram L. Fong (who served in the US Army Air Force) and Ralph Harold Metcalfe Sr. (who served in the US Army). A research institute gathered historical data about congressional members who have reported past military experience and determined that _______",
+        "question": "Which choice most effectively uses data from the graph to complete the sentence?",
         "options": [
-            "“In one site in the wild where transgenic fish were observed, females outnumbered males, while in another the numbers of females and males were equivalent.”",
-            "“Though some presence of transgenic fish in the wild has been recorded, there are insufficient studies of the impact of those fish on the ecosystems into which they are introduced.”",
-            "“The ecosystems into which transgenic fish are known to have been introduced may represent a subset of the ecosystems into which the fish have actually been introduced.”",
-            "“Through interbreeding, transgenic fish might introduce the trait of fluorescence into wild fish populations, making those populations more vulnerable to predators.” "
+            "from 2003 to 2023, the House of Representatives had a higher percentage of those members than the Senate did.",
+            "from 1953 to 2003, those members constituted a majority in both houses of Congress.",
+            "the percentage of those members decreased substantially in both houses of Congress from 1973 to 2013.",
+            "the percentage of those members remained fairly consistent, regardless of house, from 1993 to 2023."
         ]
     },
     {
         "id": 62,
         "type": "rw",
-        "passage": "Cane is a 1923 novel by Jean Toomer. In the novel, Toomer mentions a road in rural Georgia called Dixie Pike and describes it as having a deep connection to a faraway place, writing, ______",
-        "question": "Which quotation from Cane most effectively illustrates the claim?",
+        "passage": "“Aunt Sue’s Stories” is a 1926 poem by Langston Hughes. In the poem, the speaker indicates that the stories Aunt Sue tells are based on Aunt Sue’s personal experiences, saying that _______",
+        "question": "Which choice most effectively uses a quotation from “Aunt Sue’s Stories” to illustrate the claim?",
         "options": [
-            "“And when the wind is from the South, soil of my homeland falls like a fertile shower upon the lean streets of [Washington, DC].”",
-            "“The Dixie Pike has grown from a goat path in Africa.”",
-            "“From down the railroad track, the chug–chug of a gas engine announces that the repair gang is coming home.”",
-            "“One evening I walked up the [Dixie] Pike on purpose, and stopped to say hello [to Fern].” "
+            "dark shadows “cross and recross / Aunt Sue’s stories.”",
+            "a listening child “knows that Aunt Sue / Never got her stories out of any book at all, / But that they came / Right out of her own life.”",
+            "the stories are told during “Summer nights on the front porch.”",
+            "the people in the stories “Mingle themselves softly / In the flow of old Aunt Sue’s voice, / Mingle themselves softly.”"
         ]
     },
     {
         "id": 63,
         "type": "rw",
-        "passage": "The 1980 production of Charlie and Algernon was the first Broadway show for which Jess Goldstein was credited as a costume designer. Goldstein was among the Broadway costume designers interviewed by Sara Jablon-Roberts and Eulanda A. Sanders for their study of historical accuracy in costume design. They argue that aesthetics often outweigh fidelity to the past among designers for shows with historical settings. In a paper for a theater class, a student claims that the costume design for a modern production of the musical Our Town (set in the early 1900s) exemplifies this tendency.",
-        "question": "Which quotation from the costume designer for the modern production of Our Town most effectively supports the student’s claim?",
+        "passage": "Olms are salamanders that live in underwater caves. Scientists once thought that olms stay in their caves all their lives. However, Raoul Manenti and team claim that olms regularly come to the surface to perform important activities such as finding food.",
+        "question": "Which finding, if true, would most strongly support the underlined claim?",
         "options": [
-            "“Although historically accurate costumes would have added an air of authenticity to Our Town, they have so many layers that costume changes would have been difficult.”",
-            "“The clothing of the period of Our Town is aesthetically appealing but largely unfamiliar to today’s audiences, so minor deviations from historical accuracy largely went unnoticed.”",
-            "“For Our Town, I decided not to include the extra fabric that would have been typical of clothing in the period because it made the costumes unappealingly bulky.”",
-            "“In trying to create the period look of Our Town, I had to make some practical compromises, such as substituting cooler modern fabrics for historically accurate woolens so that the actors didn’t overheat.” "
+            "Researchers determine that olms don’t breed often.",
+            "Researchers confirm that olms live in only a few cave systems.",
+            "Researchers discover that earthworms from surface soils are a major part of olms’ diet.",
+            "Researchers learn that olms’ brains differ from other salamanders’ brains."
         ]
     },
     {
         "id": 64,
         "type": "rw",
-        "passage": "Zooarchaeologist Ophélie Lebrasseur and her team examined a fox skeleton discovered in 1991 at an archaeological site alongside artifacts of human habitation (like spear points) in central Argentina. Lebrasseur et al. determined that the fox was Dusicyon avus, an extinct species resembling a jackal, and radiocarbon dating placed the fox at the site at the same time as human inhabitants. (Indeed, the inhabitants may have deliberately buried the fox.) In addition, while wild foxes have a diet entirely made of meat, isotopic signatures of the skeleton’s teeth indicated that the fox’s diet, like that of the humans, was partly composed of plant material. Lebrasseur et al. therefore concluded that ______",
+        "passage": "In Switzerland, the white fuzzy mountain flowers known as edelweiss are widely treated as a symbol of strength and courage. Although edelweiss can thrive in extreme conditions, they aren’t notably tougher or harder to reach than other mountain flowers growing in the Swiss Alps. Historian Tobias Scheidegger has shown that the popular view of the flowers originated in the mid-1800s when mountain climbing became popular in Switzerland. Mountain climbers spread the idea that the flowers grew only in steep, icy terrains that were dangerous to climb to. Scheidegger says that these claims were selfinterested. He suggests that mountain climbers presented edelweiss in this way in order to _______",
         "question": "Which choice most logically completes the text?",
         "options": [
-            "the humans who were alive at the same time as the fox most likely ate more meat than the fox did.",
-            "the humans who were alive at the same time as the fox hunted using the spears whose points were also found at the site.",
-            "the fox may have been a companion animal of the humans who inhabited the site at the same time.",
-            "the fox had a diet more similar to that of jackals than to that of wild foxes. "
+            "make themselves appear brave and strong for being able to climb to difficult places where edelweiss supposedly grew.",
+            "encourage more flower enthusiasts to explore the Swiss Alps.",
+            "share their observations about the unusual characteristics of edelweiss with scientists.",
+            "prove that edelweiss were more common in the Swiss Alps than in other mountain regions in Europe."
         ]
     },
     {
         "id": 65,
         "type": "rw",
-        "passage": "In the nineteenth century, Elizabeth Cady Stanton and Susan B. Anthony _____ for women's right to vote in the United States.",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "passage": "The ratio of methane to other atmospheric constituents—represented by a measure called the methane mole fraction—influences a variety of meteorological phenomena, notably precipitation and humidity. For Titan, Saturn’s largest moon, the observational data that exist are too sparse and discrepant to fully constrain the range of the methane mole fraction at various atmospheric levels. Juan Lora and colleagues point out that outputs of the IPSL atmospheric model of Titan, which track closely to observations in some respects, reflect how the model’s developers responded to this challenge: by prescribing a uniform methane mole fraction for the lowest level of the atmosphere. It is therefore important to note that _______",
+        "question": "Which choice most logically completes the text?",
         "options": [
-            "having campaigned",
-            "campaigned",
-            "campaigning",
-            "to campaign "
+            "some disagreements between the model’s simulations of Titan’s precipitation and humidity and the moon’s actual precipitation and humidity are to be expected.",
+            "further observations of Titan may clarify the moon’s methane mole fraction sufficiently for the model to employ a single value rather than a range.",
+            "even though the model’s outputs sometimes agree with observational data, Titan’s real methane mole fraction is likely higher than the methane mole fraction used in the model.",
+            "inconsistencies across the model’s simulations of Titan’s precipitation and humidity could be attributable to variations in the moon’s methane mole fraction."
         ]
     },
     {
         "id": 66,
         "type": "rw",
-        "passage": "While conducting an interview for her book Latina Authors and Their Muses, editor Mayra Calvani asked Sarah Cortez, author of the memoir Walking Home, what _____ Cortez’s response was Bury Me Deep by Megan Abbott.",
+        "passage": "Ganga is a folk singing tradition that originated in the Dinaric Alps in southern Europe. Ganga singers sing different melodies at the same time. The clashing notes can echo a long way across the mountains, which is why _______",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "her favorite book was.",
-            "was her favorite book?",
-            "her favorite book was?",
-            "was her favorite book!"
+            "ganga has been used as a communication method?",
+            "ganga has been used as a communication method.",
+            "has ganga been used as a communication method.",
+            "has ganga been used as a communication method?"
         ]
     },
     {
         "id": 67,
         "type": "rw",
-        "passage": "Choreographers George Balanchine and Martha Graham both contributed sections to the dance piece Episodes, which premiered at New York's City Center of Music and Drama in 1959. This cross-genre collaboration brought together the distinct features of Balanchine's neoclassical ballet and Graham's modern ______ the stylistic diversity and creative innovation within the dance world.",
+        "passage": "The part of a compound that determines the compound’s color is _______ the chromophore. One example of a chromophore is hemoglobin, which gives human blood its red color.",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "dance, it showcased",
-            "dance. Which showcased",
-            "dance, showcasing",
-            "which showcased"
+            "called,",
+            "called",
+            "called—",
+            "called;"
         ]
     },
     {
         "id": 68,
         "type": "rw",
-        "passage": "In the book <i>A Theory of Harmony</i> (1985), Swiss musicologist Ernst Levy argued that every chord has an opposite that can be substituted for it. For example, a pianist could replace the vi chord for the bIII chord while _____ chord is a given chord’s opposite can be determined using a music visualization tool called the circle of fifths.",
+        "passage": "A popular suite of mapping and spatial analysis software, ArcGIS enables artographers like Karachi Cartography founder Namra Khalid _______ maps by analyzing and arranging raw geospatial data.",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "improvising which",
-            "improvising and which",
-            "improvising. Which",
-            "improvising, which"
+            "create",
+            "to create",
+            "creating",
+            "created"
         ]
     },
     {
         "id": 69,
         "type": "rw",
-        "passage": "In her Silueta sculpture series, the Cuban American artist Ana _____ to access what she called an “omnipresent female force,” utilized a variety of natural materials to create outlines—or silhouettes—of her own body.",
+        "passage": "The part of a compound that determines the compound’s color is _______ the chromophore. One example of a chromophore is hemoglobin, which gives human blood its red color.",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "Mendieta was hoping",
-            "Mendieta hoped",
-            "Mendieta had hoped",
-            "Mendieta, hoping"
+            "called,",
+            "called",
+            "called—",
+            "called;"
         ]
     },
     {
         "id": 70,
         "type": "rw",
-        "passage": "As volcanologists like Tamsin Mather are apt to make clear, not all volcanoes are the same. Tendürek in Turkey, for example, is a shield volcano, a type of volcano named for its low profile, resembling a warrior’s shield lying on the ground. Opala in Russia, _____ is a caldera, a large cauldron-like hollow that forms shortly after the emptying of a magma chamber in a volcanic eruption.",
-        "question": "Which choice completes the text with the most logical transition?",
+        "passage": "In rural Minnesota, ecologist Leroy Walston conducted a study to determine whether seeding solar panel fields with wildflowers could bolster pollinator populations in nearby food crops. Walston’s findings indicate that—assuming solar panel installers’ _______ practice has the potential to increase the number of native bees in crops near solar fields throughout the Midwest by up to 20 percent.",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "in any case,",
-            "in contrast,",
-            "in conclusion,",
-            "in fact,"
+            "cooperation, this",
+            "cooperation—this",
+            "cooperation: this",
+            "cooperation this"
         ]
     },
     {
         "id": 71,
         "type": "rw",
-        "passage": "The United Nations’ Trade and Development organization divides exports into five key categories: food items, agricultural materials, fuels, ores and raw metals, and manufactured goods (i.e., most nonfood goods made by machinery or by hand). In 2022, the majority (62 percent) of Belgium’s exports were manufactured goods. _____ vaccines, medicines, and cars were its top exports.",
-        "question": "Which choice completes the text with the most logical transition?",
+        "passage": "Key-value pairs are an important aspect of JavaScript Object Notation (JSON), an electronic file format for storing and transmitting data. Keys function as labels, while values contain the actual information. In a JSON file storing data about fire belly _______ instance, you could encounter a key such as “species” with the associated value of “<i>Cynops orientalis.</i>”",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "In a broader sense,",
-            "Within this category,",
-            "In the future,",
-            "Despite this majority,"
+            "newts. For",
+            "newts, for",
+            "newts: for",
+            "newts; for"
         ]
     },
     {
         "id": 72,
         "type": "rw",
-        "passage": "A research team led by Gal Badhii has discovered that chimpanzees communicate through exchanges of gestures occurring at a pace similar to that of human conversations. _____ chimpanzee gesture exchanges have short pauses of about 120 milliseconds between communications, comparable to the 200–millisecond average pause between turns in human speech.",
-        "question": "Which choice completes the text with the most logical transition?",
+        "passage": "Most of the ice found on Earth is ice Ih, distinguished by a crystalline structure in which molecules form a hexagonal pattern. Amorphous ice, on the other hand, constitutes most of the ice in the ultrafrigid environment of outer space. Defined by a disorganized molecular structure, _______",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "Specifically,",
-            "As a result,",
-            "By contrast,",
-            "Nevertheless,"
+            "ice Ih contains crystals, whereas amorphous ice, which lacks the thermal energy to form them, does not.",
+            "amorphous ice lacks the thermal energy to form the crystals found in ice Ih.",
+            "the lack of thermal energy in amorphous ice explains its inability to form the crystals found in ice Ih.",
+            "ice Ih differs from amorphous ice in that it possesses the thermal energy to form crystals."
         ]
     },
     {
         "id": 73,
         "type": "rw",
-        "passage": "While researching a topic, a student has taken the following notes:\n<ul>\n<li>\nThe Great Salt Lake in Utah is one of the world’s saltiest bodies of water.\n</li>\n<li>\nThe northern portion of the lake has a higher concentration of salt than the southern portion.\n</li>\n<li>\nCrustaceans called Artemia franciscana live in the southern portion.\n</li>\n<li>\nBacteria called Nodularia live in the southern portion.\n</li>\n</ul>\n",
-        "question": "The student wants to emphasize a difference between <i>Artemia franciscana</i> and <i>Nodularia</i>. Which choice most effectively uses the relevant information to accomplish this goal?",
+        "passage": "Recordings of electrical activity in the brain, _______ increased activity in brain areas associated with suppressing motor functions.",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
-            "<i>Artemia franciscana</i> are crustaceans that live in the southern portion of the Great Salt Lake.",
-            "<i>Artemia franciscana</i> and <i>Nodularia</i> both live in the Great Salt Lake’s southern portion.",
-            "The northern portion of the Great Salt Lake has a higher concentration of salt than does the southern portion.",
-            "<i>Artemia franciscana</i> and <i>Nodularia</i> are different types of organisms: <i>Artemia franciscana</i> are crustaceans, whereas <i>Nodularia</i> are bacteria. "
+            "electrograms show that while responding to hypothetical match scenarios, the most highly skilled soccer players have",
+            "the most highly skilled soccer players responding to hypothetical match scenarios have electrograms that show",
+            "responses to hypothetical match scenarios show that the most highly skilled soccer players have electrograms with",
+            "hypothetical match scenario responses show that the most highly skilled soccer players captured in electrograms have"
         ]
     },
     {
         "id": 74,
         "type": "rw",
-        "passage": "While researching a topic, a student has taken the following notes:\n<ul>\n<li>\nExtravehicular activities (EVAs) are activities performed outside a spacecraft by astronauts in outer space.\n</li>\n<li>\nEVAs are also known as spacewalks.\n</li>\n<li>\nRichard Mastracchio is a former US astronaut who has performed 9 spacewalks.\n</li>\n<li>\nThe total time of Mastracchio’s spacewalks was 53 hours and 4 minutes.\n</li>\n<li>\nGarrett Reisman is a former US astronaut who has performed 3 spacewalks.\n</li>\n<li>\nThe total time of Reisman’s spacewalks was 21 hours and 21 minutes.\n</li>\n</ul>\n",
-        "question": "The student wants to emphasize a similarity between the astronauts Mastracchio and Reisman. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "passage": "While researching a topic, a student has taken the following notes:<br>\n<div style=\"margin-left: 12px\">\n• In a 2020 study, researchers in California investigated how many potential nesting sites female wood ducks visited during the nesting\nseason.\n• The researchers placed nest boxes throughout the survey area and tagged 138 female wood ducks with radio frequency ID trackers.\n• These trackers recorded how many nest boxes each duck visited.\n• 67 ducks (48.5%) visited only one nest box.\n• 18 ducks (13.0%) visited 10 or more nest boxes.\n• Younger ducks were more likely to visit multiple nest boxes.\n</div>",
+        "question": "The student wants to present the methods used in the 2020 study. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
-            "Reisman has spent less time performing spacewalks than Mastracchio has.",
-            "EVAs, also known as spacewalks, are activities done by astronauts outside a spacecraft. ",
-            "Mastracchio and Reisman have each performed multiple spacewalks.",
-            "Mastracchio has performed spacewalks, but Reisman has performed EVAs.\n"
+            "By recording how many nest boxes each duck visited, the researchers discovered that only a relatively small percentage (13.0%) of the ducks visited 10 or more nest boxes.",
+            "After tracking how many nest boxes the 138 wood ducks visited, the researchers found that the younger ducks tended to visit more nest boxes than the older ducks.",
+            "The researchers tagged 138 female wood ducks with radio frequency ID trackers and recorded how many nest boxes each duck visited during the nesting season.",
+            "The researchers investigated each nesting site for signs that it had been visited by the female wood ducks."
         ]
     },
     {
         "id": 75,
         "type": "rw",
-        "passage": "While researching a topic, a student has taken the following notes:\n<ul>\n<li>\nThe Tijuana Slough National Wildlife Refuge (NWR) is a protected natural area in California.\n</li>\n<li>\nIt encompasses 1,023 acres.\n</li>\n<li>\nThe Tijuana Slough NWR was established to safeguard the habitat of the light-footed clapper rail, an endangered species.\n</li>\n<li>\nThe Tijuana Slough NWR is managed by the US Fish & Wildlife Service.\n</li>\n<li>\nThe US Fish & Wildlife Service limits human activities in the area.\n</li>\n</ul>\n",
-        "question": "The student wants to emphasize the role the US Fish & Wildlife Service plays in safeguarding the habitat of the light-footed clapper rail. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "passage": "While researching a topic, a student has taken the following notes:<br>\n<div style=\"margin-left: 12px\">\n• Pedestrian malls are outdoor streets in a city or town where vehicle traffic is prohibited.\n• Many pedestrian malls were built in the 19th and 20th centuries in Europe and Asia.\n• Qianmen Dajie is a famous pedestrian mall in Beijing.\n• It has existed since the Ming dynasty (1368–1644 CE).\n• Rue Mouffetard is a famous pedestrian mall in Paris.\n• It has existed since the mid-Roman Empire (117–235 CE).\n</div>",
+        "question": "The student wants to emphasize a similarity between the ages of the malls. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
-            "By limiting human activities in the Tijuana Slough NWR, the US Fish & Wildlife Service safeguards the habitat of the light-footed clapper rail.",
-            "Human activities are limited in the Tijuana Slough NWR, a protected natural area in California.",
-            "Home to the light-footed clapper rail, the Tijuana Slough NWR is located in California, where it encompasses 1,023 acres.",
-            "The 1,023-acre Tijuana Slough NWR was established to safeguard the habitat of the light-footed clapper rail, an endangered species."
+            "The Qianmen Dajie pedestrian mall has roots as far back as the Ming dynasty; likewise, Rue Mouffetard has existed for centuries.",
+            "Both Qianmen Dajie and Rue Mouffetard are famous pedestrian malls, the former in Beijing and the latter in Paris.",
+            "Qianmen Dajie and Rue Mouffetard are pedestrian malls, outdoor streets closed to vehicle traffic.",
+            "Qianmen Dajie and Rue Mouffetard are examples of pedestrian malls, which proliferated in Europe in the 19th and 20th centuries."
         ]
     },
     {
         "id": 76,
         "type": "rw",
-        "passage": "While researching a topic, a student has taken the following notes:\n\n<ul>\n<li>\nThe cuneiform script is the earliest known set of symbols used for writing.\n</li>\n<li>\nSumerian was one of the first languages to be written using the cuneiform script.\n</li>\n<li>\nSumerian was a language in ancient Mesopotamia (present-day Iraq).\n</li>\n<li>\nClay tablets with Sumerian writing have been found there.\n</li>\n<li>\nSome of these tablets are almost 5,000 years old.</li>\n</ul>\n",
+        "passage": "While researching a topic, a student has taken the following notes:<br>\n<div style=\"margin-left: 12px\">\n• Modularity of mind is the notion that the mind is at least partly composed of innate neural structures (modules) that perform fast, necessary tasks.<br>\n• 1983: cognitive scientist Jerry A. Fodor hypothesized that low-level cognitive systems (e.g., perception, language) are modular.<br>\n• In Fodorian modularity, high-level systems (e.g., reasoning) are not modular.<br>\n• 2003: cognitive scientist Peter Carruthers proposed the massive modularity hypothesis (MMH).<br>\n• MMH expands modularity to include all cognitive systems.\n</div>",
         "question": "The student wants to identify a language that was written using the cuneiform script. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
             "Examples of Mesopotamian writing that are nearly 5,000 years old have been found.",
             "A language in ancient Mesopotamia used the cuneiform script for writing.",
-            "\nClay tablets with cuneiform script have been found in present-day Iraq.",
+            "Clay tablets with cuneiform script have been found in present-day Iraq.",
             "Sumerian, an ancient Mesopotamian language, was written using the cuneiform script."
         ]
     },
     {
-        "question": "The function $f$ is defined by $f(x) = 5x - 6$. What is the value of $f(x)$ when $x = 10$?",
+        "question": "Which expression is equivalent to $6x + 5x + 4y$?",
         "id": 77,
-        "type": "math"
+        "type": "math",
+        "options": [
+            "$15x$",
+            "$15y$",
+            "$11x + 4y$",
+            "$30x + 4y$"
+        ]
     },
     {
-        "question": "On a certain day in June, the lowest recorded wind speed in a town was $5$ miles per hour (mph) and the highest recorded wind speed was $14$ mph. Which inequality is true for all values of $w$, where $w$ represents any wind speed, in mph, recorded in the town on this day?",
+        "question": "To study the characteristics of sea stars in a group of tide pools, researchers measured the diameter of the sea stars within the tide pools. The dot plot gives the diameter, to the nearest inch, of each of the sea stars in these tide pools.\n<div class=\"question-image\"><img src=\"/static/images/dot-plot.svg\"></div>",
         "options": [
             "$w \\leq 5$",
             "$w \\leq 9$",
@@ -889,210 +895,186 @@
         "type": "math"
     },
     {
-        "question": "What value of $p$ is the solution to the equation $4p - 5p = 14$",
+        "question": "A rectangle has a length of $56$ inches and a width of $28$ inches. What is the area, in square inches, of the rectangle?",
         "options": [
-            "$-14$",
-            "$-\\frac{1}{14}$",
-            "$\\frac{1}{14}$",
-            "$14$"
+            "$28$",
+            "$84$",
+            "$168$",
+            "$1568$"
         ],
         "id": 79,
         "type": "math"
     },
     {
-        "question": "A polygon with $22$ sides has a perimeter of $131$ inches. The length of one side is $5$ inches. The other $21$ sides have equal lengths. What is the length, in inches, of one of the $21$ sides with equal lengths?",
+        "question": "<img src=\"/static/images/equation.svg\" style=\"width: 120px; margin: 0 auto; display: block\">\nThe solution to the given system of equations is $(x, y)$, . What is the value of $y$?",
         "id": 80,
-        "type": "math"
+        "type": "math",
+        "options": [
+            "$63$",
+            "$11$",
+            "$10$",
+            "$3$"
+        ]
     },
     {
-        "question": "To purchase a used car at a total price of $13,000$ dollars, a one-time down payment is required, and then fixed monthly payments are made for the remaining amount owed for the car. The equation $13,000 = 2,600 + 260t$ represents this situation, where $t$ is the number of fixed monthly payments that are made. Which of the following is the best interpretation of $260$ in this context?",
+        "question": "The function $f$ is defined by $f(x) = 9(2x + 3)$. For what value of $x$ does $f(x) = 63$?",
         "options": [
-            "The amount, in dollars, of the down payment",
-            "The total amount, in dollars, of the fixed monthly payments",
-            "The total amount, in dollars, paid for the car after $t$ fixed monthly payments",
-            "The total number of fixed monthly payments"
+            "$2$",
+            "$5$",
+            "$7$",
+            "$30$"
         ],
         "id": 81,
         "type": "math"
     },
     {
-        "question": "If $3-2x = 42$, what is the value of $\\frac{1}{6}(3-2x)$?",
-        "options": [
-            "$6$",
-            "$7$",
-            "$42$",
-            "$252$"
-        ],
+        "question": "<div style=\"width: 100%; display: flex; justify-content: center\">$10x = 86$</div>\nWhat value of $x$ is the solution to the given equation?",
         "id": 82,
         "type": "math"
     },
     {
         "passage": "",
-        "question": "The ratio $72$ to $m$ is equivalent to the ratio $4$ to $24$. What is the value of $m$?",
-        "options": [
-            "$3$",
-            "$24$",
-            "$144$",
-            "$432$"
-        ],
+        "question": "<div style=\"width: 100%; display: flex; justify-content: center\">$y = 3600(a)^x$</div>\nThe given equation, where $a$ is a positive constant, gives the predicted number of bacteria, $y$, in a growth medium $x$ hours after the number of bacteria was initially measured. According to the equation, what was the predicted number of bacteria initially measured in the growth medium?",
         "id": 83,
         "type": "math"
     },
     {
-        "question": "$(z+4)(z − 6)=0$<br>What are all possible solutions to the given equation?",
+        "question": "Leo goes to a packing store to buy containers and tape. Leo has $15$. Each container costs $1.87$ and each roll of tape costs $2.40$. Which inequality represents the relationship between the number of containers, $c$, and the number of rolls of tape, $t$, Leo can buy?",
         "options": [
-            "$-4$ and $-6$",
-            "$-4$ and $6$",
-            "$4$ and $-6$",
-            "$4$ and $6$"
+            "$1.87c + 2.40t <= 15$",
+            "$1.87c + 2.40t >= 15$",
+            "$2.40c + 1.87t <= 15$",
+            "$2.40c + 1.87t >= 15$"
         ],
         "id": 84,
         "type": "math"
     },
     {
-        "question": "<div style=\"width: 100%; text-align: center;\">$7x-8y=x^2$<br>$7x-8y=36$</div><br>A solution to the given system of equations is $(x,y)$, where $x$ is positive. What is the value of $x$?",
+        "question": "The graph of the function $f$ is shown, where $y = f(x)$.\n<div class=\"question-image\"><img src=\"/static/images/q85.svg\"></div>\nWhich of the following best describes the function $f$?",
         "id": 85,
-        "type": "math"
+        "type": "math",
+        "options": [
+            "Decreasing exponential",
+            "Increasing exponential",
+            "Decreasing linear",
+            "Decreasing linear"
+        ]
     },
     {
-        "question": "The table shows four values of $x$ and their corresponding values of $y$. There is a linear relationship between $x$ and $y$. Which of the following equations represents this relationship?<br><br><table style=\"border:1px solid #1e1e1e;\"><tr><td>$x$</td><td>$y$</td></tr><tr><td>$-6$</td><td>$48$</td></tr><tr><td>$-3$</td><td>$39$</td></tr><tr><td>$3$</td><td>$21$</td></tr><tr><td>$6$</td><td>$12$</td></tr></table>",
+        "question": "<div class=\"question-image\"><img src=\"/static/images/q86.svg\"></div>\nThe shaded region shown in the graph represents all the solutions to which inequality?",
         "options": [
-            "$9x + 3y = 90$",
-            "$9x + 3y = 3$",
-            "$3x + 9y = 90$",
-            "$3x + 9y = 3$"
+            "$x <= 36$",
+            "$x >= 36$",
+            "$y <= 36$",
+            "$y >= 36$"
         ],
         "id": 86,
         "type": "math"
     },
     {
-        "question": "The function $k$ is defined by $k(x) = x^2 + 20$. What is the value of $k(x)$ when $x = 2$?",
+        "question": "There are $240$ players in a tennis competition that includes $4$ rounds of matches. Each player in the competition will play a match against another player in round $1$. At the end of each round, the player who loses the match is eliminated and the player who won the match advances to the next round to play a match against another winning player. Which equation gives the number of players, $p$, eliminated at the end of round $r$, where $r <= 4$?",
         "options": [
-            "$28$",
-            "$26$",
-            "$25$",
-            "$20$"
+            "$p = 15\\left(\\frac{1}{2}\\right)^r$",
+            "$p = 15\\left(2\\right)^r$",
+            "$p = 240\\left(\\frac{1}{2}\\right)^r$",
+            "$p = 240\\left(2\\right)^r$"
         ],
         "id": 87,
         "type": "math"
     },
     {
-        "question": "Which expression is equivalent to $9yz^3 + 6yz + 3yz^3 + 2y$ for all values of $y$ and $z$?",
+        "question": "Line $k$ is defined by $y = 6x + 4$. Line $j$ is parallel to line $k$ in the $xy$-plane and passes through the point $(0, 5$. Which equation defines line $j$?",
         "options": [
-            "$12yz^3 + 8yz$",
-            "$12yz^3 + 6yz + 2y$",
-            "$27y^2z^4 + 8y^2z$",
-            "$27y^2z^4 + 6y^2z + 2y$"
+            "$y = 6x + 5$",
+            "$y = -5x + 5$",
+            "$y = -6x + 5$",
+            "$y = 5x + 5$"
         ],
         "id": 88,
         "type": "math"
     },
     {
-        "question": "The graph of the polynomial function $f$ in the $xy$-plane includes the $x$-intercept at $(3,0)$. Which of the following must be a factor of $f(x)$?",
-        "options": [
-            "$x - 3$",
-            "$x + 3$",
-            "$3x - 1$",
-            "$3x + 1$"
-        ],
+        "question": "<div class=\"question-image\"><img src=\"/static/images/q89.svg\"></div>\nIn the triangle shown, what is the value of $x$?",
         "id": 89,
         "type": "math"
     },
     {
-        "question": "For the linear function $f,$ $f(0)=220$ and $f(8)=1820$. Which equation represents $f(x)$?",
-        "options": [
-            "$f(x)=197x-220$",
-            "$f(x)=220x-197$",
-            "$f(x)=197x+220$",
-            "$f(x)=220x+197$"
-        ],
+        "question": "What is the radius of the circle in the $xy$-plane defined by $\\left(x+2\\right)^2+\\left(y+5\\right)^2=169$?",
         "id": 90,
         "type": "math"
     },
     {
-        "question": "<img src=\"/static/images/scatter-plot.png\" alt=\"Scatter plot\" style=\"width: 350px; height: auto; margin: 0 auto; display: block\">The scatterplot shows the relationship between two variables, $x$ and $y$. A line of best fit for the data is also shown. Which of the following is closest to the difference between the $y$-coordinate of the data point with $x=1$ and the $y$-value predicted by the line of best fit at $x=1$?",
+        "question": "<div class=\"question-image\"><img src=\"/static/images/q91.svg\"></div>\nThe graph shows the estimated boiling point y, in degrees Celsius, of a normal paraffin with a molecular weight of $x$ grams per mole, where $1\\le x\\le280$. Which statement is the best interpretation of the point $\\left(149.02,186.05\\right)$?",
         "options": [
-            "$1$",
-            "$2$",
-            "$5$",
-            "$12$"
+            "A normal paraffin with a molecular weight of $186.05$ grams per mole has an estimated boiling point of $149.02$ degrees Celsius.",
+            "A normal paraffin with a molecular weight of $149.02$ grams per mole has an estimated boiling point of $186.05$ degrees Celsius.",
+            "The minimum estimated boiling point for normal paraffins corresponds to a paraffin with a molecular weight of $149.02$ grams per mole and an estimated boiling point of $186.05$ degrees Celsius.",
+            "The maximum estimated boiling point for normal paraffins corresponds to a paraffin with a molecular weight of $149.02$ grams per mole and an estimated boiling point of $186.05$ degrees Celsius."
         ],
         "id": 91,
         "type": "math"
     },
     {
-        "question": "In right triangle $RST$, the sum of the measures of angle $R$ and angle $S$ is $90$ degrees. The value of sin($R$) is $\\frac{\\sqrt{15}}{4}$. What is the value of $cos(S)$?",
+        "question": "For the polynomial function $f$ , the graph of $y = f(x)$ in the $xy$-plane passes through the points $(-5, 0), (1, 0),$ and $(4, 0)$. Which of the following must be a factor of $f(x)$?",
         "options": [
-            "$\\frac{\\sqrt{15}}{15}$",
-            "$\\frac{\\sqrt{15}}{4}$",
-            "$\\frac{4\\sqrt{15}}{15}$",
-            "$\\sqrt{15}$"
+            "$x + 1$",
+            "$x + 4$",
+            "$x - 1$",
+            "$x - 5$"
         ],
         "id": 92,
         "type": "math"
     },
     {
-        "question": "On January 1, there were 237 views of a video posted on a social media site. Every 2 days after January 1, the number of views of the video had increased by 70% of the number of views 2 days earlier. The function $f$ gives the predicted number of views $x$ days after January 1. Which equation defines $f$?",
+        "question": "<img src=\"/static/images/q93.svg\" style=\"width: 150px; display: block; margin: 0 auto\">\nFor the linear function $g$ , the table shows four values of $x$ and their corresponding values of $g(x)$. The function can be written as $g(x) = mx + b$, where $m$ and $b$ are constants. What is the value of $b$?",
         "options": [
-            "$f(x) = 237(0.70)^{x}$",
-            "$f(x) = 237(0.70)^{x/2}$",
-            "$f(x) = 237(1.70)^{x}$",
-            "$f(x) = 237(1.70)^{x/2}$"
+            "$4$",
+            "$16$",
+            "$32$",
+            "$36$"
         ],
         "id": 93,
         "type": "math"
     },
     {
-        "question": "If the water level is rising at a rate of $0.5$ cubic meters per minute, how many minutes will it take to fill the tank?",
+        "question": "<img src=\"/static/images/q94.svg\" style=\"width: 250px; display: block; margin: 0 auto\">\nFor the quadratic function $f$, the table shows three values of $x$ and their corresponding values of $f(x)$. Which equation defines $f$?",
         "options": [
-            "$1200$",
-            "$600$",
-            "$300$",
-            "$240$"
+            "$f(x) = (x-24)(x-30) + 4$",
+            "$f(x) = (x-24)(x-30) - 8$",
+            "$f(x) = (x-8)(x-32) + 32$",
+            "$f(x) = (x-8)(x-32) - 32$"
         ],
         "id": 94,
         "type": "math"
     },
     {
-        "question": "The table shows four values of $x$ and their corresponding values of $f(x)$. There is a linear relationship between $x$ and $f(x)$ that is defined by the equation $f(x) = mx - 28$, where $m$ is a constant. What is the value of $m$?",
+        "question": "<div class=\"question-image\"><img src=\"/static/images/q95.svg\"></div>\nA certain open star cluster contains M-type stars and K-type stars. The estimated total mass of M-type and K-type stars in this open star cluster is $127882$ quettagrams. The graph shown models the possible combinations of the number of M-type stars, $x$, and K-type stars, $y$, that could be in this open star cluster if all the M-type stars have the same estimated mass and all the K-type stars have the same estimated mass. Based on the graph, which of the following is closest to the estimated mass, in quettagrams, of each M-type star in this cluster?",
         "options": [
-            "$-27$",
-            "$27$",
-            "$28$",
-            "$36$"
+            "$811$",
+            "$938$",
+            "$51904$",
+            "$75978$"
         ],
         "id": 95,
         "type": "math"
     },
     {
-        "question": "The solution to the given system of equations is $(x,y)$. What is the value of $5x+8y$? <br><div style=\"width: 100%; text-align: center; padding: 12px 0;\">$7(5x)+9(8y)=189$<br>$7(5x)-9(8y)=-819$</div>",
-        "options": [
-            "$-101$",
-            "$75$",
-            "$11$",
-            "$56$"
-        ],
+        "question": "<img src=\"/static/images/q96.svg\" style=\"width: 100px; display: block; margin: 0 auto\">\nIn the given equation, $p > 1$ and $t > 1$. If $t = p^(3n-1)$ , where $n$ is a constant, what is the value of $n$?",
         "id": 96,
         "type": "math"
     },
     {
-        "question": "For the polynomial function, when $f(x)$ is divided by $x−8$, the remainder is $9$. Which of the following must be true about the graph of $y=f(x)$ in the $xy$-plane?",
-        "options": [
-            "It passes through the point $(9,−8)$.",
-            "It passes through the point $(-8,9)$.",
-            "It passes through the point $(9,8)$.",
-            "It passes through the point $(8,9)$."
-        ],
+        "question": "The number $a$ is $55%$ less than the number $b$. The number $b$ is $320%$ greater than $160$. What is the value of $a$?",
         "id": 97,
         "type": "math"
     },
     {
-        "question": "In the given equation, $k$ and $m$ are constants. The equation has infinitely many solutions. What is the value of $m$? <br><div style=\"width: 100%; text-align: center; padding: 12px 0;\">$\\frac{−22x−29+m}{2}=k(x+5)$</div>",
+        "question": "<div style=\"width: 100%; display: flex; justify-content: center\">$f(x) = -6x^2 +60x - 126$</div>\nThe function $f$ is defined by the given equation. Which of the following equivalent forms of the equation displays the maximum value of the function as a constant or coefficient?",
         "options": [
-            "$39$",
-            "$-11$",
-            "$-26$",
-            "$-81$"
+            "$f(x) = -6x^2 +42x + 18x - 126$",
+            "$f(x) = -6x(x - 7) + 18(x - 7)$",
+            "$f(x) = -6x(x - 5)^2 + 24$",
+            "$f(x) = -6x(x - 7)(x - 3)$"
         ],
         "id": 98,
         "type": "math"

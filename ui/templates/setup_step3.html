@@ -3,20 +3,11 @@
 {% block body_class %}body-setup{% endblock %}
 {% block content %}
 
-<div class="setup-top-bar">
-    <button class="btn-icon-text">
-        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
-        Help
-    </button>
-    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
-        Return to Home
-        <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
-    </a>
-</div>
+{% include "partials/_setup_topbar.html" %}
 
 <h1 class="setup-title">Test Overview</h1>
-<div class="setup-card" style="width: 650px; padding: 40px; text-align: left; margin: 0 auto; box-sizing: border-box;">
-    <div style="font-size: 15px; color: #333; line-height: 1.6;">
+<div class="setup-card" style="width: 680px; padding: 40px 32px; text-align: left; margin: 0 auto; box-sizing: border-box;">
+    <div style="font-size: 16px; color: #333; line-height: 1.6;">
         <p style="margin-bottom: 20px;">The digital SAT, PSAT/NMSQT, PSAT 10, and PSAT 8/9 each consist of a Reading
             and<br>
             Writing section and a Math section.</p>
@@ -41,13 +32,5 @@
             can<br>find these directions at the top-left corner of every question screen.</p>
     </div>
 </div>
-<div class="bottom-nav">
-    <button class="btn-secondary" onclick="window.location.href='/setup_step5/'">Back</button>
-    <div class="progress-container"><span class="progress-text">Step 3 of 9</span>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: 33%"></div>
-        </div>
-    </div>
-    <button class="btn-next" onclick="window.location.href='/setup_step4/'">Next</button>
-</div>
+{% include "partials/_setup_bottomnav.html" with back_url="/setup_step2/" step=3 progress="33%" next_url="/setup_step4/" %}
 {% endblock %}

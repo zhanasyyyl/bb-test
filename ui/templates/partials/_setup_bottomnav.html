@@ -1,0 +1,14 @@
+{% comment %}
+  Usage: {% include "partials/_setup_bottomnav.html" with back_url="/setup/" step=2 progress="22%" next_url="/setup_step3/" %}
+  Optional: next_id, next_disabled
+{% endcomment %}
+<div class="bottom-nav">
+    <button class="btn-secondary" onclick="window.location.href='{{ back_url }}'">Back</button>
+    <div class="progress-container">
+        <span class="progress-text">Step {{ step }} of 9</span>
+        <div class="progress-bar">
+            <div class="progress-fill"{% if progress %} style="width: {{ progress }}"{% endif %}></div>
+        </div>
+    </div>
+    <button{% if next_id %} id="{{ next_id }}"{% endif %} class="btn-next" onclick="window.location.href='{{ next_url }}'"{% if next_disabled %} disabled{% endif %}>Next</button>
+</div>

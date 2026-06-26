@@ -3,28 +3,11 @@
 {% block body_class %}body-setup{% endblock %}
 {% block content %}
 
-<div class="setup-top-bar">
-    <button class="btn-icon-text">
-        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
-        Help
-    </button>
-    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
-        Return to Home
-        <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
-    </a>
-</div>
+{% include "partials/_setup_topbar.html" %}
 
 <h1 class="setup-title">We're About to Lock Your Device</h1>
-<div class="setup-card" style="width: 550px; padding: 20px; text-align: center;">
+<div class="setup-card" style="width: 529px; height: 428px; padding: 20px; text-align: center;">
     <img style="width: 100%; height: auto;" src="{% static 'images/lock-device.png' %}" alt="">
 </div>
-<div class="bottom-nav">
-    <button class="btn-secondary" onclick="window.location.href='/setup_step7/'">Back</button>
-    <div class="progress-container"><span class="progress-text">Step 8 of 9</span>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: 88%"></div>
-        </div>
-    </div>
-    <button class="btn-next" onclick="window.location.href='/start-code/'">Next</button>
-</div>
+{% include "partials/_setup_bottomnav.html" with back_url="/setup_step7/" step=8 progress="88%" next_url="/start-code/" %}
 {% endblock %}

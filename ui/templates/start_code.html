@@ -3,19 +3,14 @@
 {% block body_class %}body-startcode{% endblock %}
 
 {% block content %}
-<div class="setup-top-bar">
-    <button class="btn-icon-text">
-        <img style="width: 20px; height: 20px;" src="{% static 'images/help.svg' %}" alt="">
-        Help
-    </button>
-    <a href="/dashboard/" class="btn-icon-text" style="text-decoration:none;">
-        Return to Home
-        <img style="width: 20px; height: 20px;" src="{% static 'images/home.png' %}" alt="">
-    </a>
+{% include "partials/_setup_topbar.html" with extra_class="startcode" %}
+<div style="position: absolute; right: 14px; top: 4px;">
+    <span id="ui-battery-1" style="font-weight: 600; font-size: 11px; color: #1e1e1e;">98%</span>
+    <img src="{% static 'images/battery.svg' %}" style="width: 16px; height: 10px;" alt="">
 </div>
 <div class="startcode-main">
     <h1>Start Code</h1>
-    <p>Once the proctor shares the start code, enter it here to begin testing.</p>
+    <p>Enter your start code now to begin testing. Good luck!</p>
     <p>The start code contains <strong>numbers only</strong>.</p>
 
     <form id="start-code-form" method="POST" action="{% url 'start_code' %}" style="text-align: center;">
@@ -23,29 +18,15 @@
         <input type="hidden" name="full_code" id="full-code-input">
 
         <div class="code-boxes" style="display:flex; justify-content:center; gap:15px; margin: 40px 0;">
-            <input type="text" maxlength="1" class="code-input"
-                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
-                autocomplete="off" />
-            <input type="text" maxlength="1" class="code-input"
-                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
-                autocomplete="off" />
-            <input type="text" maxlength="1" class="code-input"
-                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
-                autocomplete="off" />
-            <input type="text" maxlength="1" class="code-input"
-                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
-                autocomplete="off" />
-            <input type="text" maxlength="1" class="code-input"
-                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
-                autocomplete="off" />
-            <input type="text" maxlength="1" class="code-input"
-                style="width: 64px; height: 64px; font-size: 32px; font-weight: 700; text-align: center; border-radius: 8px; border: 1px solid #333;"
-                autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input" autocomplete="off"/>
+            <input type="text" maxlength="1" class="code-input" autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input" autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input" autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input" autocomplete="off" />
+            <input type="text" maxlength="1" class="code-input" autocomplete="off" />
         </div>
 
-        <button type="submit" id="start-btn" class="btn-secondary"
-            style="font-size: 16px; width:auto; padding: 16px 24px; border-radius: 24px; display: inline-block; cursor: pointer;"
-            disabled>Start Test</button>
+        <button type="submit" id="start-btn" class="btn-secondary" disabled>Start Test</button>
     </form>
 
     <script>
@@ -66,16 +47,10 @@
                         fullCodeInput.value = Array.from(inputs).map(i => i.value).join('');
                         startBtn.disabled = false;
                         startBtn.className = 'btn-start';
-                        startBtn.style.padding = '16px 24px';
-                        startBtn.style.borderRadius = '24px';
-                        startBtn.style.width = 'auto';
                     } else {
                         fullCodeInput.value = '';
                         startBtn.disabled = true;
                         startBtn.className = 'btn-secondary';
-                        startBtn.style.padding = '16px 24px';
-                        startBtn.style.borderRadius = '24px';
-                        startBtn.style.width = 'auto';
                     }
                 });
 
@@ -90,6 +65,7 @@
 </div>
 
 <div class="bottom-info">
-    You can <a>review the instructions</a> that the proctor reads aloud.
+    <img src="{% static 'images/review-instructions.svg' %}">
+    <p>You can <a>review the instructions</a><br>that the proctor reads aloud.</p>
 </div>
 {% endblock %}

@@ -284,6 +284,51 @@
         color: #fff;
     }
 
+    /* Cross-out styles */
+    .option-row.crossed-out .option-box {
+        position: relative;
+        overflow: visible;
+    }
+
+    .option-row.crossed-out .option-box>* {
+        opacity: 0.5;
+    }
+
+    .option-row.crossed-out .option-box::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: -4px;
+        right: -2px;
+        height: 1.5px;
+        background: #1e1e1e;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .cross-btn-wrap {
+        display: none;
+        width: 40px;
+        flex-shrink: 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cross-btn-undo {
+        text-decoration: underline;
+        font-size: 14px;
+        font-weight: 600;
+        width: auto;
+        min-width: 36px;
+        padding: 0 4px;
+        border-radius: 4px;
+        border: none;
+    }
+
+    .cross-btn-undo::after {
+        display: none;
+    }
+
     .mark-review {
         transition: color 0.2s;
     }
@@ -297,7 +342,7 @@
     .test-bottombar {
         border: none;
         background-image: url('{% static "images/dashed-border.png" %}');
-        background-size: 100% auto;
+        background-size: 100% 1.5px;
         background-repeat: no-repeat;
     }
 
@@ -316,14 +361,14 @@
     }
 
     .screen-loading {
-        background: #f8f9fa;
+        background: #fafafa;
         justify-content: center;
         align-items: center;
         text-align: center;
     }
 
     .screen-loading h2 {
-        color: #5c7cb8;
+        color: #324dc7;
         font-size: 28px;
         font-weight: 300;
         margin-bottom: 24px;
@@ -332,16 +377,7 @@
     .screen-loading p {
         font-size: 18px;
         margin-bottom: 12px;
-    }
-
-    .spinner {
-        margin-top: 32px;
-        width: 40px;
-        height: 40px;
-        border: 4px solid #dadce0;
-        border-top: 4px solid #5c7cb8;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
+        color: #1e1e1e;
     }
 
     .desmos-window-control {
@@ -358,14 +394,106 @@
         background-color: #505050 !important;
     }
 
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
+    .calc-type {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 0 4px;
+        color: #fff;
+        border-radius: 6px;
+        cursor: pointer;
+    }
 
-        100% {
-            transform: rotate(360deg);
-        }
+    .calc-type:first-child {
+        background-color: #fff;
+        color: #1e1e1e;
+        text-decoration: underline;
+    }
+
+    .calc-type:hover {
+        background-color: #1b2264;
+        color: #fff;
+    }
+
+    .calc-type img {
+        height: 16px;
+        padding: 0;
+        margin: 0;
+        margin-right: 3px;
+    }
+
+    .question-image {
+        width: 321px;
+        display: flex;
+        margin: 10px auto;
+        flex-direction: column;
+        border: 1px solid #b2b2b2;
+        border-radius: 6px;
+        overflow: hidden;
+        background: #fff;
+        font-family: sans-serif;
+    }
+
+    .question-image-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 8px;
+        border-bottom: 1px solid #b2b2b2;
+        background: #f0f0f0;
+    }
+
+    .question-image-toolbar img {
+        height: 15px;
+    }
+
+    .question-image-toolbar button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: #1e1e1e;
+        border-radius: 4px;
+        font-size: 16px;
+        padding: 0;
+    }
+
+    .question-image-toolbar button:hover {
+        background: #d9d9d9;
+    }
+
+    .question-image-toolbar .zoom-level {
+        font-size: 13px;
+        font-weight: 500;
+        min-width: 36px;
+        text-align: center;
+    }
+
+    .question-image-toolbar .reset-btn {
+        width: auto;
+        padding: 0 8px;
+        font-size: 14px;
+    }
+
+    .question-image-toolbar .divider {
+        width: 1px;
+        height: 16px;
+        background: #b2b2b2;
+        margin: 0 2px;
+    }
+
+    .question-image-toolbar .expand-btn {
+        margin-left: auto;
+    }
+
+    .question-image img {
+        display: block;
+        max-width: 100%;
     }
 </style>
 
@@ -417,7 +545,7 @@
         <img src="{% static 'images/battery.svg' %}" style="width: 16px; height: 10px;" alt="">
     </div>
 </div>
-<img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: auto;">
+<img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: 2px;">
 
 <div class="test-workspace" id="main-workspace">
     <div class="passage-pane" id="ui-passage">
@@ -439,10 +567,11 @@
                 </span>
             </div>
             <img src="{% static 'images/cross-out-abc.svg' %}" id="btn-cross-out"
-                style="width: 28px; height: 28px; cursor: pointer; margin-right: 12px;" alt="">
+                style="width: 28px; height: 28px; cursor: pointer; margin-right: 12px;" alt=""
+                onclick="app.toggleCrossOutMode()">
         </div>
         <img src="{% static 'images/question-border.png' %}" alt=""
-            style="width: 100%; margin: 0; margin-bottom: 12px; padding: 0;">
+            style="width: 100%; height: 2px; margin: 0; margin-bottom: 12px; padding: 0;">
 
         <div class="question-text" id="ui-question">
             <!-- populated dynamically -->
@@ -523,7 +652,7 @@
     <p>All your work has been saved.</p>
     <p>You'll move on automatically in just a moment.</p>
     <p>Do not refresh this page or quit the app.</p>
-    <div class="spinner"></div>
+    <img src="{% static 'images/spinner.png' %}" style="margin-top: 20px;width: 60px;">
 </div>
 
 <style>
@@ -534,7 +663,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: #202124;
+        background: #1e1e1e;
         color: #fff;
         z-index: 200;
         flex-direction: column;
@@ -550,7 +679,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        background: #404040;
+        background: #4e4e4e;
         padding: 6px 12px;
         border-radius: 4px;
         font-size: 14px;
@@ -560,50 +689,52 @@
     .break-content {
         flex: 1;
         display: flex;
-        justify-content: center;
         align-items: center;
-        gap: 80px;
-        padding: 40px;
+        width: 100vw;
     }
 
     .break-timer-card {
-        border: 1px solid #777;
+        border: 1px solid #fff;
         border-radius: 8px;
-        padding: 40px 60px;
+        width: 300px;
+        padding: 14px;
+        padding-bottom: 2px;
         text-align: center;
-        min-width: 380px;
     }
 
     .break-timer-card h3 {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 600;
-        margin-bottom: 24px;
     }
 
     .break-timer-card .time {
-        font-size: 80px;
+        font-size: 76px;
         font-weight: 700;
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
 
     .break-info {
-        max-width: 480px;
+        width: 50vw;
+        padding-left: 0;
+        margin-left: 0;
     }
 
     .break-info h1 {
-        font-size: 36px;
+        font-size: 28px;
         font-weight: 600;
         margin-bottom: 24px;
         line-height: 1.2;
     }
 
     .break-info p {
-        font-size: 18px;
+        font-size: 16px;
         margin-bottom: 24px;
         line-height: 1.5;
     }
 
     .break-info h4 {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 600;
         margin-bottom: 16px;
     }
@@ -613,7 +744,7 @@
     }
 
     .break-info li {
-        font-size: 18px;
+        font-size: 16px;
         margin-bottom: 16px;
         line-height: 1.4;
     }
@@ -626,7 +757,7 @@
     }
 
     .break-name {
-        font-size: 24px;
+        font-size: 18px;
         font-weight: 600;
     }
 </style>
@@ -642,8 +773,9 @@
     </div>
 
     <div class="break-content">
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
-            <div class="break-timer-card">
+        <div id="break-timer-section"
+            style="display: flex; flex-direction: column; align-items: center; gap: 24px; width: 50vw;">
+            <div class="break-timer-card" id="break-time-card">
                 <h3>Remaining Break Time:</h3>
                 <div onclick="app.skipBreak()" class="time" id="break-time-display">10:00</div>
             </div>
@@ -651,20 +783,28 @@
                 style="display: none; padding: 16px 32px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
                 onclick="app.resumeTesting()">Resume Testing Now</button>
         </div>
-        <div class="break-info">
-            <h1>Take a Break: Do Not Close Your Device</h1>
-            <p>After the break, a <strong>Resume Testing Now</strong> button will appear and you'll start the
-                next
-                section.</p>
+        <div class="break-info" id="break-info-section">
+            <h1>Take a Break: Do Not Close<br>Your Device</h1>
+            <p>You may leave the room, but do not disturb<br>students who are still testing.</p>
+            <p>Testing won't resume until you return.</p>
             <h4>Follow these rules during the break:</h4>
             <ol>
-                <li>Do not disturb students who are still testing.</li>
-                <li>Do not exit the app or close your laptop.</li>
-                <li>Do not access phones, smartwatches, textbooks, notes, or the internet.</li>
-                <li>Do not eat or drink near any testing device.</li>
-                <li>Do not speak in the test room; outside the test room, do not discuss the exam with anyone.
-                </li>
+                <li>Do not access your phone, smartwatch,<br>textbooks, notes, or the internet.</li>
+                <li>Do not eat or drink in the testing room.</li>
+                <li>Do not speak in the test room; outside the<br>test room, do not discuss the exam with anyone.</li>
+                <li>If you leave the room, bring your photo ID.</li>
             </ol>
+        </div>
+
+        <!-- Resume Testing Screen (shown after break ends) -->
+        <div id="resume-testing-screen"
+            style="display:none; width:100%; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:16px;">
+            <h1 style="font-size:30px; font-weight:700; color:#fff;">Resume Testing Now</h1>
+            <p style="font-size:18px; color:#ccc;">Your testing timer has not started counting down yet.</p>
+            <p style="font-size:18px; color:#ccc;">Please put your photo ID back on your desk then resume testing.</p>
+            <button class="btn-yellow"
+                style="padding:14px; border-radius:40px; font-weight:600; width:auto; color:black; border:1px solid black; cursor:pointer; background:#fedb00; margin-top:8px;"
+                onclick="app.resumeTesting()">Resume Testing</button>
         </div>
     </div>
 
@@ -679,7 +819,7 @@
 <div class="screen-review" id="screen-review">
     <div class="test-topbar">
         <div class="test-info">
-            <div class="test-title" id="ui-test-title">Section 1, Module 1: Reading and Writing</div>
+            <div class="test-title" id="review-test-title">Section 1, Module 1: Reading and Writing</div>
             <div class="test-directions" onclick="document.getElementById('modal-directions').style.display='flex'">
                 Directions
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -726,18 +866,27 @@
             <img src="{% static 'images/battery.svg' %}" style="width: 16px; height: 10px;" alt="">
         </div>
     </div>
-    <img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: auto; transform: scaleY(-1);">
+    <img src="{% static 'images/dashed-border.png' %}" alt=""
+        style="width: 100%; height: 1.5px; transform: scaleY(-1);">
 
     <div class="review-content"
         style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px;">
-        <div
-            style="width: 100vw; overflow: hidden; text-align: center; background-color: #1b2264; color: white; font-size: 28px; padding: 10px; margin-bottom: 16px;">
-            Testing in Progress: Do Not
-            Close Your
-            Device</div>
-        <p>When the timer reaches zero, your answers will be submitted automatically.</p>
-        <p><b>Do not close your device, quit the app, or leave the room or your answers may not be
-                submitted.</b></p>
+        <div id="review-last-module-info"
+            style="display: none; flex-direction: column; align-items: center; gap: 10px;">
+            <div
+                style="width: 100vw; overflow: hidden; text-align: center; background-color: #1b2264; color: white; font-size: 28px; padding: 10px; margin-bottom: 16px;">
+                Testing in Progress: Do Not
+                Close Your
+                Device</div>
+            <p>When the timer reaches zero, your answers will be submitted automatically.</p>
+            <p><b>Do not close your device, quit the app, or leave the room or your answers may not be
+                    submitted.</b></p>
+        </div>
+        <div id="review-other-module-info" style="display: none;">
+            <p style="text-align: center; font-size: 32px; margin-bottom: 32px">Check Your Work</p>
+            <p>When the timer reaches zero, you will move on to the
+                next module automatically.</p>
+        </div>
         <p>In the meantime, please look over your work and check any questions you marked for review.</p>
     </div>
 
@@ -773,31 +922,24 @@
 
 <!-- Desmos Modal -->
 <div id="calc-modal"
-    style="position:absolute; width:660px; height:650px; background:#fff; z-index:2000; display:none; flex-direction:column; box-shadow: 0 4px 20px rgba(0,0,0,0.2); border: 1px solid #505050; overflow: hidden;">
+    style="position:absolute; width:391px; height:648px; background:#fff; z-index:2000; display:none; flex-direction:column; border: 0.5px solid #1e1e1e">
     <div id="calc-header"
         style="background:#1e1e1e; color:#fff; height:44px; display:flex; align-items:center; justify-content:space-between; cursor:grab; user-select:none; padding: 6px;">
         <div
             style="display:flex; height: 100%; border: 0.5px solid #fff; gap: 0; padding: 0; border-radius: 6px; margin-left: 6px;">
             <!-- Tabs -->
-            <div
-                style="display:flex; align-items:center; background:#fff; color:#1e1e1e; font-family:'Roboto', sans-serif; font-size: 12px; font-weight:600; padding: 0 4px; border-radius: 4px; text-decoration: underline; cursor: pointer;">
-                <img src="{% static 'images/graphing.png' %}"
-                    style="height: 16px; padding: 0; margin: 0; margin-right: 3px;" alt="">
+            <div class="calc-type">
+                <img src="{% static 'images/graphing.png' %}">
                 Graphing
             </div>
-            <div
-                style="display:flex; align-items:center; color:#fff; font-family:'Roboto', sans-serif; font-size: 12px; font-weight:600; padding: 0 4px; cursor: pointer;">
-                <img src="{% static 'images/scientific.png' %}"
-                    style="height: 16px; padding: 0; margin: 0; margin-right: 3px; color: #fff;" alt="">
+            <div class="calc-type">
+                <img src="{% static 'images/scientific.png' %}">
                 Scientific
             </div>
         </div>
         <img src="{% static 'images/move.png' %}"
             style="width: 24px; position: absolute; left: 50%; transform: translateX(-50%);" alt="">
         <div style="display:flex; align-items:center; padding-right: 12px; gap: 16px;">
-            <div class="desmos-window-control">
-                <img src="{% static 'images/minimize.svg' %}" style="height: 16px;" alt="">
-            </div>
             <div class="desmos-window-control" onclick="app.toggleCalculator()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f7f7f7" stroke-width="1.5">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -809,6 +951,8 @@
     <div style="flex:1; background:#fff; position: relative;">
         <div id="calculator-container" style="width: 100%; height: 100%;"></div>
     </div>
+    <img src="{% static 'images/resizer.png' %}"
+        style="position: absolute; bottom: -14px; right: -14px; width:24px; height:24px; cursor:grab; z-index:20001; background: transparent">
 </div>
 
 <link rel="preconnect" href="https://www.desmos.com" crossorigin>
@@ -825,13 +969,14 @@
         qIdx: 0,
         batteryLevel: 98,
         batteryInterval: null,
+        crossOutMode: false,
 
         init() {
             // Initialize state structure
             for (let i = 0; i < modulesData.length; i++) {
                 moduleState[i] = [];
                 for (let j = 0; j < modulesData[i].count; j++) {
-                    moduleState[i].push({ review: false, answer: null });
+                    moduleState[i].push({ review: false, answer: null, crossedOut: [] });
                 }
             }
             this.startModuleTimer();
@@ -860,6 +1005,56 @@
                         navModal.style.display = 'none';
                     }
                 }
+            });
+        },
+
+        initQuestionImageToolbars() {
+            document.querySelectorAll('.question-image').forEach(wrapper => {
+                if (wrapper.querySelector('.question-image-toolbar')) return;
+                const img = wrapper.querySelector('img');
+                if (!img) return;
+
+                let zoom = 100;
+
+                const toolbar = document.createElement('div');
+                toolbar.className = 'question-image-toolbar';
+                toolbar.innerHTML = `
+                    <button class="zoom-in-btn" title="Zoom in"><img src="/static/images/zoom-in.png" alt="Zoom in"></button>
+                    <button class="zoom-out-btn" title="Zoom out"><img src="/static/images/zoom-out.png" alt="Zoom out"></button>
+                    <span class="zoom-level">100%</span>
+                    <button class="reset-btn">Reset</button>
+                    <div class="divider"></div>
+                    <button class="expand-btn" title="Expand"><img src="/static/images/image-full.png" alt="Expand"></button>
+                `;
+
+                wrapper.insertBefore(toolbar, img);
+
+                const zoomLabel = toolbar.querySelector('.zoom-level');
+
+                function applyZoom() {
+                    img.style.transform = `scale(${zoom / 100})`;
+                    img.style.transformOrigin = 'top left';
+                    zoomLabel.textContent = zoom + '%';
+                }
+
+                toolbar.querySelector('.zoom-in-btn').addEventListener('click', () => {
+                    zoom = Math.min(zoom + 25, 200);
+                    applyZoom();
+                });
+
+                toolbar.querySelector('.zoom-out-btn').addEventListener('click', () => {
+                    zoom = Math.max(zoom - 25, 25);
+                    applyZoom();
+                });
+
+                toolbar.querySelector('.reset-btn').addEventListener('click', () => {
+                    zoom = 100;
+                    applyZoom();
+                });
+
+                toolbar.querySelector('.expand-btn').addEventListener('click', () => {
+                    img.requestFullscreen?.();
+                });
             });
         },
 
@@ -982,6 +1177,12 @@
         startModuleTimer() {
             if (this.mainTimerInterval) clearInterval(this.mainTimerInterval);
 
+            // Reset timer warnings from previous module
+            const t1 = document.getElementById('timer-text-1');
+            const t2 = document.getElementById('timer-text-2');
+            if (t1) t1.style.color = '';
+            if (t2) t2.style.color = '';
+
             let isMath = this.modIdx >= 2;
             this.moduleTimeRemaining = isMath ? 35 * 60 : 32 * 60;
             this.updateTimerDisplays();
@@ -1002,8 +1203,18 @@
             const s = this.moduleTimeRemaining % 60;
             const timeStr = `${m}:${s < 10 ? '0' : ''}${s}`;
 
-            document.getElementById('timer-text-1').innerText = timeStr;
-            document.getElementById('timer-text-2').innerText = timeStr;
+            const t1 = document.getElementById('timer-text-1');
+            const t2 = document.getElementById('timer-text-2');
+            t1.innerText = timeStr;
+            t2.innerText = timeStr;
+
+            if (this.moduleTimeRemaining <= 300) {
+                t1.style.color = '#d32f2f';
+                t2.style.color = '#d32f2f';
+            } else {
+                t1.style.color = '';
+                t2.style.color = '';
+            }
         },
 
         skipModule() {
@@ -1051,6 +1262,7 @@
             }
 
             document.getElementById('ui-test-title').innerText = mod.title;
+            document.getElementById('review-test-title').innerText = mod.title;
             document.getElementById('nav-modal-title').innerText = mod.title + " Questions";
             document.getElementById('ui-q-nav').innerText = `Question ${this.qIdx + 1} of ${mod.count}`;
             document.getElementById('ui-q-num').innerText = this.qIdx + 1;
@@ -1153,6 +1365,11 @@
                             <div class="option-letter">${optLetter}</div>
                             <div class="option-text">${optText}</div>
                         </div>
+                        <div class="cross-btn-wrap" id="cross-wrap-${optLetter}">
+                            <div class="cross-btn" id="cross-btn-${optLetter}" onclick="event.stopPropagation(); app.toggleCrossOut('${optLetter}')" title="Cross out">
+                                ${optLetter}
+                            </div>
+                        </div>
                     `;
                     optionsList.appendChild(optRow);
                 });
@@ -1183,6 +1400,8 @@
             renderMathQuill(document.getElementById('ui-question'));
             renderMathQuill(document.getElementById('ui-passage'));
             renderMathQuill(document.getElementById('ui-options'));
+
+            this.initQuestionImageToolbars();
         },
 
         setSPRAnswer(val) {
@@ -1206,25 +1425,82 @@
                 btnReview.src = '/static/images/mark.svg';
             }
 
+            // Update cross-out button icon
+            const crossOutBtn = document.getElementById('btn-cross-out');
+            if (crossOutBtn) {
+                crossOutBtn.src = this.crossOutMode
+                    ? '/static/images/cross-out-abc-blue.svg'
+                    : '/static/images/cross-out-abc.svg';
+            }
+
             ['A', 'B', 'C', 'D'].forEach(opt => {
                 const row = document.getElementById('opt-row-' + opt);
+                const crossWrap = document.getElementById('cross-wrap-' + opt);
+                const crossBtn = document.getElementById('cross-btn-' + opt);
                 if (row) {
+                    // Selection state
                     if (state.answer === opt) {
                         row.classList.add('selected');
                     } else {
                         row.classList.remove('selected');
                     }
+
+                    // Cross-out state
+                    const isCrossed = state.crossedOut && state.crossedOut.includes(opt);
+                    if (isCrossed) {
+                        row.classList.add('crossed-out');
+                    } else {
+                        row.classList.remove('crossed-out');
+                    }
+
+                    // Show/hide cross-out buttons based on mode
+                    if (crossWrap && crossBtn) {
+                        if (this.crossOutMode) {
+                            crossWrap.style.display = 'flex';
+                            // Show "Undo" text if already crossed out
+                            if (isCrossed) {
+                                crossBtn.innerHTML = 'Undo';
+                                crossBtn.classList.add('cross-btn-undo');
+                            } else {
+                                crossBtn.innerHTML = opt;
+                                crossBtn.classList.remove('cross-btn-undo');
+                            }
+                        } else {
+                            crossWrap.style.display = 'none';
+                        }
+                    }
                 }
             });
         },
 
+        toggleCrossOutMode() {
+            this.crossOutMode = !this.crossOutMode;
+            this.syncSelections();
+        },
+
+        toggleCrossOut(opt) {
+            const state = moduleState[this.modIdx][this.qIdx];
+            if (!state.crossedOut) state.crossedOut = [];
+            const idx = state.crossedOut.indexOf(opt);
+            if (idx === -1) {
+                state.crossedOut.push(opt);
+                // If the crossed-out option was selected, deselect it
+                if (state.answer === opt) {
+                    state.answer = null;
+                }
+            } else {
+                state.crossedOut.splice(idx, 1);
+            }
+            this.syncSelections();
+        },
+
         selectOption(opt) {
             const state = moduleState[this.modIdx][this.qIdx];
-            if (state.answer === opt) {
-                state.answer = null;
-            } else {
-                state.answer = opt;
-            }
+            // Don't allow selecting a crossed-out option
+            if (state.crossedOut && state.crossedOut.includes(opt)) return;
+            // Don't allow deselecting — only allow changing to a different option
+            if (state.answer === opt) return;
+            state.answer = opt;
             this.syncSelections();
         },
 
@@ -1253,6 +1529,7 @@
                 navItem.innerText = i + 1;
 
                 navItem.onclick = () => {
+                    this.crossOutMode = false;
                     this.qIdx = i;
                     document.getElementById('modal-nav').style.display = 'none';
                     document.getElementById('screen-review').style.display = 'none';
@@ -1276,6 +1553,21 @@
         },
 
         nextQuestion() {
+            const btnNext = document.getElementById('btn-next');
+            if (btnNext.disabled) return;
+            // Disable for 0.5 seconds
+            btnNext.disabled = true;
+            btnNext.className = 'btn-blue-disabled';
+            btnNext.style.cursor = 'not-allowed';
+            setTimeout(() => {
+                btnNext.disabled = false;
+                btnNext.className = 'btn-blue';
+                btnNext.style.cursor = 'pointer';
+            }, 500);
+
+            // Reset cross-out mode when navigating
+            this.crossOutMode = false;
+
             const mod = modulesData[this.modIdx];
             if (this.qIdx < mod.count - 1) {
                 this.qIdx++;
@@ -1287,6 +1579,7 @@
 
         prevQuestion() {
             if (this.qIdx > 0) {
+                this.crossOutMode = false;
                 this.qIdx--;
                 this.renderQuestion();
             }
@@ -1296,11 +1589,11 @@
             document.getElementById('modal-nav').style.display = 'none';
             document.getElementById('main-workspace').style.display = 'none';
             document.getElementById('main-bottombar').style.display = 'none';
-
             const mod = modulesData[this.modIdx];
-
+            const isLastModule = this.modIdx === modulesData.length - 1;
+            document.getElementById('review-last-module-info').style.display = isLastModule ? 'flex' : 'none';
+            document.getElementById('review-other-module-info').style.display = isLastModule ? 'none' : 'block';
             this.renderNavGrid('review-grid', true);
-
             document.getElementById('screen-review').style.display = 'flex';
         },
 
@@ -1321,7 +1614,15 @@
                 if (this.breakTimeRemaining <= 0) {
                     clearInterval(this.breakInterval);
                     timerEl.innerText = '0:00';
-                    btnEl.style.display = 'block';
+                    // Hide break timer card and break info, show resume screen
+                    const timeCard = document.getElementById('break-time-card');
+                    const breakInfo = document.getElementById('break-info-section');
+                    const timerSection = document.getElementById('break-timer-section');
+                    const resumeScreen = document.getElementById('resume-testing-screen');
+                    if (timeCard) timeCard.style.display = 'none';
+                    if (breakInfo) breakInfo.style.display = 'none';
+                    if (timerSection) timerSection.style.display = 'none';
+                    if (resumeScreen) resumeScreen.style.display = 'flex';
                 }
             }, 1000);
         },
@@ -1394,7 +1695,7 @@
                     </div>`;
                     document.body.insertAdjacentHTML('beforeend', congratsHtml);
                 }
-            }, 0);
+            }, 1000);
         }
     };
 

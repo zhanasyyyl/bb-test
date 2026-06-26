@@ -6,7 +6,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bluebook</title>
-  <link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,12 +13,14 @@
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
   <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
+  {% for url in prefetch_static_urls %}
+  <link rel="prefetch" href="{{ url }}">
+  {% endfor %}
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js" defer></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       window.MQ = MathQuill.getInterface(2);
     });
   </script>
@@ -36,8 +37,7 @@
       <div class="title-bar-right">
         <span class="window-control minimize">—</span>
         <span class="window-control maximize">&#9744;</span>
-        <a href="/quit" style="color: white; text-decoration: none;"><span
-            class="window-control close">&#10005;</span></a>
+        <span class="window-control close">&#10005;</span>
       </div>
     </header>
     <script>
@@ -55,19 +55,6 @@
       {% endblock %}
     </main>
   </div>
-
-  {% if preload_static_urls %}
-  <script>
-    window.addEventListener('load', function () {
-      setTimeout(function () {
-        var staticUrlsToCache = {{ preload_static_urls| safe }};
-        staticUrlsToCache.forEach(function (url) {
-          fetch(url, { cache: 'force-cache' }).catch(function (e) { });
-        });
-      }, 500);
-    });
-  </script>
-  {% endif %}
 </body>
 
 </html>

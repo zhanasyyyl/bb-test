@@ -44,7 +44,7 @@
                 <div class="reg-title">SAT</div>
                 <div class="reg-details">
                     <div class="reg-left">
-                        <p><strong>Date:</strong> Sat, Jun 6, 2026</p>
+                        <p><strong>Date:</strong> Sat, Jun 27, 2026</p>
                         <p><strong>Arrival Time:</strong> 7:45 a.m. +05</p>
                         <p><strong>Doors Close:</strong> 8:00 a.m. +05</p>
 
@@ -135,30 +135,37 @@
             <div class="cards-grid">
                 <div class="practice-card">
                     <div class="card-icon">
-                        <img src="/static/images/test-preview.svg" style="width: 80px;" alt="">
+                        <img src="/static/images/test-preview.svg" style="width: 82px;" alt="">
                         <h4>Test<br>Preview</h4>
                     </div>
                 </div>
                 <div class="practice-card">
                     <div class="card-icon">
-                        <img src="/static/images/full-length-practice.svg" style="width: 80px;" alt="">
+                        <img src="/static/images/full-length-practice.svg" style="width: 82px;" alt="">
                         <h4>Full-Length<br>Practice</h4>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="split-section">
+            <div class="section-header">
+                <h2>Explore BigFuture</h2>
+            </div>
+
+            <div class="resource-card">
+                <img src="{% static 'images/bigfuture.jpg' %}" id="resource-image">
+                <div class="resource-card-content">
+                    <h3>Plan for Life After High School</h4>
+                    <p>Whether you're interested in a four-year university, community college, or career training, BigFuture has what you need to start planning your future, your way.</p>
+                    <button class="btn-outline">Go to BigFuture</button>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="dashboard-bottom"></div>
-    <div class="version-info" style="background-color: #fefefe;">VSN-0.9.651 BT-2026 05-10 15:02</div>
+    {% include "partials/_version_info.html" %}
 </div>
-
-<script>
-    (function () {
-        if (navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.userAgent.toUpperCase().indexOf('MAC') >= 0) {
-            document.querySelector('.version-info').textContent = 'VSN-1.14.2 BT-2026-04-30 20:12';
-        }
-    })();
-</script>
 
 <!-- Profile Edit Modal -->
 <div id="profile-modal" class="profile-modal-overlay" style="display: none;">

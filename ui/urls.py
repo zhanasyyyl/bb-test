@@ -8,16 +8,18 @@ urlpatterns = [
     path('cb_login/', views.cb_login_view, name='cb_login'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('update-profile/', views.update_profile_view, name='update_profile'),
-    path('setup/', login_required(TemplateView.as_view(template_name='setup_step1.html')), name='setup_step1'),
-    path('setup_step2/', login_required(TemplateView.as_view(template_name='setup_step2.html')), name='setup_step2'),
-    path('setup_step3/', login_required(TemplateView.as_view(template_name='setup_step3.html')), name='setup_step3'),
-    path('setup_step4/', login_required(TemplateView.as_view(template_name='setup_step4.html')), name='setup_step4'),
-    path('setup_step5/', login_required(TemplateView.as_view(template_name='setup_step5.html')), name='setup_step5'),
-    path('setup_step6/', login_required(TemplateView.as_view(template_name='setup_step6.html')), name='setup_step6'),
-    path('setup_step7/', login_required(TemplateView.as_view(template_name='setup_step7.html')), name='setup_step7'),
-    path('setup_step8/', login_required(TemplateView.as_view(template_name='setup_step8.html')), name='setup_step8'),
     path('start-code/', views.start_code_view, name='start_code'),
     path('test/', views.test_interface_view, name='test_interface'),
     path('api/mark-test-completed/', views.mark_test_completed_view, name='mark_test_completed'),
     path('quit/', views.dashboard_view, name='quit'),
+    path('question-editor/', views.question_editor_view, name='question_editor'),
+    path('api/questions/', views.api_questions, name='api_questions'),
 ]
+
+# Generate setup step URLs dynamically (steps 1–8)
+for i in range(1, 9):
+    route = 'setup/' if i == 1 else f'setup_step{i}/'
+    urlpatterns.append(
+        path(route, login_required(TemplateView.as_view(template_name=f'setup_step{i}.html')), name=f'setup_step{i}')
+    )
+
