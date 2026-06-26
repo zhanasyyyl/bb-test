@@ -437,7 +437,9 @@
 
     .question-image-toolbar {
         display: flex;
+        width: 100%;
         align-items: center;
+        justify-content: flex-end;
         gap: 6px;
         padding: 4px 8px;
         border-bottom: 1px solid #b2b2b2;
@@ -488,7 +490,7 @@
     }
 
     .question-image-toolbar .expand-btn {
-        margin-left: auto;
+        margin-left: 0;
     }
 
     .question-image img {
@@ -511,7 +513,7 @@
     <div class="test-timer"
         style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
         <img id="timer-icon-1" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
-        <div onclick="app.skipModule()" id="timer-text-1"
+        <div id="timer-text-1"
             style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">--:--
         </div>
         <button id="timer-btn-1" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
@@ -777,7 +779,7 @@
             style="display: flex; flex-direction: column; align-items: center; gap: 24px; width: 50vw;">
             <div class="break-timer-card" id="break-time-card">
                 <h3>Remaining Break Time:</h3>
-                <div onclick="app.skipBreak()" class="time" id="break-time-display">10:00</div>
+                <div class="time" id="break-time-display">10:00</div>
             </div>
             <button id="btn-resume-break" class="btn-yellow"
                 style="display: none; padding: 16px 32px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
@@ -831,7 +833,7 @@
         <div class="test-timer"
             style="position: absolute; left: 50%; transform: translateX(-50%); display:flex; flex-direction:column; align-items:center;">
             <img id="timer-icon-2" src="{% static 'images/timer.svg' %}" style="display:none;" alt="">
-            <div onclick="app.skipModule()" id="timer-text-2"
+            <div id="timer-text-2"
                 style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">
                 --:--
             </div>
