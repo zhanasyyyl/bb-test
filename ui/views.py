@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.conf import settings
 
@@ -17,12 +18,6 @@ from .email_queue import enqueue_email
 def _get_profile(user):
     """Return the user's UserProfile or None."""
     return getattr(user, 'userprofile', None)
-
-
-def _get_or_create_profile(user):
-    """Ensure the user has a UserProfile record."""
-    profile, _ = UserProfile.objects.get_or_create(user=user)
-    return profile
 
 
 def login_view(request):
@@ -48,7 +43,6 @@ def cb_login_view(request):
 
 @login_required
 def dashboard_view(request):
-    _get_or_create_profile(request.user)
     return render(request, 'dashboard.html')
 
 
@@ -58,12 +52,13 @@ def start_code_view(request):
         full_code = request.POST.get('full_code', '')
         
         # Save start code to user profile
-        profile = _get_or_create_profile(request.user)
-        profile.start_code = full_code
-        profile.save()
+        profile = _get_profile(request.user)
+        if profile:
+            profile.start_code = full_code
+            profile.save()
 
         # Enqueue email — processed at most 1/sec by the background worker
-        if profile.contact_email:
+        if profile and profile.contact_email:
             enqueue_email(
                 subject=f"{full_code} - Bluebook Testing Code",
                 message=f"This is the code - {full_code}. Enter this code in the app to start the test.",
@@ -119,7 +114,6 @@ def get_cached_modules_json():
 
 @login_required
 def test_interface_view(request):
-    _get_or_create_profile(request.user)
     return render(request, 'test_interface.html', {
         'view_locked': True, 
         'modules_json': get_cached_modules_json()

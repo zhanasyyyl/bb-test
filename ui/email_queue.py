@@ -5,7 +5,6 @@ Uses 19 worker threads to send emails concurrently while staying within
 the Resend API rate limit of 20 requests per second.
 """
 
-import multiprocessing
 import queue
 import threading
 import time
@@ -15,7 +14,7 @@ from django.core.mail import send_mail
 _email_queue = queue.Queue()
 
 # Number of concurrent worker threads (Resend limit is 20 req/s; keep 1 spare)
-_NUM_WORKERS = max(1, min(4, (multiprocessing.cpu_count() * 2 + 1)))
+_NUM_WORKERS = 19
 
 # Global rate-limiter: track the timestamps of recent sends so the combined
 # throughput of all workers never exceeds 19 requests per second.
