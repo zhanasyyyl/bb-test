@@ -763,10 +763,6 @@ body {
     cursor: pointer;
 }
 
-.btn-icon-text:hover {
-    color: #1a73e8;
-}
-
 .setup-title {
     text-align: center;
     font-size: 32px;
@@ -984,8 +980,8 @@ input[type="radio"] {
 }
 
 .code-input {
-    width: 54px;
-    height: 54px;
+    width: 64px;
+    height: 64px;
     background: #fff;
     border: 1px solid #1e1e1e;
     border-radius: 8px;
@@ -1017,6 +1013,10 @@ input[type="radio"] {
     color: #324dc7;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.bottom-info a:hover {
+    text-decoration: none;
 }
 
 /* ========================================================= */
@@ -1056,6 +1056,11 @@ input[type="radio"] {
     align-items: center;
     gap: 4px;
     cursor: pointer;
+    width: fit-content;
+}
+
+.test-directions:hover {
+    background-color: #f0f0f0;
 }
 
 .test-timer {
