@@ -5,6 +5,47 @@
 
 {% block content %}
 <style>
+    /* Timer 5-minute warning toast */
+    .timer-toast {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 8px;
+        background: #1e1e1e;
+        color: #fff;
+        padding: 14px 20px;
+        width: 310px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 400;
+        white-space: nowrap;
+        z-index: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        line-height: 1.4;
+    }
+
+    .timer-toast .toast-close {
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        background: none;
+        border: 2px solid transparent;
+        color: #fff;
+        font-size: 28px;
+        font-weight: 200;
+        cursor: pointer;
+        padding: 0 10px 7px 10px;
+        border-radius: 12px;
+        line-height: 1;
+    }
+
+    .timer-toast .toast-close:hover {
+        border: 2px solid #fff;
+        background-color: #303030;
+    }
+
     /* Additions for Modals and Loading */
     .modal-overlay {
         position: fixed;
@@ -513,6 +554,10 @@
             style="font-size:22px; font-weight:500; line-height: 1; margin-top:2px;">--:--
         </div>
         <button id="timer-btn-1" class="btn-timer" onclick="app.toggleTimer()">Hide</button>
+        <div id="timer-toast" class="timer-toast">
+            5 minutes left in this part of the<br>test.
+            <button class="toast-close" onclick="app.dismissTimerToast()">&times;</button>
+        </div>
     </div>
 
     <div class="test-tools"
@@ -1174,6 +1219,9 @@
         mainTimerInterval: null,
         moduleTimeRemaining: 0,
 
+        fiveMinToastShown: false,
+        toastDismissTimeout: null,
+
         startModuleTimer() {
             if (this.mainTimerInterval) clearInterval(this.mainTimerInterval);
 
@@ -1183,8 +1231,17 @@
             if (t1) t1.style.color = '';
             if (t2) t2.style.color = '';
 
+            // Reset 5-minute toast state
+            this.fiveMinToastShown = false;
+            if (this.toastDismissTimeout) {
+                clearTimeout(this.toastDismissTimeout);
+                this.toastDismissTimeout = null;
+            }
+            const toast = document.getElementById('timer-toast');
+            if (toast) toast.style.display = 'none';
+
             let isMath = this.modIdx >= 2;
-            this.moduleTimeRemaining = isMath ? 35 * 60 : 32 * 60;
+            this.moduleTimeRemaining = 305;
             this.updateTimerDisplays();
 
             this.mainTimerInterval = setInterval(() => {
@@ -1211,6 +1268,18 @@
             if (this.moduleTimeRemaining <= 300) {
                 t1.style.color = '#d32f2f';
                 t2.style.color = '#d32f2f';
+
+                // Show toast exactly when 5:00 is reached (once per module)
+                if (this.moduleTimeRemaining === 300 && !this.fiveMinToastShown) {
+                    this.fiveMinToastShown = true;
+                    const toast = document.getElementById('timer-toast');
+                    if (toast) {
+                        toast.style.display = 'block';
+                        this.toastDismissTimeout = setTimeout(() => {
+                            toast.style.display = 'none';
+                        }, 30000);
+                    }
+                }
             } else {
                 t1.style.color = '';
                 t2.style.color = '';
@@ -1219,6 +1288,15 @@
 
         skipModule() {
             this.moduleTimeRemaining = 0;
+        },
+
+        dismissTimerToast() {
+            const toast = document.getElementById('timer-toast');
+            if (toast) toast.style.display = 'none';
+            if (this.toastDismissTimeout) {
+                clearTimeout(this.toastDismissTimeout);
+                this.toastDismissTimeout = null;
+            }
         },
 
         toggleTimer() {
