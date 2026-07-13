@@ -534,6 +534,7 @@
         display: block;
         max-width: 100%;
     }
+
     /* ===== Feedback Modal ===== */
     .feedback-overlay {
         position: fixed;
@@ -541,7 +542,7 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.45);
+        background: rgba(0, 0, 0, 0.65);
         z-index: 9999;
         display: flex;
         align-items: center;
@@ -551,7 +552,6 @@
     .feedback-modal {
         background: #fff;
         border-radius: 12px;
-        width: 420px;
         max-width: 90vw;
         padding: 32px 36px 24px;
         position: relative;
@@ -560,8 +560,15 @@
     }
 
     @keyframes feedbackFadeIn {
-        from { opacity: 0; transform: translateY(16px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .feedback-close {
@@ -582,8 +589,13 @@
         background: #f0f0f0;
     }
 
+    .feedback-form-container {
+        width: 420px;
+        margin: 0 auto;
+    }
+
     .feedback-title {
-        font-size: 18px;
+        font-size: 22px;
         font-weight: 600;
         color: #1e1e1e;
         text-align: center;
@@ -594,6 +606,7 @@
 
     .feedback-options {
         display: flex;
+        gap: 8px;
         flex-direction: column;
     }
 
@@ -601,11 +614,11 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 14px 4px;
-        border-bottom: 1px solid #e0e0e0;
+        padding: 8px;
         cursor: pointer;
         font-size: 15px;
         color: #1e1e1e;
+        background-color: #f6f7fc;
     }
 
     .feedback-option:last-child {
@@ -615,7 +628,7 @@
     .feedback-option input[type="radio"] {
         width: 18px;
         height: 18px;
-        accent-color: #1a2263;
+        accent-color: #324dc7;
         cursor: pointer;
         margin: 0;
     }
@@ -626,7 +639,7 @@
     }
 
     .feedback-textarea-label {
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 600;
         color: #1e1e1e;
         margin-top: 20px;
@@ -641,13 +654,13 @@
         padding: 10px 12px;
         font-size: 14px;
         font-family: inherit;
-        resize: vertical;
+        resize: none;
         outline: none;
         box-sizing: border-box;
     }
 
     .feedback-textarea:focus {
-        border-color: #1a2263;
+        border-color: #324dc7;
     }
 
     .feedback-actions {
@@ -661,7 +674,7 @@
     .feedback-dismiss {
         background: none;
         border: none;
-        color: #1a2263;
+        color: #324dc7;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
@@ -672,22 +685,6 @@
         text-decoration: underline;
     }
 
-    .feedback-submit {
-        background: #fff;
-        border: 1.5px solid #1e1e1e;
-        border-radius: 20px;
-        padding: 8px 24px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #1e1e1e;
-        cursor: pointer;
-        transition: background 0.15s;
-    }
-
-    .feedback-submit:hover {
-        background: #f5f5f5;
-    }
-
     /* Thank you state */
     .feedback-thankyou {
         text-align: center;
@@ -695,33 +692,37 @@
     }
 
     .feedback-thankyou-icon {
-        width: 100px;
-        height: 100px;
+        width: 150px;
         margin: 0 auto 8px;
-        border-radius: 50%;
-        overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
     .feedback-thankyou-icon img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        width: 150px;
     }
 
-    .feedback-close-btn {
+    .feedback-yellow-btn {
         background-color: #fedb00;
         border: 1px solid #fedb00;
         outline: 1px solid black;
         color: #000;
-        padding: 10px 28px;
+        padding: 12px 16px;
         border-radius: 40px;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: border 0.4s;
+    }
+
+    .feedback-yellow-btn:disabled {
+        box-shadow: none;
+        color: #888;
+        background: #f0f0f0;
+        border: 1px solid #888;
+        outline: none;
+        cursor: not-allowed;
     }
 
     .feedback-close-btn:hover {
@@ -1434,7 +1435,7 @@
             if (toast) toast.style.display = 'none';
 
             let isMath = this.modIdx >= 2;
-            this.moduleTimeRemaining = 305;
+            this.moduleTimeRemaining = 0;
             this.updateTimerDisplays();
 
             this.mainTimerInterval = setInterval(() => {
@@ -1971,44 +1972,46 @@
                             <button class="feedback-close" id="feedback-close-x">&times;</button>
 
                             <!-- Form State -->
-                            <div id="feedback-form-state">
-                                <div class="feedback-title">Overall, how would you rate your experience taking a test?</div>
-                                <div class="feedback-options">
-                                    <div class="feedback-option">
-                                        <input type="radio" name="feedback-rating" id="fb-excellent" value="Excellent">
-                                        <label for="fb-excellent">Excellent</label>
+                            <div id="feedback-form-state" style="width: 600px">
+                                <div class="feedback-form-container">
+                                    <div class="feedback-title">Overall, how would you rate your<br>experience taking a test?</div>
+                                    <div class="feedback-options">
+                                        <div class="feedback-option">
+                                            <input type="radio" name="feedback-rating" id="fb-excellent" value="Excellent">
+                                            <label for="fb-excellent">Excellent</label>
+                                        </div>
+                                        <div class="feedback-option">
+                                            <input type="radio" name="feedback-rating" id="fb-good" value="Good">
+                                            <label for="fb-good">Good</label>
+                                        </div>
+                                        <div class="feedback-option">
+                                            <input type="radio" name="feedback-rating" id="fb-fair" value="Fair">
+                                            <label for="fb-fair">Fair</label>
+                                        </div>
+                                        <div class="feedback-option">
+                                            <input type="radio" name="feedback-rating" id="fb-poor" value="Poor">
+                                            <label for="fb-poor">Poor</label>
+                                        </div>
                                     </div>
-                                    <div class="feedback-option">
-                                        <input type="radio" name="feedback-rating" id="fb-good" value="Good">
-                                        <label for="fb-good">Good</label>
-                                    </div>
-                                    <div class="feedback-option">
-                                        <input type="radio" name="feedback-rating" id="fb-fair" value="Fair">
-                                        <label for="fb-fair">Fair</label>
-                                    </div>
-                                    <div class="feedback-option">
-                                        <input type="radio" name="feedback-rating" id="fb-poor" value="Poor">
-                                        <label for="fb-poor">Poor</label>
-                                    </div>
+                                    <div class="feedback-textarea-label">What went well? What can we improve?</div>
+                                    <textarea class="feedback-textarea" id="feedback-text" placeholder=""></textarea>
                                 </div>
-                                <div class="feedback-textarea-label">What went well? What can we improve?</div>
-                                <textarea class="feedback-textarea" id="feedback-text" placeholder=""></textarea>
                                 <div class="feedback-actions">
                                     <button class="feedback-dismiss" id="feedback-dismiss-btn">Dismiss</button>
-                                    <button class="feedback-submit" id="feedback-submit-btn">Submit</button>
+                                    <button class="feedback-yellow-btn" disabled id="feedback-submit-btn">Submit</button>
                                 </div>
                             </div>
 
                             <!-- Thank You State -->
-                            <div id="feedback-thankyou-state" style="display: none;">
+                            <div id="feedback-thankyou-state" style="display: none; width: 420px">
                                 <div class="feedback-title">Thanks for Your Feedback!</div>
                                 <div class="feedback-thankyou">
                                     <div class="feedback-thankyou-icon">
-                                        <img src="{% static 'images/thumbs-up-feedback.png' %}" alt="Thank you">
+                                        <img src="{% static 'images/feedback-thanks.svg' %}">
                                     </div>
                                 </div>
                                 <div class="feedback-actions" style="justify-content: flex-end;">
-                                    <button class="feedback-close-btn" id="feedback-final-close">Close</button>
+                                    <button class="feedback-yellow-btn" id="feedback-final-close">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -2019,7 +2022,7 @@
                     setTimeout(() => {
                         const overlay = document.getElementById('feedback-overlay');
                         if (overlay) overlay.style.display = 'flex';
-                    }, 2000);
+                    }, 1000);
 
                     // Feedback modal event handlers
                     function closeFeedbackModal() {
@@ -2036,8 +2039,15 @@
                     document.getElementById('feedback-close-x').addEventListener('click', closeFeedbackModal);
                     document.getElementById('feedback-dismiss-btn').addEventListener('click', closeFeedbackModal);
 
+                    // Enable submit when a rating is selected
+                    document.querySelectorAll('input[name="feedback-rating"]').forEach(function (radio) {
+                        radio.addEventListener('change', function () {
+                            document.getElementById('feedback-submit-btn').disabled = false;
+                        });
+                    });
+
                     // Submit
-                    document.getElementById('feedback-submit-btn').addEventListener('click', function() {
+                    document.getElementById('feedback-submit-btn').addEventListener('click', function () {
                         showThankYou();
                     });
 
@@ -2045,7 +2055,7 @@
                     document.getElementById('feedback-final-close').addEventListener('click', closeFeedbackModal);
 
                     // Click overlay to dismiss
-                    document.getElementById('feedback-overlay').addEventListener('click', function(e) {
+                    document.getElementById('feedback-overlay').addEventListener('click', function (e) {
                         if (e.target === this) closeFeedbackModal();
                     });
                 }
