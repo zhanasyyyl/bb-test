@@ -1,0 +1,48 @@
+{% load static %}
+<!-- Language Selector Button -->
+<div class="language-selector" id="language-selector">
+    <button class="language-btn" id="language-btn"
+        onclick="document.getElementById('language-dropdown').classList.toggle('open')">
+        <img src="{% static 'images/lang-keyboard.png' %}" style="width: 20px;">
+        <span id="language-label">Английский</span>
+        <svg class="lang-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" width="21" height="21">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </button>
+    <div class="language-dropdown" id="language-dropdown">
+        <div class="language-option selected" data-lang="Английский">Английский</div>
+        <div class="language-option" data-lang="Русский">Русский</div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var btn = document.getElementById('language-btn');
+        var dropdown = document.getElementById('language-dropdown');
+        var label = document.getElementById('language-label');
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.language-selector')) {
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // Handle language option clicks
+        dropdown.addEventListener('click', function (e) {
+            var option = e.target.closest('.language-option');
+            if (!option) return;
+
+            // Update selected state
+            dropdown.querySelectorAll('.language-option').forEach(function (opt) {
+                opt.classList.remove('selected');
+            });
+            option.classList.add('selected');
+
+            // Update label
+            label.textContent = option.getAttribute('data-lang');
+            dropdown.classList.remove('open');
+        });
+    })();
+</script>
