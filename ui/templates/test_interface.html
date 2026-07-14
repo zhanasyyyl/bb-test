@@ -1435,7 +1435,7 @@
             if (toast) toast.style.display = 'none';
 
             let isMath = this.modIdx >= 2;
-            this.moduleTimeRemaining = 0;
+            this.moduleTimeRemaining = isMath ? 35 * 60 : 32 * 60;
             this.updateTimerDisplays();
 
             this.mainTimerInterval = setInterval(() => {
