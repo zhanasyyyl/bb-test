@@ -348,7 +348,7 @@
 
     .cross-btn-wrap {
         display: none;
-        width: 40px;
+        width: 32px;
         flex-shrink: 0;
         justify-content: center;
         align-items: center;
@@ -367,6 +367,10 @@
 
     .cross-btn-undo::after {
         display: none;
+    }
+
+    .cross-btn-undo:hover {
+        text-decoration: none;
     }
 
     .mark-review {
@@ -533,6 +537,88 @@
     .question-image img {
         display: block;
         max-width: 100%;
+    }
+
+    /* ===== Reference Sheet Panel ===== */
+    .ref-panel {
+        position: absolute;
+        top: 88px;
+        bottom: 74px;
+        right: 0;
+        width: 500px;
+        background: #fff;
+        z-index: 2000;
+        display: none;
+        flex-direction: column;
+        border-left: 1px solid #9e9e9e;
+    }
+
+    .ref-panel.open {
+        display: flex;
+    }
+
+    .ref-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-bottom: 1px solid #dadce0;
+        background: #1e1e1e;
+    }
+
+    .ref-panel-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+    }
+
+    .ref-panel-actions {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .ref-panel-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #f7f7f7;
+    }
+
+    .ref-panel-btn:hover {
+        background: #e8eaed;
+    }
+
+    .ref-panel-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .ref-panel-body img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
+
+    .ref-paragraphs {
+        font-family: "Noto Serif";
+        font-size: 16px;
+        font-weight: 500;
+        color: #1e1e1e;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 0 32px;
     }
 
     /* ===== Feedback Modal ===== */
@@ -728,6 +814,59 @@
     .feedback-close-btn:hover {
         border: 1px solid black;
     }
+
+    /* ===== More Dropdown Menu ===== */
+    .more-dropdown-wrap {
+        position: relative;
+    }
+
+    .more-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 6px;
+        background: #fff;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        min-width: 240px;
+        z-index: 3000;
+        padding: 8px 0;
+        flex-direction: column;
+    }
+
+    .more-dropdown.open {
+        display: flex;
+    }
+
+    .more-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 24px;
+        font-size: 16px;
+        text-decoration: none;
+        color: #1e1e1e;
+        cursor: pointer;
+        white-space: nowrap;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .more-dropdown-item:hover {
+        background-color: #f0f0f0;
+        text-decoration: underline;
+    }
+
+    .more-dropdown-item svg {
+        flex-shrink: 0;
+        width: 22px;
+        height: 22px;
+    }
 </style>
 
 <div class="test-topbar">
@@ -767,13 +906,35 @@
                 <img src="{% static 'images/calculator.svg' %}" style="height: 16px;" alt="">
                 Calculator
             </div>
-            <div class="tool-item">
+            <div class="tool-item" id="tool-reference" onclick="app.toggleReference()">
                 <img src="{% static 'images/reference.svg' %}" style="height: 14px; padding: 1px 0;" alt="">
                 Reference
             </div>
         </div>
-        <div class="tool-item">
-            <img src="{% static 'images/more.svg' %}" style="height: 15px;"> More
+        <div class="more-dropdown-wrap">
+            <div class="tool-item" onclick="app.toggleMoreMenu(event)">
+                <img src="{% static 'images/more.svg' %}" style="height: 15px;"> More
+            </div>
+            <div class="more-dropdown" id="more-dropdown-1">
+                <button class="more-dropdown-item">
+                    <img src="{% static 'images/help.svg' %}">Help
+                </button>
+                <button class="more-dropdown-item">
+                    <img src="{% static 'images/shortcuts.svg' %}">Shortcuts
+                </button>
+                <button class="more-dropdown-item">
+                    <img src="{% static 'images/assistive.svg' %}">Assistive Technology
+                </button>
+                <button class="more-dropdown-item">
+                    <img src="{% static 'images/line-reader.svg' %}">Line Reader
+                </button>
+                <button class="more-dropdown-item">
+                    <img src="{% static 'images/unscheduled.svg' %}">Unscheduled Break
+                </button>
+                <button class="more-dropdown-item">
+                    <img src="{% static 'images/exit.svg' %}">Exit the Exam
+                </button>
+            </div>
         </div>
     </div>
 
@@ -804,7 +965,7 @@
                 </span>
             </div>
             <img src="{% static 'images/cross-out-abc.svg' %}" id="btn-cross-out"
-                style="width: 28px; height: 28px; cursor: pointer; margin-right: 12px;" alt=""
+                style="width: 28px; height: 28px; cursor: pointer; margin-right: 8px;" alt=""
                 onclick="app.toggleCrossOutMode()">
         </div>
         <img src="{% static 'images/question-border.png' %}" alt=""
@@ -1088,13 +1249,35 @@
                     <img src="{% static 'images/calculator.svg' %}" style="height: 16px;" alt="">
                     Calculator
                 </div>
-                <div class="tool-item">
+                <div class="tool-item" id="tool-reference-2" onclick="app.toggleReference()">
                     <img src="{% static 'images/reference.svg' %}" style="height: 14px; padding: 1px 0;" alt="">
                     Reference
                 </div>
             </div>
-            <div class="tool-item">
-                <img src="{% static 'images/more.svg' %}" style="height: 15px;"> More
+            <div class="more-dropdown-wrap">
+                <div class="tool-item" onclick="app.toggleMoreMenu(event)">
+                    <img src="{% static 'images/more.svg' %}" style="height: 15px;"> More
+                </div>
+                <div class="more-dropdown" id="more-dropdown-2">
+                    <button class="more-dropdown-item">
+                        <img src="{% static 'images/help.svg' %}">Help
+                    </button>
+                    <button class="more-dropdown-item">
+                        <img src="{% static 'images/shortcuts.svg' %}">Shortcuts
+                    </button>
+                    <button class="more-dropdown-item">
+                        <img src="{% static 'images/assistive.svg' %}">Assistive Technology
+                    </button>
+                    <button class="more-dropdown-item">
+                        <img src="{% static 'images/line-reader.svg' %}">Line Reader
+                    </button>
+                    <button class="more-dropdown-item">
+                        <img src="{% static 'images/unscheduled.svg' %}">Unscheduled Break
+                    </button>
+                    <button class="more-dropdown-item">
+                        <img src="{% static 'images/exit.svg' %}">Exit the Exam
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1194,6 +1377,38 @@
         style="position: absolute; bottom: -11px; right: -11px; width:24px; height:24px; cursor:grab; z-index:20001; background: transparent">
 </div>
 
+<!-- Reference Sheet Panel -->
+<div id="ref-panel" class="ref-panel">
+    <div class="ref-panel-header">
+        <span class="ref-panel-title">Reference</span>
+        <div class="ref-panel-actions">
+            <button class="ref-panel-btn" id="ref-expand-btn" title="Expand" onclick="app.expandReference()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+            </button>
+            <button class="ref-panel-btn" onclick="app.toggleReference()" title="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="ref-panel-body">
+        <img src="{% static 'images/reference-1.png' %}" alt="Reference Sheet - Formulas">
+        <img src="{% static 'images/reference-2.png' %}" alt="Reference Sheet - Volumes">
+        <div class="ref-paragraphs">
+            <p>The number of degrees of arc in a circle is $360$.</p>
+            <p>The number of radians of arc in a circle is $2\pi$.</p>
+            <p>The sum of the measures in degrees of the angles of<br>a triangle is $180$.</p>
+        </div>
+    </div>
+</div>
+
 <link rel="preconnect" href="https://www.desmos.com" crossorigin>
 
 <script>
@@ -1208,7 +1423,7 @@
         qIdx: 0,
         batteryLevel: 98,
         batteryInterval: null,
-        crossOutMode: false,
+        crossOutMode: true,
 
         init() {
             // Initialize state structure
@@ -1222,6 +1437,22 @@
             this.renderQuestion();
             this.initDraggable();
             this.startBatteryTimer();
+
+            // Render MathQuill in reference sheet paragraphs
+            const refParagraphs = document.querySelector('.ref-paragraphs');
+            if (refParagraphs) {
+                refParagraphs.innerHTML = refParagraphs.innerHTML.replace(/\$([^\$]+)\$/g, '<span class="mq-math">$1</span>');
+                const renderRefMQ = () => {
+                    if (window.MQ) {
+                        refParagraphs.querySelectorAll('.mq-math').forEach(el => MQ.StaticMath(el));
+                    }
+                };
+                if (window.MQ) {
+                    renderRefMQ();
+                } else {
+                    document.addEventListener('DOMContentLoaded', renderRefMQ);
+                }
+            }
 
             if (this.modIdx === 0) {
                 document.getElementById('modal-directions').style.display = 'flex';
@@ -1244,6 +1475,15 @@
                         navModal.style.display = 'none';
                     }
                 }
+
+                // Close More dropdowns on outside click
+                document.querySelectorAll('.more-dropdown.open').forEach(dd => {
+                    if (!dd.parentElement.contains(e.target)) {
+                        dd.classList.remove('open');
+                        const item = dd.parentElement.querySelector('.tool-item');
+                        if (item) item.style.borderBottom = 'none';
+                    }
+                });
             });
         },
 
@@ -1318,6 +1558,8 @@
 
         desmosCalc: null,
         isCalculatorOpen: false,
+        isReferenceOpen: false,
+        isReferenceExpanded: false,
 
         updateQuestionPanePosition() {
             const questionPane = document.querySelector('.question-pane');
@@ -1378,6 +1620,61 @@
                 settingsMenu: true,
                 zoomButtons: true,
             });
+        },
+
+        toggleMoreMenu(e) {
+            e.stopPropagation();
+            const wrap = e.currentTarget.closest('.more-dropdown-wrap');
+            const dropdown = wrap.querySelector('.more-dropdown');
+            const toolItem = wrap.querySelector('.tool-item');
+            // Close all other dropdowns first
+            document.querySelectorAll('.more-dropdown.open').forEach(dd => {
+                if (dd !== dropdown) {
+                    dd.classList.remove('open');
+                    const otherItem = dd.parentElement.querySelector('.tool-item');
+                    if (otherItem) otherItem.style.borderBottom = 'none';
+                }
+            });
+            dropdown.classList.toggle('open');
+            toolItem.style.borderBottom = dropdown.classList.contains('open') ? '2px solid #1e1e1e' : 'none';
+        },
+
+        toggleReference() {
+            const panel = document.getElementById('ref-panel');
+            const toolItem = document.getElementById('tool-reference');
+            const toolItem2 = document.getElementById('tool-reference-2');
+            const workspace = document.getElementById('main-workspace');
+            if (this.isReferenceOpen) {
+                panel.classList.remove('open');
+                this.isReferenceOpen = false;
+                this.isReferenceExpanded = false;
+                panel.style.width = '500px';
+                if (workspace) workspace.style.paddingRight = '0';
+                if (toolItem) toolItem.style.borderBottom = 'none';
+                if (toolItem2) toolItem2.style.borderBottom = 'none';
+            } else {
+                panel.classList.add('open');
+                this.isReferenceOpen = true;
+                if (workspace) workspace.style.paddingRight = '500px';
+                if (toolItem) toolItem.style.borderBottom = '2px solid #1e1e1e';
+                if (toolItem2) toolItem2.style.borderBottom = '2px solid #1e1e1e';
+            }
+            this.updateQuestionPanePosition();
+        },
+
+        expandReference() {
+            const panel = document.getElementById('ref-panel');
+            const workspace = document.getElementById('main-workspace');
+            if (this.isReferenceExpanded) {
+                panel.style.width = '500px';
+                if (workspace) workspace.style.paddingRight = '500px';
+                this.isReferenceExpanded = false;
+            } else {
+                panel.style.width = '100%';
+                if (workspace) workspace.style.paddingRight = '0';
+                this.isReferenceExpanded = true;
+            }
+            this.updateQuestionPanePosition();
         },
 
         initDraggable() {
@@ -1531,6 +1828,10 @@
                 document.getElementById('ui-tools-reading-2').style.display = 'flex';
                 document.getElementById('ui-tools-math-1').style.display = 'none';
                 document.getElementById('ui-tools-math-2').style.display = 'none';
+                // Close reference panel when leaving math modules
+                if (this.isReferenceOpen) {
+                    this.toggleReference();
+                }
             }
 
             document.getElementById('ui-test-title').innerText = mod.title;

@@ -1,7 +1,41 @@
 {% load static %}
 <div class="login-header">
-    <button class="btn-pill">
+    <button class="btn-pill" id="test-device-btn"
+        onclick="document.getElementById('test-device-overlay').style.display='flex'">
         <img src="{% static 'images/test-device.png' %}" style="height:13px; width: auto; margin-bottom: 2px;">
         Test Your Device
     </button>
+</div>
+
+<!-- ============ Test Your Device Overlay ============ -->
+<div id="test-device-overlay" class="test-device-overlay" style="display:none;">
+    <div class="test-device-logo">
+        <img src="{% static 'images/bluebook-white-logo.svg' %}" height="48" alt="Bluebook">
+    </div>
+
+    <div class="test-device-card">
+        <h2 class="test-device-title">This Device Meets the<br>Requirements</h2>
+        <p class="test-device-subtitle">We recommend running this check as close to test<br>day as possible.</p>
+
+        <div class="test-device-checks">
+            <div class="test-device-check-item">
+                <span class="test-device-check-icon">✓</span>
+                <span class="test-device-check-label">Memory</span>
+            </div>
+            <div class="test-device-check-item">
+                <span class="test-device-check-icon">✓</span>
+                <span class="test-device-check-label">Operating system</span>
+            </div>
+            <div class="test-device-check-item">
+                <span class="test-device-check-icon">✓</span>
+                <span class="test-device-check-label">Disk space</span>
+            </div>
+        </div>
+
+        <button class="test-device-done-btn"
+            onclick="document.getElementById('test-device-overlay').style.display='none'">Done</button>
+    </div>
+
+    <!-- Background illustration -->
+    <img src="{% static 'images/login-background.svg' %}" alt="" class="test-device-bg">
 </div>
