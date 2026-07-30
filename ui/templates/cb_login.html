@@ -3,9 +3,6 @@
 {% block body_class %}body-login{% endblock %}
 
 {% block content %}
-<div class="bg-decor"
-    style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2240%22 opacity=%220.2%22 fill=%22white%22/%3E%3C/svg%3E');">
-</div>
 
 {% include "partials/_login_header.html" %}
 
@@ -41,9 +38,9 @@
                     style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 16px; color: #111;">Email
                     Address</label>
                 <input type="text" id="email" name="email" required
-                    style="width: 100%; padding: 12px 14px; padding-right: 40px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
+                    style="width: 100%; padding: 15px; padding-right: 40px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
                 <img id="email-erase" src="{% static 'images/password-erase.png' %}"
-                    style="display:none; position: absolute; right: 16px; top: 42px; height: 12px; cursor: pointer;"
+                    style="display:none; position: absolute; right: 16px; top: 46px; height: 12px; cursor: pointer;"
                     alt="Clear email">
             </div>
 
@@ -51,9 +48,9 @@
                 <label for="password"
                     style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 16px; color: #111;">Password</label>
                 <input type="password" id="password" name="password" required
-                    style="width: 100%; padding: 12px 14px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
+                    style="width: 100%; padding: 15px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
                 <img id="toggle-password" src="{% static 'images/password-eye-crossed.png' %}"
-                    style="position: absolute; right: 12px; top: 42px; height: 12px; cursor: pointer;"
+                    style="position: absolute; right: 12px; top: 46px; height: 12px; cursor: pointer;"
                     alt="Toggle password visibility">
             </div>
 
@@ -63,7 +60,7 @@
 
             <div style="display: flex; justify-content: center; width: 100%;">
                 <button type="submit" id="submit-btn" class="btn-yellow" disabled
-                    style="width: 100%; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 20px; opacity: 0.5;">
+                    style="width: 100%; font-weight: 600; font-size: 14px; padding: 14.5px; border-radius: 20px; opacity: 0.5;">
                     Submit
                 </button>
             </div>

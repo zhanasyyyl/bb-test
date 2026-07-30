@@ -373,13 +373,18 @@
         text-decoration: none;
     }
 
-    .mark-review {
-        transition: color 0.2s;
+    #mark-review {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 14px;
+        color: #1e1e1e;
+        cursor: pointer;
+        font-weight: 400;
     }
 
-    .mark-review:hover {
-        color: #000;
-        font-weight: 500;
+    #mark-review:hover {
+        font-weight: 500 !important;
     }
 
     /* Bottom Bars */
@@ -436,6 +441,20 @@
 
     .desmos-window-control:hover {
         background-color: #505050 !important;
+    }
+
+    #desmos-move {
+        width: 32px;
+        padding: 4px;
+        border-radius: 4px;
+        background-color: #1e1e1e;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    #desmos-move:hover {
+        background-color: #505050;
     }
 
     .calc-type {
@@ -582,16 +601,18 @@
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px;
         border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #f7f7f7;
+        width: 26px;
+        height: 26px;
+        padding: auto;
     }
 
     .ref-panel-btn:hover {
-        background: #e8eaed;
+        background: #505050;
     }
 
     .ref-panel-body {
@@ -872,9 +893,10 @@
 <div class="test-topbar">
     <div class="test-info">
         <div class="test-title" id="ui-test-title">Section 1, Module 1: Reading and Writing</div>
-        <div class="test-directions" onclick="document.getElementById('modal-directions').style.display='flex'">
+        <div class="test-directions" onclick="app.toggleDirections()">
             Directions
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg id="arrow-directions" style="transform: rotate(180deg);" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
         </div>
@@ -958,7 +980,7 @@
         <div class="question-header">
             <div class="q-num-mark">
                 <span class="q-num" id="ui-q-num">1</span>
-                <span class="mark-review" onclick="app.toggleReview()" style="cursor: pointer;">
+                <span id="mark-review" onclick="app.toggleReview()" style="cursor: pointer;">
                     <img src="{% static 'images/mark.svg' %}" id="btn-mark-review" style="width: 20px; height: 20px;"
                         alt="">
                     Mark for Review
@@ -988,7 +1010,7 @@
 
     <div class="test-q-nav" style="cursor: pointer;" onclick="app.showNavModal()">
         <span id="ui-q-nav">Question 1 of 27</span>
-        <img id="arrow" src="{% static 'images/arrow.png' %}" style="width: 20px; height: auto;" alt="">
+        <img id="arrow" src="{% static 'images/arrow.png' %}" style="width: 20px; height: auto;">
     </div>
 
     <div>
@@ -1359,8 +1381,7 @@
                 Scientific
             </div>
         </div>
-        <img src="{% static 'images/move.png' %}"
-            style="width: 24px; position: absolute; left: 50%; transform: translateX(-50%);" alt="">
+        <img src="{% static 'images/move.png' %}" id="desmos-move">
         <div style="display:flex; align-items:center; padding-right: 12px; gap: 16px;">
             <div class="desmos-window-control" onclick="app.toggleCalculator()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f7f7f7" stroke-width="1.5">
@@ -1391,7 +1412,7 @@
                 </svg>
             </button>
             <button class="ref-panel-btn" onclick="app.toggleReference()" title="Close">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -1461,6 +1482,7 @@
             document.getElementById('modal-directions').addEventListener('mousedown', function (e) {
                 if (e.target === this) {
                     this.style.display = 'none';
+                    document.getElementById('arrow-directions').style.transform = 'rotate(0deg)';
                 }
             });
 
@@ -1498,12 +1520,12 @@
                 const toolbar = document.createElement('div');
                 toolbar.className = 'question-image-toolbar';
                 toolbar.innerHTML = `
-                    <button class="zoom-in-btn" title="Zoom in"><img src="/static/images/zoom-in.png" alt="Zoom in"></button>
-                    <button class="zoom-out-btn" title="Zoom out"><img src="/static/images/zoom-out.png" alt="Zoom out"></button>
+                    <button class="zoom-in-btn" title="Zoom in"><img src="{% static 'images/zoom-in.png' %}"></button>
+                    <button class="zoom-out-btn" title="Zoom out"><img src="{% static 'images/zoom-out.png' %}"></button>
                     <span class="zoom-level">100%</span>
                     <button class="reset-btn">Reset</button>
                     <div class="divider"></div>
-                    <button class="expand-btn" title="Expand"><img src="/static/images/image-full.png" alt="Expand"></button>
+                    <button class="expand-btn" title="Expand"><img src="/static/images/image-full.png"></button>
                 `;
 
                 wrapper.insertBefore(toolbar, img);
@@ -1675,6 +1697,17 @@
                 this.isReferenceExpanded = true;
             }
             this.updateQuestionPanePosition();
+        },
+
+        toggleDirections() {
+            const modal = document.getElementById('modal-directions');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                document.getElementById('arrow-directions').style.transform = 'rotate(0deg)';
+            } else {
+                modal.style.display = 'flex';
+                document.getElementById('arrow-directions').style.transform = 'rotate(180deg)';
+            }
         },
 
         initDraggable() {
@@ -1992,10 +2025,16 @@
         syncSelections() {
             const state = moduleState[this.modIdx][this.qIdx];
             const btnReview = document.getElementById('btn-mark-review');
+            const markReview = document.getElementById('mark-review');
             if (state.review) {
                 btnReview.src = "/static/images/marked.svg";
+                markReview.style.textDecoration = "underline";
+                markReview.style.fontWeight = "600";
+
             } else {
                 btnReview.src = '/static/images/mark.svg';
+                markReview.style.textDecoration = "none";
+                markReview.style.fontWeight = "400";
             }
 
             // Update cross-out button icon
@@ -2138,9 +2177,6 @@
                 btnNext.style.cursor = 'pointer';
             }, 500);
 
-            // Reset cross-out mode when navigating
-            this.crossOutMode = false;
-
             const mod = modulesData[this.modIdx];
             if (this.qIdx < mod.count - 1) {
                 this.qIdx++;
@@ -2152,7 +2188,6 @@
 
         prevQuestion() {
             if (this.qIdx > 0) {
-                this.crossOutMode = false;
                 this.qIdx--;
                 this.renderQuestion();
             }
