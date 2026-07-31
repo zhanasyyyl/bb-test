@@ -558,6 +558,101 @@
         max-width: 100%;
     }
 
+    /* ===== Expanded Image Overlay ===== */
+    .img-expand-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 5000;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .img-expand-toolbar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+        background: #505050;
+        position: absolute;
+        right: 36px;
+        top: 12px;
+        border-radius: 8px;
+    }
+
+    .zoom-btns {
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+
+    .img-expand-toolbar button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-radius: 8px;
+        padding: 0;
+    }
+
+    .img-expand-toolbar button:hover {
+        background: #6b6b6b;
+    }
+
+    .img-expand-toolbar img {
+        width: 18px;
+        height: 18px;
+        filter: brightness(0) invert(1);
+    }
+
+    .img-expand-toolbar .zoom-level {
+        font-size: 12px;
+        color: #fff;
+        text-align: center;
+    }
+
+    .img-expand-toolbar .reset-btn {
+        width: auto;
+        padding: 0 10px;
+        font-size: 14px;
+        color: #fff;
+    }
+
+    .img-expand-toolbar .toolbar-divider {
+        width: 0.5px;
+        height: 18px;
+        background: #b2b2b2;
+        margin: 0;
+    }
+
+    .img-expand-toolbar .close-expand-btn svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .img-expand-body {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: auto;
+        padding: 16px;
+    }
+
+    .img-expand-body img {
+        object-fit: contain;
+        transform-origin: center center;
+        opacity: 1;
+        height: 342px;
+    }
+
     /* ===== Reference Sheet Panel ===== */
     .ref-panel {
         position: absolute;
@@ -1554,7 +1649,57 @@
                 });
 
                 toolbar.querySelector('.expand-btn').addEventListener('click', () => {
-                    img.requestFullscreen?.();
+                    // Create expanded image overlay
+                    const overlay = document.createElement('div');
+                    overlay.className = 'img-expand-overlay';
+
+                    let expandZoom = 100;
+                    const clonedImg = img.cloneNode(true);
+                    clonedImg.style.transform = 'none';
+                    clonedImg.style.background = 'white';
+
+                    function applyExpandZoom() {
+                        clonedImg.style.transform = `scale(${expandZoom / 100})`;
+                        overlay.querySelector('.zoom-level').textContent = expandZoom + '%';
+                    }
+
+                    overlay.innerHTML = `
+                        <div class="img-expand-toolbar">
+                            <div class="zoom-btns">
+                                <button class="ex-zoom-in" title="Zoom in"><img src="{% static 'images/zoom-in.png' %}"></button>
+                                <button class="ex-zoom-out" title="Zoom out"><img src="{% static 'images/zoom-out.png' %}"></button>
+                            </div>
+                            <span class="zoom-level">100%</span>
+                            <button class="reset-btn">Reset</button>
+                            <div class="toolbar-divider"></div>
+                            <button class="close-expand-btn" title="Close">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="img-expand-body"></div>
+                    `;
+
+                    overlay.querySelector('.img-expand-body').appendChild(clonedImg);
+                    document.body.appendChild(overlay);
+
+                    overlay.querySelector('.ex-zoom-in').addEventListener('click', () => {
+                        expandZoom = Math.min(expandZoom + 25, 300);
+                        applyExpandZoom();
+                    });
+                    overlay.querySelector('.ex-zoom-out').addEventListener('click', () => {
+                        expandZoom = Math.max(expandZoom - 25, 25);
+                        applyExpandZoom();
+                    });
+                    overlay.querySelector('.reset-btn').addEventListener('click', () => {
+                        expandZoom = 100;
+                        applyExpandZoom();
+                    });
+                    overlay.querySelector('.close-expand-btn').addEventListener('click', () => {
+                        overlay.remove();
+                    });
                 });
             });
         },
