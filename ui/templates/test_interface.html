@@ -1086,7 +1086,7 @@
                 onclick="app.toggleCrossOutMode()">
         </div>
         <img src="{% static 'images/question-border.png' %}" alt=""
-            style="width: 100%; height: 2px; margin: 0; margin-bottom: 12px; padding: 0;">
+            style="width: 100%; height: 1.5px; margin-bottom: 12px; padding: 0;">
 
         <div class="question-text" id="ui-question">
             <!-- populated dynamically -->
@@ -1552,6 +1552,7 @@
             this.startModuleTimer();
             this.renderQuestion();
             this.initDraggable();
+            this.initResizer();
             this.startBatteryTimer();
 
             // Render MathQuill in reference sheet paragraphs
@@ -1881,6 +1882,49 @@
 
             document.addEventListener('mouseup', () => {
                 isDragging = false;
+            });
+        },
+
+        initResizer() {
+            const resizer = document.querySelector('.resizer');
+            const workspace = document.getElementById('main-workspace');
+            const passagePane = document.getElementById('ui-passage');
+            const questionPane = document.querySelector('.question-pane');
+            if (!resizer || !workspace || !passagePane || !questionPane) return;
+
+            let isResizing = false;
+
+            resizer.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isResizing = true;
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const workspaceRect = workspace.getBoundingClientRect();
+                const offsetX = e.clientX - workspaceRect.left;
+                const totalWidth = workspaceRect.width;
+                const resizerWidth = resizer.offsetWidth;
+
+                // Clamp so each pane gets at least 20% of the workspace
+                const minPx = totalWidth * 0.2;
+                const maxPx = totalWidth * 0.8 - resizerWidth;
+                const clampedX = Math.min(Math.max(offsetX, minPx), maxPx);
+
+                passagePane.style.flex = 'none';
+                questionPane.style.flex = 'none';
+                passagePane.style.width = clampedX + 'px';
+                questionPane.style.width = (totalWidth - clampedX - resizerWidth) + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                }
             });
         },
 

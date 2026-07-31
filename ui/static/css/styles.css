@@ -1367,6 +1367,16 @@ input[type="radio"] {
     overflow-y: auto;
 }
 
+.question-pane>* {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.question-pane > img {
+    display: block;
+}
+
 .question-header {
     display: flex;
     align-items: center;
