@@ -197,6 +197,10 @@ body {
     line-height: 1.5;
 }
 
+#test-device-link:hover {
+    text-decoration: none !important;
+}
+
 .test-device-checks {
     width: 100%;
     display: flex;
@@ -1373,7 +1377,7 @@ input[type="radio"] {
     margin-right: auto;
 }
 
-.question-pane > img {
+.question-pane>img {
     display: block;
 }
 
