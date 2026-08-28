@@ -77,3 +77,8 @@ def _get_prefetch_urls():
 def static_files_preloader(request):
     """Provide prefetch URLs for all small UI images on every page."""
     return {'prefetch_static_urls': _get_prefetch_urls()}
+
+
+def debug_mode_context(request):
+    """Expose DEBUG setting as 'debug_mode' for template-level feature gating."""
+    return {'debug_mode': settings.DEBUG}

@@ -26,6 +26,84 @@
       window.MQ = MathQuill.getInterface(2);
     });
   </script>
+
+  {% if not debug_mode %}
+  <script>
+    // --- Anti-inspection measures (production only) ---
+    (function () {
+      'use strict';
+
+      // 1. Disable right-click context menu
+      document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        return false;
+      });
+
+      // 2. Block keyboard shortcuts used to open DevTools or view source
+      document.addEventListener('keydown', function (e) {
+        // F12
+        if (e.key === 'F12' || e.keyCode === 123) {
+          e.preventDefault();
+          return false;
+        }
+
+        // Ctrl+Shift+I  (DevTools – Elements)
+        // Ctrl+Shift+J  (DevTools – Console)
+        // Ctrl+Shift+C  (DevTools – Inspect element)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey &&
+          (e.key === 'I' || e.key === 'i' ||
+            e.key === 'J' || e.key === 'j' ||
+            e.key === 'C' || e.key === 'c')) {
+          e.preventDefault();
+          return false;
+        }
+
+        // Ctrl+U  (View Source)
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
+          e.preventDefault();
+          return false;
+        }
+
+        // Ctrl+S  (Save Page)
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's')) {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      // 3. Detect DevTools being opened via debugger-timing heuristic
+      var devtoolsOpen = false;
+      var threshold = 160;
+
+      function detectDevTools() {
+        var widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        var heightThreshold = window.outerHeight - window.innerHeight > threshold;
+
+        if (widthThreshold || heightThreshold) {
+          if (!devtoolsOpen) {
+            devtoolsOpen = true;
+            document.documentElement.innerHTML = '';
+          }
+        } else {
+          devtoolsOpen = false;
+        }
+      }
+
+      setInterval(detectDevTools, 1000);
+
+      // 5. Console-clear loop to discourage console use
+      try {
+        var _c = console;
+        Object.defineProperty(window, 'console', {
+          get: function () {
+            throw new Error('Console access is disabled.');
+          },
+          set: function () { }
+        });
+      } catch (_) { }
+    })();
+  </script>
+  {% endif %}
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
