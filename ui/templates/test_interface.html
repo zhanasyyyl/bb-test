@@ -983,6 +983,326 @@
         width: 22px;
         height: 22px;
     }
+
+    /* ===== Unscheduled Break Modal ===== */
+    .unscheduled-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .unscheduled-modal-overlay.open {
+        display: flex;
+    }
+
+    .unscheduled-modal {
+        background: #fff;
+        border-radius: 8px;
+        width: 656px;
+        max-width: 90vw;
+        padding: 32px 36px 28px;
+        position: relative;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        animation: unschedModalIn 0.2s ease;
+    }
+
+    @keyframes unschedModalIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .unscheduled-modal h2 {
+        font-size: 28px;
+        font-weight: 400;
+        color: #1e1e1e;
+        margin: 0 0 20px 0;
+        padding-right: 32px;
+        line-height: 1.3;
+    }
+
+    .unscheduled-modal-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: none;
+        border: none;
+        font-size: 26px;
+        color: #555;
+        cursor: pointer;
+        padding: 2px 8px;
+        line-height: 1;
+        border-radius: 4px;
+    }
+
+    .unscheduled-modal-close:hover {
+        background: #f0f0f0;
+    }
+
+    .unscheduled-checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    /* Hide the default browser checkbox */
+    .custom-checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Base style for the custom checkbox container */
+    .custom-checkbox {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        user-select: none;
+        font-family: sans-serif;
+    }
+
+    /* Create the square background matching the image */
+    .checkmark {
+        height: 24px;
+        width: 24px;
+        background-color: #f0f0f0;
+        border: 1px solid #324dc7;
+        border-radius: 4px;
+        /* Smooth rounded corners */
+        position: relative;
+        transition: background-color 0.2s ease;
+    }
+
+    /* Background color when checked (matching the royal blue image) */
+    .custom-checkbox input:checked~.checkmark {
+        background-color: #324dc7;
+    }
+
+    /* Create the checkmark graphic (hidden by default) */
+    .checkmark::after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 8px;
+        top: 4px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    /* Show the checkmark graphic when checked */
+    .custom-checkbox input:checked~.checkmark::after {
+        display: block;
+    }
+
+    /* Focus styles for accessibility */
+    .custom-checkbox input:focus-visible~.checkmark {
+        outline: 2px solid #2557a7;
+        outline-offset: 2px;
+    }
+
+    .unscheduled-checkbox-row label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e1e1e;
+        cursor: pointer;
+        line-height: 1.4;
+        user-select: none;
+    }
+
+    .unscheduled-laptop-note {
+        font-size: 16px;
+        color: #1e1e1e;
+        margin-bottom: 20px;
+        line-height: 1.4;
+    }
+
+    .unscheduled-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .unscheduled-cancel-btn {
+        background: none;
+        border: none;
+        color: #324dc7;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 10px 16px;
+    }
+
+    .unscheduled-cancel-btn:hover {
+        text-decoration: underline;
+    }
+
+    .unscheduled-take-btn {
+        background-color: #fedb00;
+        border: 1px solid #fedb00;
+        outline: 1px solid black;
+        color: #000;
+        padding: 14px 20px;
+        border-radius: 40px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: border 0.3s;
+    }
+
+    .unscheduled-take-btn:hover {
+        border: 1px solid #1e1e1e;
+    }
+
+    .unscheduled-take-btn:disabled {
+        background: #f0f0f0;
+        border: 1px solid #888;
+        outline: none;
+        color: #888;
+        cursor: not-allowed;
+    }
+
+    /* ===== Unscheduled Break Screen ===== */
+    .screen-unscheduled-break {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #1e1e1e;
+        color: #fff;
+        z-index: 200;
+        flex-direction: column;
+    }
+
+    .unsched-break-top-bar {
+        display: flex;
+        justify-content: flex-end;
+        padding: 24px;
+    }
+
+    .unsched-break-battery {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #4e4e4e;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .unsched-break-content {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        width: 100vw;
+    }
+
+    .unsched-break-left {
+        width: 50vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .unsched-break-section-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        width: 274px;
+        text-align: left;
+        justify-content: flex-start;
+        margin-top: -84px;
+    }
+
+    .unsched-break-section-label svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .unsched-break-timer-card {
+        border: 1px solid #fff;
+        border-radius: 8px;
+        width: 274px;
+        padding: 24px 14px;
+        padding-bottom: 12px;
+        text-align: center;
+    }
+
+    .unsched-break-timer-card h3 {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .unsched-break-timer-card .time {
+        font-size: 70px;
+        font-weight: 700;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .unsched-break-right {
+        width: 50vw;
+        padding-left: 48px;
+        margin-left: 0;
+    }
+
+    .unsched-break-right h1 {
+        font-size: 32px;
+        font-weight: 500;
+        letter-spacing: -2px;
+        margin-bottom: 16px;
+        line-height: 1.2;
+        color: #fff;
+    }
+
+    .unsched-break-right p {
+        font-size: 20px;
+        font-weight: 300;
+        margin-bottom: 24px;
+        line-height: 1.7;
+        color: #fff;
+    }
+
+    .unsched-break-bottom-bar {
+        padding: 32px 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .unsched-break-name {
+        font-size: 22px;
+        font-weight: 400;
+    }
 </style>
 
 <div class="test-topbar">
@@ -1046,7 +1366,7 @@
                 <button class="more-dropdown-item">
                     <img src="{% static 'images/line-reader.svg' %}">Line Reader
                 </button>
-                <button class="more-dropdown-item">
+                <button class="more-dropdown-item unscheduled-break">
                     <img src="{% static 'images/unscheduled.svg' %}">Unscheduled Break
                 </button>
                 <button class="more-dropdown-item">
@@ -1331,6 +1651,64 @@
     </div>
 </div>
 
+<!-- Unscheduled Break Confirmation Modal -->
+<div class="unscheduled-modal-overlay" id="unscheduled-modal-overlay">
+    <div class="unscheduled-modal">
+        <h2>You'll Lose Testing Time During This Break</h2>
+        <button class="unscheduled-modal-close" id="unscheduled-modal-close">&times;</button>
+        <div class="unscheduled-checkbox-row" onclick="document.getElementById('unsched-confirm-check').click()">
+            <label class="custom-checkbox" onclick="event.stopPropagation(); app.toggleUnschedCheckbox()">
+                <input type="checkbox" id="unsched-confirm-check">
+                <span class="checkmark"></span>
+                <label for="unsched-confirm-check">I need to take a break, and I
+                    understand that I'll lose testing time.</label>
+            </label>
+        </div>
+        <div class="unscheduled-laptop-note">If you're testing with a laptop, do not close it.</div>
+        <div class="unscheduled-modal-actions">
+            <button class="unscheduled-cancel-btn" id="unsched-cancel-btn">Cancel</button>
+            <button class="unscheduled-take-btn" id="unsched-take-btn" disabled>Take Unscheduled Break</button>
+        </div>
+    </div>
+</div>
+
+<!-- Unscheduled Break Screen -->
+<div class="screen-unscheduled-break" id="screen-unscheduled-break">
+    <div class="unsched-break-top-bar">
+        <div class="unsched-break-battery">
+            <span id="ui-battery-unsched">98%</span>
+            <img src="{% static 'images/battery.svg' %}"
+                style="width: 22px; height: 11px; filter: brightness(0) invert(1);" alt="">
+        </div>
+    </div>
+
+    <div class="unsched-break-content">
+        <div class="unsched-break-left">
+            <div class="unsched-break-section-label">
+                <img src="{% static 'images/section-list.png' %}" style="width: 32px; height: 32px;">
+                <span id="unsched-break-section-title">Section 1:<br>Reading and Writing</span>
+            </div>
+            <div class="unsched-break-timer-card">
+                <h3>Time Remaining in Module:</h3>
+                <div class="time" id="unsched-break-time-display">0:00</div>
+            </div>
+        </div>
+        <div class="unsched-break-right">
+            <h1>Unscheduled Break: Do Not Close Your Device</h1>
+            <p>If this module ends while you're on break, you'll<br>be taken to the next module.</p>
+            <button class="btn-yellow"
+                style="padding: 14px 20px; border-radius: 40px; font-weight: 600; width: auto; color: black; border: 1px solid black; cursor: pointer; background: #fedb00;"
+                onclick="app.resumeFromUnscheduledBreak()">Resume Testing</button>
+        </div>
+    </div>
+
+    <div class="unsched-break-bottom-bar">
+        <div class="unsched-break-name">
+            {{ request.user.userprofile.full_name }}
+        </div>
+    </div>
+</div>
+
 <!-- Review Page Full Screen -->
 <div class="screen-review" id="screen-review">
     <div class="test-topbar">
@@ -1389,7 +1767,7 @@
                     <button class="more-dropdown-item">
                         <img src="{% static 'images/line-reader.svg' %}">Line Reader
                     </button>
-                    <button class="more-dropdown-item">
+                    <button class="more-dropdown-item unscheduled-break">
                         <img src="{% static 'images/unscheduled.svg' %}">Unscheduled Break
                     </button>
                     <button class="more-dropdown-item">
@@ -1720,9 +2098,11 @@
             const bat1 = document.getElementById('ui-battery-1');
             const bat2 = document.getElementById('ui-battery-2');
             const batBreak = document.getElementById('ui-battery-break');
+            const batUnsched = document.getElementById('ui-battery-unsched');
             if (bat1) bat1.innerText = this.batteryLevel + '%';
             if (bat2) bat2.innerText = this.batteryLevel + '%';
             if (batBreak) batBreak.innerText = this.batteryLevel + '%';
+            if (batUnsched) batUnsched.innerText = this.batteryLevel + '%';
         },
 
         desmosCalc: null,
@@ -2619,9 +2999,116 @@
                     });
                 }
             }, 1000);
+        },
+        // ===== Unscheduled Break =====
+        isOnUnscheduledBreak: false,
+        unschedTimerInterval: null,
+
+        openUnscheduledBreakModal() {
+            // Close any open More dropdown
+            document.querySelectorAll('.more-dropdown.open').forEach(dd => {
+                dd.classList.remove('open');
+                const item = dd.parentElement.querySelector('.tool-item');
+                if (item) item.style.borderBottom = 'none';
+            });
+            // Reset checkbox and button state
+            const checkbox = document.getElementById('unsched-confirm-check');
+            const takeBtn = document.getElementById('unsched-take-btn');
+            if (checkbox) checkbox.checked = false;
+            if (takeBtn) takeBtn.disabled = true;
+            document.getElementById('unscheduled-modal-overlay').classList.add('open');
+        },
+
+        closeUnscheduledBreakModal() {
+            document.getElementById('unscheduled-modal-overlay').classList.remove('open');
+        },
+
+        toggleUnschedCheckbox() {
+            const checkbox = document.getElementById('unsched-confirm-check');
+            const takeBtn = document.getElementById('unsched-take-btn');
+            if (takeBtn) takeBtn.disabled = !checkbox.checked;
+        },
+
+        startUnscheduledBreak() {
+            this.closeUnscheduledBreakModal();
+
+            // Hide the test workspace, review screen, and bottom bar
+            document.getElementById('main-workspace').style.display = 'none';
+            document.getElementById('main-bottombar').style.display = 'none';
+            document.getElementById('screen-review').style.display = 'none';
+
+            // Update battery on break screen
+            const batUnsched = document.getElementById('ui-battery-unsched');
+            if (batUnsched) batUnsched.innerText = this.batteryLevel + '%';
+
+            // Set section title
+            const mod = modulesData[this.modIdx];
+            const titleEl = document.getElementById('unsched-break-section-title');
+            if (titleEl && mod) {
+                titleEl.innerHTML = mod.title.replace(': ', ':<br>');
+            }
+
+            // Show unscheduled break screen
+            document.getElementById('screen-unscheduled-break').style.display = 'flex';
+            this.isOnUnscheduledBreak = true;
+
+            // Start updating the break screen timer display from the module timer
+            this.updateUnschedBreakDisplay();
+            this.unschedTimerInterval = setInterval(() => {
+                this.updateUnschedBreakDisplay();
+            }, 500);
+        },
+
+        updateUnschedBreakDisplay() {
+            const m = Math.floor(this.moduleTimeRemaining / 60);
+            const s = this.moduleTimeRemaining % 60;
+            const timeStr = `${m}:${s < 10 ? '0' : ''}${s}`;
+            const display = document.getElementById('unsched-break-time-display');
+            if (display) display.innerText = timeStr;
+
+            // If module time ran out while on break, auto-finish
+            if (this.moduleTimeRemaining <= 0 && this.isOnUnscheduledBreak) {
+                this.resumeFromUnscheduledBreak();
+            }
+        },
+
+        resumeFromUnscheduledBreak() {
+            if (this.unschedTimerInterval) {
+                clearInterval(this.unschedTimerInterval);
+                this.unschedTimerInterval = null;
+            }
+            this.isOnUnscheduledBreak = false;
+            document.getElementById('screen-unscheduled-break').style.display = 'none';
+
+            // If module time already ran out, go to finish
+            if (this.moduleTimeRemaining <= 0) {
+                this.finishModule();
+            } else {
+                document.getElementById('main-workspace').style.display = 'flex';
+                document.getElementById('main-bottombar').style.display = 'flex';
+                this.renderQuestion();
+            }
         }
     };
 
     app.init();
+
+    // Wire up unscheduled break buttons
+    document.querySelectorAll('.unscheduled-break').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            app.openUnscheduledBreakModal();
+        });
+    });
+
+    // Wire up modal close/cancel buttons
+    document.getElementById('unscheduled-modal-close').addEventListener('click', () => app.closeUnscheduledBreakModal());
+    document.getElementById('unsched-cancel-btn').addEventListener('click', () => app.closeUnscheduledBreakModal());
+    document.getElementById('unsched-take-btn').addEventListener('click', () => app.startUnscheduledBreak());
+
+    // Close modal on overlay click
+    document.getElementById('unscheduled-modal-overlay').addEventListener('click', function (e) {
+        if (e.target === this) app.closeUnscheduledBreakModal();
+    });
 </script>
 {% endblock %}
