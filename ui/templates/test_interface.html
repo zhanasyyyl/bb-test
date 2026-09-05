@@ -2148,7 +2148,7 @@
                         // Lazy-load Desmos on first calculator use
                         this.desmosLoading = true;
                         const script = document.createElement('script');
-                        script.src = 'https://www.desmos.com/api/v1.12/calculator.js?apiKey=6780649bdf1949d289074298dcb954a6';
+                        script.src = 'https://www.desmos.com/api/v1.12/calculator.js?apiKey={{ desmos_api_key }}';
                         script.onload = () => {
                             this.desmosLoading = false;
                             this._initDesmos();

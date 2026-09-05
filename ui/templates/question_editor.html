@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Question Editor — Bluebook Admin</title>
   <meta name="description" content="Visual editor for managing SAT-style questions in the Bluebook testing platform.">
+  <meta name="robots" content="noindex, nofollow">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ===== RESET & TOKENS ===== */
@@ -994,7 +995,16 @@
         applyFilters();
         updateStats();
       } catch(e) {
-        listEl.innerHTML = `<div class="empty-state"><h3>Error loading questions</h3><p>${e.message}</p></div>`;
+        const errDiv = document.createElement('div');
+        errDiv.className = 'empty-state';
+        const errH3 = document.createElement('h3');
+        errH3.textContent = 'Error loading questions';
+        const errP = document.createElement('p');
+        errP.textContent = e.message;
+        errDiv.appendChild(errH3);
+        errDiv.appendChild(errP);
+        listEl.innerHTML = '';
+        listEl.appendChild(errDiv);
       }
     }
 

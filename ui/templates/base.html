@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bluebook</title>
+  <meta name="robots" content="noindex, nofollow">
   <link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -18,9 +19,9 @@
   <link rel="prefetch" href="{{ url }}">
   {% endfor %}
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css" integrity="sha384-hyelkzOwgzPmPEil1GOCRDI9tDelmUVzJSsiB1jmI77HxfQrEizlUdQJy2e3H2EC" crossorigin="anonymous" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" integrity="sha384-/Gm+ur33q/W+9ANGYwB2Q4V0ZWApToOzRuA8md/1p9xMMxpqnlguMvk8QuEFWA1B" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js" integrity="sha384-54KBFeyIUG5fojJCVirXnYLliOkeE6hzvBMTpZhKrCsW2ZlkxOXEvORRWK4RyZ3P" crossorigin="anonymous" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       window.MQ = MathQuill.getInterface(2);

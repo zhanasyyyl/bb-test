@@ -20,6 +20,14 @@ staticfiles/
 .DS_Store
 Thumbs.db
 
+# IDE / editor folders
+.antigravity/
+.vscode/
+.idea/
+
+# Node
+node_modules/
+
 # Original App
 original-app/
 

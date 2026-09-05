@@ -6,7 +6,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.conf import settings
 
@@ -116,7 +115,8 @@ def get_cached_modules_json():
 def test_interface_view(request):
     return render(request, 'test_interface.html', {
         'view_locked': True, 
-        'modules_json': get_cached_modules_json()
+        'modules_json': get_cached_modules_json(),
+        'desmos_api_key': settings.DESMOS_API_KEY,
     })
 
 
@@ -137,7 +137,9 @@ def api_questions(request):
                 data = json.load(f)
             return JsonResponse(data, safe=False)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            if settings.DEBUG:
+                return JsonResponse({'error': str(e)}, status=500)
+            return JsonResponse({'error': 'Failed to load questions'}, status=500)
 
     elif request.method == 'POST':
         try:
@@ -148,6 +150,8 @@ def api_questions(request):
             get_cached_modules_json.cache_clear()
             return JsonResponse({'status': 'ok', 'count': len(data)})
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            if settings.DEBUG:
+                return JsonResponse({'error': str(e)}, status=500)
+            return JsonResponse({'error': 'Failed to save questions'}, status=500)
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
