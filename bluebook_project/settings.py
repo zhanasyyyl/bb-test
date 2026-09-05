@@ -35,8 +35,8 @@ if not SECRET_KEY:
         from django.core.exceptions import ImproperlyConfigured
         raise ImproperlyConfigured("The SECRET_KEY setting must not be empty in production.")
 
-allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'bbtest.space')
-ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()] if allowed_hosts_env else ['bbtest.space', 'localhost', '127.0.0.1']
+allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'bbtest.shop')
+ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()] if allowed_hosts_env else ['bbtest.shop', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -151,7 +151,7 @@ EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
 ANYMAIL = {
     "RESEND_API_KEY": os.getenv('RESEND_API_KEY', ''),
 }
-DEFAULT_FROM_EMAIL = "messages@bbtest.space"
+DEFAULT_FROM_EMAIL = "messages@bbtest.shop"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

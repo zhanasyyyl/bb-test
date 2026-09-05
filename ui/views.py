@@ -61,7 +61,7 @@ def start_code_view(request):
             enqueue_email(
                 subject=f"{full_code} - Bluebook Testing Code",
                 message=f"This is the code - {full_code}. Enter this code in the app to start the test.",
-                from_email="Bluebook <messages@bbtest.space>",
+                from_email="Bluebook <messages@bbtest.shop>",
                 recipient_list=[profile.contact_email],
             )
 
