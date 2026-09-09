@@ -468,7 +468,7 @@
         cursor: pointer;
     }
 
-    .calc-type:first-child {
+    .calc-type.active {
         background-color: #fff;
         color: #1e1e1e;
         text-decoration: underline;
@@ -477,6 +477,17 @@
     .calc-type:hover {
         background-color: #1b2264;
         color: #fff;
+        border: 1px solid #fff;
+    }
+
+    .calc-type:first-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .calc-type:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 
     .calc-type img {
@@ -1846,11 +1857,11 @@
         <div
             style="display:flex; height: 100%; border: 0.5px solid #fff; gap: 0; padding: 0; border-radius: 6px; margin-left: 6px;">
             <!-- Tabs -->
-            <div class="calc-type">
+            <div class="calc-type active" onclick="app.setCalcMode('graphing')">
                 <img src="{% static 'images/graphing.png' %}">
                 Graphing
             </div>
-            <div class="calc-type">
+            <div class="calc-type" onclick="app.setCalcMode('scientific')">
                 <img src="{% static 'images/scientific.png' %}">
                 Scientific
             </div>
@@ -1903,8 +1914,6 @@
         </div>
     </div>
 </div>
-
-<link rel="preconnect" href="https://www.desmos.com" crossorigin>
 
 <script>
     const staticUrl = "{% static 'questions/' %}";
@@ -2106,6 +2115,7 @@
         },
 
         desmosCalc: null,
+        calcMode: 'graphing',
         isCalculatorOpen: false,
         isReferenceOpen: false,
         isReferenceExpanded: false,
@@ -2148,7 +2158,7 @@
                         // Lazy-load Desmos on first calculator use
                         this.desmosLoading = true;
                         const script = document.createElement('script');
-                        script.src = 'https://www.desmos.com/api/v1.12/calculator.js?apiKey={{ desmos_api_key }}';
+                        script.src = "{% static 'calculator.js' %}";
                         script.onload = () => {
                             this.desmosLoading = false;
                             this._initDesmos();
@@ -2163,12 +2173,32 @@
 
         _initDesmos() {
             const elt = document.getElementById('calculator-container');
-            this.desmosCalc = Desmos.GraphingCalculator(elt, {
-                keypad: true,
-                expressions: true,
-                settingsMenu: true,
-                zoomButtons: true,
+            if (this.desmosCalc) {
+                this.desmosCalc.destroy();
+                this.desmosCalc = null;
+            }
+            if (this.calcMode === 'scientific') {
+                this.desmosCalc = Desmos.ScientificCalculator(elt);
+            } else {
+                this.desmosCalc = Desmos.GraphingCalculator(elt, {
+                    keypad: true,
+                    expressions: true,
+                    settingsMenu: true,
+                    zoomButtons: true,
+                });
+            }
+        },
+
+        setCalcMode(mode) {
+            if (this.calcMode === mode) return;
+            this.calcMode = mode;
+            document.querySelectorAll('.calc-type').forEach(el => {
+                el.classList.remove('active');
             });
+            event.currentTarget.classList.add('active');
+            if (this.desmosCalc) {
+                this._initDesmos();
+            }
         },
 
         toggleMoreMenu(e) {

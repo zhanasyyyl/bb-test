@@ -10,8 +10,10 @@
 </div>
 <div class="startcode-main">
     <h1>Start Code</h1>
-    <p>Enter your start code now to begin testing. Good luck!</p>
-    <p>The start code contains <strong>numbers only</strong>.</p>
+    <div id="instruction-text">
+        <p>Enter your start code now to begin testing. Good luck!</p>
+        <p>The start code contains <strong>numbers only</strong>.</p>
+    </div>
 
     <form id="start-code-form" method="POST" action="{% url 'start_code' %}" style="text-align: center;">
         {% csrf_token %}
@@ -34,6 +36,29 @@
             const inputs = document.querySelectorAll('.code-input');
             const startBtn = document.getElementById('start-btn');
             const fullCodeInput = document.getElementById('full-code-input');
+            const form = document.getElementById('start-code-form');
+            const instructionText = document.getElementById('instruction-text');
+
+            let forceInvalid = false;
+            // Hidden shortcut: Ctrl + Shift + E to toggle error state
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
+                    forceInvalid = !forceInvalid;
+                }
+            });
+
+            form.addEventListener('submit', (e) => {
+                if (forceInvalid) {
+                    e.preventDefault();
+                    instructionText.innerHTML = '<p style="font-weight: bold; color: #d32f2f;">Invalid code.</p><p style="font-weight: bold; color: #d32f2f;">Make sure you entered the code accurately.</p>';
+                    // Reset inputs
+                    inputs.forEach(input => input.value = '');
+                    fullCodeInput.value = '';
+                    startBtn.disabled = true;
+                    startBtn.className = 'btn-secondary';
+                    inputs[0].focus();
+                }
+            });
 
             inputs.forEach((input, index) => {
                 input.addEventListener('input', (e) => {

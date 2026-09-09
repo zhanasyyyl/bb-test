@@ -150,10 +150,11 @@ body {
 /* ---- Test Your Device Overlay ---- */
 .test-device-overlay {
     position: fixed;
-    top: 0;
+    top: 23px;
     left: 0;
+    bottom: 32px;
     width: 100vw;
-    height: 100vh;
+    height: max-content;
     background-color: #324dc7;
     z-index: 10000;
     display: flex;
@@ -1221,6 +1222,10 @@ input[type="radio"] {
 /* ========================================================= */
 /* TEST INTERFACE                                            */
 /* ========================================================= */
+.dcg-expressions-branding {
+    display: none;
+}
+
 .body-test .content-area {
     display: flex;
     flex-direction: column;
