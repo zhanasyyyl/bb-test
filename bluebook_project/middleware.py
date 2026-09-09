@@ -22,8 +22,8 @@ class SecurityHeadersMiddleware:
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://www.desmos.com",
         # Styles: self + Google Fonts + inline styles used extensively in templates.
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
-        # Fonts: self (local woff/woff2 files) + Google Fonts.
-        "font-src 'self' https://fonts.gstatic.com",
+        # Fonts: self (local woff/woff2 files) + Google Fonts + data URIs (for Desmos icons).
+        "font-src 'self' https://fonts.gstatic.com data:",
         # Images: self + data URIs (inline SVG backgrounds).
         "img-src 'self' data:",
         # Connections (fetch/XHR): only same-origin API calls.
