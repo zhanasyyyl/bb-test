@@ -223,16 +223,6 @@
 
     .nav-item.answered {
         background: #324dc7;
-        border: none;
-    }
-
-    .nav-item.current {
-        border: 1px dashed #5f6368;
-        background: transparent;
-    }
-
-    .nav-item.answered {
-        background: #324dc7;
         color: white;
         border: none;
     }
@@ -257,6 +247,14 @@
         width: 8px;
         background: url('{% static "images/for-review.png" %}') no-repeat center;
         background-size: cover;
+    }
+
+    .nav-item:hover {
+        background-color: #f0f0f0;
+    }
+
+    .nav-item.answered:hover {
+        background-color: #255e9b;
     }
 
     .nav-footer {
