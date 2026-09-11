@@ -20,6 +20,8 @@ class SecurityHeadersMiddleware:
         # 'unsafe-inline' needed for the small inline <script> blocks.
         # 'unsafe-eval' needed by MathQuill.
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://www.desmos.com",
+        # Workers: self + blob URIs (Desmos uses blob URIs for its math computation workers).
+        "worker-src 'self' blob:",
         # Styles: self + Google Fonts + inline styles used extensively in templates.
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
         # Fonts: self (local woff/woff2 files) + Google Fonts + data URIs (for Desmos icons).
