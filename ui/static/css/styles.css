@@ -549,10 +549,6 @@ body {
     color: #1e1e1e;
 }
 
-.dashboard-container *::selection {
-    background: #c6d4ea;
-}
-
 .body-dashboard .content-area {
     background-color: #fafafa;
     display: flex;
