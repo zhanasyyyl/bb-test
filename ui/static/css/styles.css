@@ -1308,6 +1308,12 @@ input[type="radio"] {
     color: #1e1e1e;
 }
 
+.test-workspace::selection,
+.test-topbar::selection,
+.test-bottombar::selection {
+    background-color: #c6d4ea;
+}
+
 .passage-pane {
     flex: 1;
     padding: 48px;
