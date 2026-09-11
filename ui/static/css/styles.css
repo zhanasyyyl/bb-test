@@ -51,6 +51,10 @@
     box-sizing: border-box;
 }
 
+*::selection {
+    background-color: #c6d4ea;
+}
+
 body,
 input,
 button,
@@ -1306,12 +1310,6 @@ input[type="radio"] {
     flex: 1;
     display: flex;
     color: #1e1e1e;
-}
-
-.test-workspace::selection,
-.test-topbar::selection,
-.test-bottombar::selection {
-    background-color: #c6d4ea;
 }
 
 .passage-pane {
