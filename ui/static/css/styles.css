@@ -1219,7 +1219,7 @@ input[type="radio"] {
     align-items: center;
     padding: 16px 24px;
     padding-left: 40px;
-    background: #e6edf8;
+    background: #fff;
     border: none;
     position: relative;
     z-index: 10;
@@ -1510,7 +1510,7 @@ input[type="radio"] {
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
-    background: #e8f0fe;
+    background: #fff;
     border-top: 1px solid #dadce0;
 }
 

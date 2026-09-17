@@ -14,6 +14,13 @@
         <p>Enter your start code now to begin testing. Good luck!</p>
         <p>The start code contains <strong>numbers only</strong>.</p>
     </div>
+    <div id="error-message"
+        style="display: none; position: absolute; top: 200px; max-width: 480px; margin: 4px auto 0; text-align: center;">
+        <p style="font-weight: bold; margin: 0; color: #d32f2f; font-size: 14px; line-height: 1.3;">&#x26A0;&#xFE0F;
+            <strong>Incorrect code:</strong> Check the code and reenter it now. If you see this<br>
+            message again, ask your proctor for help. <strong>(Error code: XS2B)</strong>
+        </p>
+    </div>
 
     <form id="start-code-form" method="POST" action="{% url 'start_code' %}" style="text-align: center;">
         {% csrf_token %}
@@ -37,7 +44,7 @@
             const startBtn = document.getElementById('start-btn');
             const fullCodeInput = document.getElementById('full-code-input');
             const form = document.getElementById('start-code-form');
-            const instructionText = document.getElementById('instruction-text');
+            const errorMessage = document.getElementById('error-message');
 
             let forceInvalid = false;
             // Hidden shortcut: Ctrl + Shift + E to toggle error state
@@ -50,13 +57,10 @@
             form.addEventListener('submit', (e) => {
                 if (forceInvalid) {
                     e.preventDefault();
-                    instructionText.innerHTML = '<p style="font-weight: bold; color: #d32f2f;">Invalid code.</p><p style="font-weight: bold; color: #d32f2f;">Make sure you entered the code accurately.</p>';
-                    // Reset inputs
-                    inputs.forEach(input => input.value = '');
-                    fullCodeInput.value = '';
-                    startBtn.disabled = true;
-                    startBtn.className = 'btn-secondary';
-                    inputs[0].focus();
+                    errorMessage.style.display = 'block';
+                    // Turn code box borders red
+                    inputs.forEach(input => input.style.borderColor = '#d32f2f');
+                    inputs.forEach(input => input.style.borderWidth = '2px');
                 }
             });
 
