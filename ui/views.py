@@ -121,6 +121,12 @@ def test_interface_view(request):
 
 
 @login_required
+def congrats_view(request):
+    return render(request, 'congrats.html', {'view_locked': True})
+
+
+
+@login_required
 def question_editor_view(request):
     if not request.user.is_superuser:
         return redirect('dashboard')
