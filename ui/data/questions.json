@@ -428,12 +428,12 @@
         "type": "math"
     },
     {
-        "question": "Which expression is equivalent to $9yz^3 + 6yz + 3yz^3 + 2y$ for all values of $y$ and $z$?",
+        "question": "What are the solutions to the equation $x^2 - 5x + 6 = 0$?",
         "options": [
-            "$12yz^3 + 8yz$",
-            "$12yz^3 + 6yz + 2y$",
-            "$27y^2z^4 + 8y^2z$",
-            "$27y^2z^4 + 6y^2z + 2y$"
+            "$x = 2$ and $x = 3$",
+            "$x = -2$ and $x = -3$",
+            "$x = 1$ and $x = 6$",
+            "$x = -1$ and $x = -6$"
         ],
         "id": 39,
         "type": "math"
@@ -450,7 +450,7 @@
         "type": "math"
     },
     {
-        "question": "For the linear function $f,$ $f(0)=220$ and $f(8)=1820$. Which equation represents $f(x)$?",
+        "question": "For the linear function $f$, $f(0)=220$ and $f(8)=1820$. Which equation represents $f(x)$?",
         "options": [
             "$f(x)=197x-220$",
             "$f(x)=220x-197$",
@@ -906,7 +906,7 @@
         "type": "math"
     },
     {
-        "question": "<img src=\"/static/images/equation.svg\" style=\"width: 120px; margin: 0 auto; display: block\">\nThe solution to the given system of equations is $(x, y)$, . What is the value of $y$?",
+        "question": "<img src=\"/static/images/equation.svg\" style=\"width: 120px; margin: 0 auto; display: block\">\nThe solution to the given system of equations is $(x, y)$. What is the value of $y$?",
         "id": 80,
         "type": "math",
         "options": [
@@ -941,10 +941,10 @@
     {
         "question": "Leo goes to a packing store to buy containers and tape. Leo has $15$. Each container costs $1.87$ and each roll of tape costs $2.40$. Which inequality represents the relationship between the number of containers, $c$, and the number of rolls of tape, $t$, Leo can buy?",
         "options": [
-            "$1.87c + 2.40t <= 15$",
-            "$1.87c + 2.40t >= 15$",
-            "$2.40c + 1.87t <= 15$",
-            "$2.40c + 1.87t >= 15$"
+            "$1.87c + 2.40t \\lt 15$",
+            "$1.87c + 2.40t \\gt 15$",
+            "$2.40c + 1.87t \\lt 15$",
+            "$2.40c + 1.87t \\gt 15$"
         ],
         "id": 84,
         "type": "math"
@@ -963,16 +963,16 @@
     {
         "question": "<div class=\"question-image\"><img src=\"/static/images/q86.svg\"></div>\nThe shaded region shown in the graph represents all the solutions to which inequality?",
         "options": [
-            "$x <= 36$",
-            "$x >= 36$",
-            "$y <= 36$",
-            "$y >= 36$"
+            "$x \\lt 36$",
+            "$x \\gt 36$",
+            "$y \\lt 36$",
+            "$y \\gt 36$"
         ],
         "id": 86,
         "type": "math"
     },
     {
-        "question": "There are $240$ players in a tennis competition that includes $4$ rounds of matches. Each player in the competition will play a match against another player in round $1$. At the end of each round, the player who loses the match is eliminated and the player who won the match advances to the next round to play a match against another winning player. Which equation gives the number of players, $p$, eliminated at the end of round $r$, where $r <= 4$?",
+        "question": "There are $240$ players in a tennis competition that includes $4$ rounds of matches. Each player in the competition will play a match against another player in round $1$. At the end of each round, the player who loses the match is eliminated and the player who won the match advances to the next round to play a match against another winning player. Which equation gives the number of players, $p$, eliminated at the end of round $r$, where $r \\lt 4$?",
         "options": [
             "$p = 15\\left(\\frac{1}{2}\\right)^r$",
             "$p = 15\\left(2\\right)^r$",
@@ -983,7 +983,7 @@
         "type": "math"
     },
     {
-        "question": "Line $k$ is defined by $y = 6x + 4$. Line $j$ is parallel to line $k$ in the $xy$-plane and passes through the point $(0, 5$. Which equation defines line $j$?",
+        "question": "Line $k$ is defined by $y = 6x + 4$. Line $j$ is parallel to line $k$ in the $xy$-plane and passes through the point $(0, 5)$. Which equation defines line $j$?",
         "options": [
             "$y = 6x + 5$",
             "$y = -5x + 5$",
@@ -1015,7 +1015,7 @@
         "type": "math"
     },
     {
-        "question": "For the polynomial function $f$ , the graph of $y = f(x)$ in the $xy$-plane passes through the points $(-5, 0), (1, 0),$ and $(4, 0)$. Which of the following must be a factor of $f(x)$?",
+        "question": "For the polynomial function $f$ , the graph of $y = f(x)$ in the $xy$-plane passes through the points $(-5, 0), (1, 0)$, and $(4, 0)$. Which of the following must be a factor of $f(x)$?",
         "options": [
             "$x + 1$",
             "$x + 4$",
@@ -1059,7 +1059,7 @@
         "type": "math"
     },
     {
-        "question": "<img src=\"/static/images/q96.svg\" style=\"width: 100px; display: block; margin: 0 auto\">\nIn the given equation, $p > 1$ and $t > 1$. If $t = p^(3n-1)$ , where $n$ is a constant, what is the value of $n$?",
+        "question": "<img src=\"/static/images/q96.svg\" style=\"width: 100px; display: block; margin: 0 auto\">\nIn the given equation, $p > 1$ and $t > 1$. If $t = p^{3n-1}$ , where $n$ is a constant, what is the value of $n$?",
         "id": 96,
         "type": "math"
     },
