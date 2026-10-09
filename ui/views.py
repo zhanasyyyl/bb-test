@@ -67,7 +67,7 @@ def start_code_view(request):
 
         return redirect('test_interface')
         
-    return render(request, 'start_code.html', {'view_locked': True})
+    return render(request, 'start_code.html')
 
 
 @login_required
@@ -114,7 +114,6 @@ def get_cached_modules_json():
 @login_required
 def test_interface_view(request):
     return render(request, 'test_interface.html', {
-        'view_locked': True, 
         'modules_json': get_cached_modules_json(),
         'desmos_api_key': settings.DESMOS_API_KEY,
     })
@@ -122,7 +121,7 @@ def test_interface_view(request):
 
 @login_required
 def congrats_view(request):
-    return render(request, 'congrats.html', {'view_locked': True})
+    return render(request, 'congrats.html')
 
 
 
