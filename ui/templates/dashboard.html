@@ -7,7 +7,7 @@
 <div class="dashboard-container">
     <div class="dashboard-top">
         <div class="dashboard-header">
-            <img src="/static/images/bluebook-blue.svg" style="width: 110px;" alt="">
+            <img src="{% static 'images/bluebook-blue.svg' %}" style="width: 110px;" alt="">
             <div class="db-profile">
                 <span id="profile-name-display">{{ request.user.userprofile.full_name }}</span>
                 <img id="profile-pic" src="{% static 'images/profile.png' %}" alt="Profile Picture"
@@ -146,13 +146,13 @@
             <div class="cards-grid">
                 <div class="practice-card">
                     <div class="card-icon">
-                        <img src="/static/images/test-preview.svg" style="width: 82px;" alt="">
+                        <img src="{% static 'images/test-preview.svg' %}" style="width: 82px;" alt="">
                         <h4>Test<br>Preview</h4>
                     </div>
                 </div>
                 <div class="practice-card">
                     <div class="card-icon">
-                        <img src="/static/images/full-length-practice.svg" style="width: 82px;" alt="">
+                        <img src="{% static 'images/full-length-practice.svg' %}" style="width: 82px;" alt="">
                         <h4>Full-Length<br>Practice</h4>
                     </div>
                 </div>

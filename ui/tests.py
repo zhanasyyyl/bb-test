@@ -1,3 +1,213 @@
-from django.test import TestCase
+import json
+import os
+import shutil
+import tempfile
+from datetime import timedelta
+from unittest import mock
 
-# Create your tests here.
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core import mail
+from django.test import TestCase, override_settings
+from django.utils import timezone
+
+from . import email_queue, views
+from .models import QueuedEmail
+
+
+def make_questions(rw=54, math=44):
+    questions = []
+    for i in range(rw + math):
+        questions.append({
+            'id': i + 1,
+            'type': 'rw' if i < rw else 'math',
+            'question': f'Question {i + 1}?',
+            'options': ['a', 'b', 'c', 'd'],
+        })
+    return questions
+
+
+class QuestionsFileTestCase(TestCase):
+    """Points views.QUESTIONS_FILE at a temp copy so tests never touch the real file."""
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmpdir)
+        self.path = os.path.join(self.tmpdir, 'questions.json')
+        self.write_file(make_questions())
+        patcher = mock.patch.object(views, 'QUESTIONS_FILE', self.path)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        views._modules_cache = None
+
+    def write_file(self, data):
+        with open(self.path, 'w', encoding='utf-8') as f:
+            json.dump(data, f)
+
+
+class ValidateQuestionsTests(TestCase):
+    def test_valid_bank_has_no_errors_or_warnings(self):
+        self.assertEqual(views.validate_questions(make_questions()), ([], []))
+
+    def test_rejects_non_list(self):
+        errors, _ = views.validate_questions({'id': 1})
+        self.assertTrue(errors)
+
+    def test_rejects_bad_entries(self):
+        data = make_questions()
+        data[0]['type'] = 'science'
+        data[1]['id'] = data[2]['id']
+        data[3]['question'] = '   '
+        data[4]['options'] = 'abcd'
+        data[5]['id'] = '6'
+        errors, _ = views.validate_questions(data)
+        self.assertEqual(len(errors), 5)
+
+    def test_short_bank_is_a_warning_not_an_error(self):
+        errors, warnings = views.validate_questions(make_questions(rw=53))
+        self.assertEqual(errors, [])
+        self.assertEqual(len(warnings), 1)
+
+
+class ApiQuestionsTests(QuestionsFileTestCase):
+    def setUp(self):
+        super().setUp()
+        self.admin = User.objects.create_superuser('admin@example.com', 'admin@example.com', 'pw')
+        self.client.force_login(self.admin)
+
+    def post(self, data):
+        return self.client.post('/api/questions/', json.dumps(data), content_type='application/json')
+
+    def test_invalid_payload_leaves_file_untouched(self):
+        with open(self.path, 'rb') as f:
+            before = f.read()
+        response = self.post([{'id': 1}])
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(response.json()['details'])
+        with open(self.path, 'rb') as f:
+            self.assertEqual(f.read(), before)
+
+    def test_malformed_json_is_rejected(self):
+        response = self.client.post('/api/questions/', '{not json', content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_valid_save_writes_file_and_returns_warnings(self):
+        data = make_questions(math=43)
+        response = self.post(data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['warnings']), 1)
+        with open(self.path, encoding='utf-8') as f:
+            self.assertEqual(json.load(f), data)
+        self.assertEqual(
+            [n for n in os.listdir(self.tmpdir) if n != 'questions.json'], [],
+            "temp file left behind",
+        )
+
+    def test_failed_write_keeps_old_file(self):
+        with open(self.path, 'rb') as f:
+            before = f.read()
+        with mock.patch.object(views.os, 'replace', side_effect=OSError('disk full')):
+            response = self.post(make_questions())
+        self.assertEqual(response.status_code, 500)
+        with open(self.path, 'rb') as f:
+            self.assertEqual(f.read(), before)
+        self.assertEqual(os.listdir(self.tmpdir), ['questions.json'])
+
+    def test_non_superuser_forbidden(self):
+        user = User.objects.create_user('u@example.com', 'u@example.com', 'pw')
+        self.client.force_login(user)
+        self.assertEqual(self.post(make_questions()).status_code, 403)
+
+
+class ModulesCacheTests(QuestionsFileTestCase):
+    def test_modules_split_by_type(self):
+        modules = json.loads(views.get_cached_modules_json())
+        self.assertEqual([m['count'] for m in modules], [27, 27, 22, 22])
+        self.assertEqual({q['type'] for q in modules[2]['questions']}, {'math'})
+
+    def test_reloads_when_file_changes(self):
+        views.get_cached_modules_json()
+        data = make_questions()
+        data[0]['question'] = 'Changed?'
+        self.write_file(data)
+        # Make sure the mtime differs even on coarse-grained filesystems
+        stat = os.stat(self.path)
+        os.utime(self.path, ns=(stat.st_atime_ns, stat.st_mtime_ns + 1_000_000_000))
+        modules = json.loads(views.get_cached_modules_json())
+        self.assertEqual(modules[0]['questions'][0]['question'], 'Changed?')
+
+    def test_short_module_count_matches_its_questions(self):
+        self.write_file(make_questions(rw=40))
+        modules = json.loads(views.get_cached_modules_json())
+        self.assertEqual(modules[1]['count'], 13)
+        self.assertEqual(len(modules[1]['questions']), 13)
+
+    def test_test_page_returns_503_when_file_is_broken(self):
+        user = User.objects.create_user('u@example.com', 'u@example.com', 'pw')
+        self.client.force_login(user)
+        with open(self.path, 'w') as f:
+            f.write('{broken')
+        with self.assertLogs('ui.views', 'ERROR'):
+            response = self.client.get('/test/')
+        self.assertEqual(response.status_code, 503)
+
+    def test_failed_load_is_not_cached(self):
+        with open(self.path, 'w') as f:
+            f.write('{broken')
+        with self.assertRaises(ValueError):
+            views.get_cached_modules_json()
+        self.write_file(make_questions())
+        self.assertEqual(len(json.loads(views.get_cached_modules_json())), 4)
+
+
+class EmailQueueTests(TestCase):
+    def enqueue(self):
+        email_queue.enqueue_email(
+            subject='Code', message='Body', from_email='from@example.com',
+            recipient_list=['to@example.com'],
+        )
+        return QueuedEmail.objects.latest('id')
+
+    def test_enqueue_stores_and_process_one_sends(self):
+        email = self.enqueue()
+        self.assertEqual(email.status, QueuedEmail.PENDING)
+        self.assertTrue(email_queue.process_one())
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ['to@example.com'])
+        email.refresh_from_db()
+        self.assertEqual(email.status, QueuedEmail.SENT)
+        self.assertFalse(email_queue.process_one())
+
+    def test_failure_schedules_retry_then_gives_up(self):
+        email = self.enqueue()
+        with mock.patch.object(email_queue, 'send_mail', side_effect=RuntimeError('boom')):
+            for attempt in range(1, email_queue._MAX_ATTEMPTS + 1):
+                self.assertTrue(email_queue.process_one())
+                email.refresh_from_db()
+                self.assertEqual(email.attempts, attempt)
+                if email.status == QueuedEmail.PENDING:
+                    self.assertGreater(email.next_attempt_at, timezone.now())
+                    # Not due yet, so nothing to send
+                    self.assertFalse(email_queue.process_one())
+                    QueuedEmail.objects.filter(id=email.id).update(next_attempt_at=timezone.now())
+        self.assertEqual(email.status, QueuedEmail.FAILED)
+        self.assertIn('boom', email.last_error)
+
+    def test_email_claimed_by_another_worker_is_skipped(self):
+        email = self.enqueue()
+        QueuedEmail.objects.filter(id=email.id).update(
+            status=QueuedEmail.SENDING, claimed_at=timezone.now())
+        self.assertFalse(email_queue.process_one())
+
+    def test_stale_claim_is_retried(self):
+        email = self.enqueue()
+        QueuedEmail.objects.filter(id=email.id).update(
+            status=QueuedEmail.SENDING, claimed_at=timezone.now() - timedelta(minutes=10))
+        self.assertTrue(email_queue.process_one())
+        email.refresh_from_db()
+        self.assertEqual(email.status, QueuedEmail.SENT)
+
+    @override_settings(EMAIL_SENDER_PROCESSES=9)
+    def test_rate_budget_is_split_across_processes(self):
+        self.assertLessEqual(email_queue._per_process_rps() * settings.EMAIL_SENDER_PROCESSES,
+                             email_queue._MAX_RPS_TOTAL)

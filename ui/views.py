@@ -1,17 +1,21 @@
 import os
 import json
-import functools
+import logging
+import tempfile
+import threading
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
 from .models import UserProfile
 from .forms import UserProfileForm
 from .email_queue import enqueue_email
+
+logger = logging.getLogger(__name__)
 
 
 def _get_profile(user):
@@ -56,7 +60,7 @@ def start_code_view(request):
             profile.start_code = full_code
             profile.save()
 
-        # Enqueue email — processed at most 1/sec by the background worker
+        # Queue email — delivered by the rate-limited background senders
         if profile and profile.contact_email:
             enqueue_email(
                 subject=f"{full_code} - Bluebook Testing Code",
@@ -90,31 +94,135 @@ def update_profile_view(request):
     return redirect('dashboard')
 
 
-# Load questions data dynamically and cache in memory
 QUESTIONS_FILE = os.path.join(settings.BASE_DIR, 'ui', 'data', 'questions.json')
 
-@functools.lru_cache(maxsize=1)
+# (title, question type, start, end) — slices of each type, in file order
+MODULES = [
+    ("Section 1, Module 1: Reading and Writing", 'rw', 0, 27),
+    ("Section 1, Module 2: Reading and Writing", 'rw', 27, 54),
+    ("Section 2, Module 1: Math", 'math', 0, 22),
+    ("Section 2, Module 2: Math", 'math', 22, 44),
+]
+REQUIRED_COUNTS = {'rw': 54, 'math': 44}
+
+# Serializes writes to QUESTIONS_FILE within this process; os.replace makes
+# each write atomic, so a concurrent save from another process can't corrupt it
+_questions_write_lock = threading.Lock()
+
+# (file mtime, modules JSON). Keyed on mtime so every worker picks up editor saves.
+_modules_cache = None
+
+
+def _count_by_type(questions):
+    counts = {'rw': 0, 'math': 0}
+    for q in questions:
+        counts[q['type']] += 1
+    return counts
+
+
 def get_cached_modules_json():
-    try:
-        with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
-            all_questions = json.load(f)
-        rw_questions_cached = [q for q in all_questions if q.get('type') == 'rw']
-        math_questions_cached = [q for q in all_questions if q.get('type') == 'math']
-        
-        cached_modules = [
-            {"title": "Section 1, Module 1: Reading and Writing", "count": 27, "questions": rw_questions_cached[0:27]},
-            {"title": "Section 1, Module 2: Reading and Writing", "count": 27, "questions": rw_questions_cached[27:54]},
-            {"title": "Section 2, Module 1: Math", "count": 22, "questions": math_questions_cached[0:22]},
-            {"title": "Section 2, Module 2: Math", "count": 22, "questions": math_questions_cached[22:44]},
-        ]
-        return json.dumps(cached_modules)
-    except Exception:
-        return "[]"
+    """Return the 4 test modules as JSON, reloading when questions.json changes.
+
+    Raises OSError / ValueError if the file can't be read or parsed.
+    """
+    global _modules_cache
+    mtime = os.stat(QUESTIONS_FILE).st_mtime_ns
+    cached = _modules_cache
+    if cached and cached[0] == mtime:
+        return cached[1]
+
+    with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
+        all_questions = json.load(f)
+    by_type = {
+        t: [q for q in all_questions if q.get('type') == t] for t in REQUIRED_COUNTS
+    }
+    for t, needed in REQUIRED_COUNTS.items():
+        if len(by_type[t]) < needed:
+            logger.warning("questions.json has %s %s questions; the test needs %s",
+                           len(by_type[t]), t, needed)
+
+    modules = []
+    for title, qtype, start, end in MODULES:
+        questions = by_type[qtype][start:end]
+        modules.append({"title": title, "count": len(questions), "questions": questions})
+    result = json.dumps(modules)
+    _modules_cache = (mtime, result)
+    return result
+
+
+def validate_questions(data):
+    """Return (errors, warnings) for a full questions.json payload."""
+    if not isinstance(data, list):
+        return ["Expected a list of questions."], []
+
+    errors = []
+    seen_ids = set()
+    for i, q in enumerate(data):
+        where = f"Question #{i + 1}"
+        if not isinstance(q, dict):
+            errors.append(f"{where}: must be an object.")
+            continue
+        qid = q.get('id')
+        if not isinstance(qid, int) or isinstance(qid, bool):
+            errors.append(f"{where}: id must be an integer.")
+        elif qid in seen_ids:
+            errors.append(f"{where}: duplicate id {qid}.")
+        else:
+            seen_ids.add(qid)
+            where = f"Question id {qid}"
+        if q.get('type') not in REQUIRED_COUNTS:
+            errors.append(f"{where}: type must be 'rw' or 'math'.")
+        if not isinstance(q.get('question'), str) or not q['question'].strip():
+            errors.append(f"{where}: question text is required.")
+        if 'passage' in q and not isinstance(q['passage'], str):
+            errors.append(f"{where}: passage must be text.")
+        if 'options' in q and not (
+            isinstance(q['options'], list) and all(isinstance(o, str) for o in q['options'])
+        ):
+            errors.append(f"{where}: options must be a list of text.")
+    if errors:
+        return errors, []
+
+    counts = _count_by_type(data)
+    warnings = [
+        f"Only {counts[t]} {'Reading and Writing' if t == 'rw' else 'Math'} questions; "
+        f"the test needs {needed}, so some modules will be short."
+        for t, needed in REQUIRED_COUNTS.items() if counts[t] < needed
+    ]
+    return [], warnings
+
+
+def _write_questions(data):
+    """Atomically replace QUESTIONS_FILE: write a temp file, then rename over it."""
+    directory = os.path.dirname(QUESTIONS_FILE)
+    with _questions_write_lock:
+        fd, tmp_path = tempfile.mkstemp(dir=directory, prefix='.questions-', suffix='.json')
+        try:
+            with os.fdopen(fd, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            # mkstemp creates the file as 0600; keep the existing permissions
+            if os.path.exists(QUESTIONS_FILE):
+                os.chmod(tmp_path, os.stat(QUESTIONS_FILE).st_mode & 0o777)
+            os.replace(tmp_path, QUESTIONS_FILE)
+        except BaseException:
+            if os.path.exists(tmp_path):
+                os.unlink(tmp_path)
+            raise
 
 @login_required
 def test_interface_view(request):
+    try:
+        modules_json = get_cached_modules_json()
+    except (OSError, ValueError):
+        logger.exception("Could not load %s", QUESTIONS_FILE)
+        return HttpResponse(
+            "The test is temporarily unavailable. Please try again shortly.",
+            status=503, content_type='text/plain',
+        )
     return render(request, 'test_interface.html', {
-        'modules_json': get_cached_modules_json(),
+        'modules_json': modules_json,
         'desmos_api_key': settings.DESMOS_API_KEY,
     })
 
@@ -149,11 +257,14 @@ def api_questions(request):
     elif request.method == 'POST':
         try:
             data = json.loads(request.body)
-            with open(QUESTIONS_FILE, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
-            # Clear the cached modules so test interface picks up changes
-            get_cached_modules_json.cache_clear()
-            return JsonResponse({'status': 'ok', 'count': len(data)})
+        except ValueError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        errors, warnings = validate_questions(data)
+        if errors:
+            return JsonResponse({'error': 'Questions not saved', 'details': errors}, status=400)
+        try:
+            _write_questions(data)
+            return JsonResponse({'status': 'ok', 'count': len(data), 'warnings': warnings})
         except Exception as e:
             if settings.DEBUG:
                 return JsonResponse({'error': str(e)}, status=500)

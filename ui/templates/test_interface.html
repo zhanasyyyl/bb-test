@@ -2140,7 +2140,7 @@
                     <span class="zoom-level">100%</span>
                     <button class="reset-btn">Reset</button>
                     <div class="divider"></div>
-                    <button class="expand-btn" title="Expand"><img src="/static/images/image-full.png"></button>
+                    <button class="expand-btn" title="Expand"><img src="{% static 'images/image-full.png' %}"></button>
                 `;
 
                 wrapper.insertBefore(toolbar, img);
@@ -2791,12 +2791,12 @@
             const btnReview = document.getElementById('btn-mark-review');
             const markReview = document.getElementById('mark-review');
             if (state.review) {
-                btnReview.src = "/static/images/marked.svg";
+                btnReview.src = "{% static 'images/marked.svg' %}";
                 markReview.style.textDecoration = "underline";
                 markReview.style.fontWeight = "600";
 
             } else {
-                btnReview.src = '/static/images/mark.svg';
+                btnReview.src = "{% static 'images/mark.svg' %}";
                 markReview.style.textDecoration = "none";
                 markReview.style.fontWeight = "400";
             }
@@ -2805,8 +2805,8 @@
             const crossOutBtn = document.getElementById('btn-cross-out');
             if (crossOutBtn) {
                 crossOutBtn.src = this.crossOutMode
-                    ? '/static/images/cross-out-abc-blue.svg'
-                    : '/static/images/cross-out-abc.svg';
+                    ? "{% static 'images/cross-out-abc-blue.svg' %}"
+                    : "{% static 'images/cross-out-abc.svg' %}";
             }
 
             ['A', 'B', 'C', 'D'].forEach(opt => {

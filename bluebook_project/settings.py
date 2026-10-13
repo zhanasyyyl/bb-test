@@ -138,11 +138,21 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'ui', 'static'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-if DEBUG:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-else:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_MAX_AGE = 31536000  # 1 year — safe because hashed filenames auto-bust cache
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': (
+            'django.contrib.staticfiles.storage.StaticFilesStorage' if DEBUG
+            else 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+        ),
+    },
+}
+# WhiteNoise always caches hashed filenames (from {% static %}) forever. This
+# max-age only applies to unhashed paths such as the /static/images/... URLs
+# embedded in ui/data/questions.json, so keep it short enough for edits to show.
+WHITENOISE_MAX_AGE = 60 * 60  # 1 hour
 
 LOGIN_URL = 'login'
 
@@ -152,6 +162,11 @@ ANYMAIL = {
     "RESEND_API_KEY": os.getenv('RESEND_API_KEY', ''),
 }
 DEFAULT_FROM_EMAIL = "messages@bbtest.shop"
+
+# Number of server processes running email senders (ui/email_queue.py). The
+# Resend rate limit is split across them, so keep this equal to `workers` in
+# gunicorn.conf.py.
+EMAIL_SENDER_PROCESSES = int(os.getenv('EMAIL_SENDER_PROCESSES', '9'))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
