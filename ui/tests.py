@@ -12,7 +12,7 @@ from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from . import email_queue, views
-from .models import QueuedEmail
+from .models import LoginFailure, QueuedEmail, UserProfile
 
 
 def make_questions(rw=54, math=44):
@@ -211,3 +211,70 @@ class EmailQueueTests(TestCase):
     def test_rate_budget_is_split_across_processes(self):
         self.assertLessEqual(email_queue._per_process_rps() * settings.EMAIL_SENDER_PROCESSES,
                              email_queue._MAX_RPS_TOTAL)
+
+
+class LoginTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'right-pw')
+
+    def login(self, email='student@example.com', password='right-pw'):
+        return self.client.post('/cb_login/', {'email': email, 'password': password})
+
+    def test_success_redirects_to_dashboard(self):
+        self.assertRedirects(self.login(), '/dashboard/')
+
+    def test_wrong_password_shows_error_and_keeps_email(self):
+        response = self.login(password='wrong')
+        self.assertContains(response, 'Invalid email or password.')
+        self.assertContains(response, 'value="student@example.com"')
+
+    def test_empty_fields_show_error(self):
+        self.assertContains(self.login(password=''), 'Enter your email and password.')
+
+    def test_account_locks_after_too_many_failures(self):
+        for _ in range(views.LOGIN_MAX_FAILURES):
+            self.login(password='wrong')
+        # Even the right password is refused while locked
+        response = self.login()
+        self.assertEqual(response.status_code, 429)
+        self.assertContains(response, 'Too many sign-in attempts', status_code=429)
+
+        # Case changes don't get around the lock
+        self.assertEqual(self.login(email='STUDENT@example.com').status_code, 429)
+
+    def test_lock_expires_after_window(self):
+        for _ in range(views.LOGIN_MAX_FAILURES):
+            self.login(password='wrong')
+        LoginFailure.objects.update(
+            created_at=timezone.now() - views.LOGIN_FAILURE_WINDOW - timedelta(seconds=1))
+        self.assertRedirects(self.login(), '/dashboard/')
+
+    def test_success_clears_failures(self):
+        self.login(password='wrong')
+        self.login()
+        self.assertFalse(LoginFailure.objects.exists())
+
+    def test_lock_is_per_account(self):
+        User.objects.create_user('other@example.com', 'other@example.com', 'other-pw')
+        for _ in range(views.LOGIN_MAX_FAILURES):
+            self.login(password='wrong')
+        self.assertRedirects(self.login(email='other@example.com', password='other-pw'), '/dashboard/')
+
+
+class UpdateProfileTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
+        self.client.force_login(self.user)
+
+    def test_valid_profile_saves(self):
+        self.client.post('/update-profile/', {
+            'full_name': 'Ana Lee', 'contact_email': 'ana@example.com', 'test_center_address': 'Here'})
+        self.assertEqual(UserProfile.objects.get(user=self.user).contact_email, 'ana@example.com')
+
+    def test_invalid_profile_shows_error_on_dashboard(self):
+        response = self.client.post('/update-profile/', {
+            'full_name': 'Ana Lee', 'contact_email': 'not-an-email', 'test_center_address': 'Here'},
+            follow=True)
+        self.assertContains(response, 'Profile not saved.')
+        self.assertContains(response, 'Contact email')
+        self.assertIsNone(UserProfile.objects.get(user=self.user).contact_email)

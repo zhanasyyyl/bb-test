@@ -3,6 +3,7 @@ import json
 import logging
 import tempfile
 import threading
+from datetime import timedelta
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -10,8 +11,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+from django.contrib import messages
+from django.db import transaction
+from django.utils import timezone
 
-from .models import UserProfile
+from .models import LoginFailure, UserProfile
 from .forms import UserProfileForm
 from .email_queue import enqueue_email
 
@@ -26,22 +30,57 @@ def _get_profile(user):
 def login_view(request):
     return render(request, 'login.html')
 
+# Failed sign-ins allowed per account within the window before it is locked.
+# Limited per account, not per IP: students at a test center share one IP.
+LOGIN_MAX_FAILURES = 10
+LOGIN_FAILURE_WINDOW = timedelta(minutes=15)
+
+
+def _reserve_login_attempt(username):
+    """Count this attempt as a failure before checking the password.
+
+    Returns False if the account is locked. The check and the insert run in
+    one transaction; with SQLite's IMMEDIATE transaction mode (see settings)
+    that takes the write lock up front, so simultaneous attempts from
+    different workers are serialized and can't all slip under the limit.
+    The caller deletes the account's failures if the password is right.
+    """
+    cutoff = timezone.now() - LOGIN_FAILURE_WINDOW
+    with transaction.atomic():
+        LoginFailure.objects.filter(created_at__lt=cutoff).delete()
+        if LoginFailure.objects.filter(username=username).count() >= LOGIN_MAX_FAILURES:
+            return False
+        LoginFailure.objects.create(username=username)
+        return True
+
+
 def cb_login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        if email and password:
-            user = authenticate(request, username=email, password=password)
-            if user is not None:
-                login(request, user)
-                # Reset test_completed so registration card shows on every login
-                profile = _get_profile(user)
-                if profile:
-                    profile.test_completed = False
-                    profile.save()
-                return redirect('dashboard')
-            else:
-                return render(request, 'cb_login.html', {'error': 'Invalid email or password'})
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+        context = {'email': email}
+        if not email or not password:
+            context['error'] = 'Enter your email and password.'
+            return render(request, 'cb_login.html', context)
+
+        failure_key = email.lower()
+        if not _reserve_login_attempt(failure_key):
+            context['error'] = 'Too many sign-in attempts. Try again in 15 minutes.'
+            return render(request, 'cb_login.html', context, status=429)
+
+        user = authenticate(request, username=email, password=password)
+        if user is None:
+            context['error'] = 'Invalid email or password.'
+            return render(request, 'cb_login.html', context)
+
+        LoginFailure.objects.filter(username=failure_key).delete()
+        login(request, user)
+        # Reset test_completed so registration card shows on every login
+        profile = _get_profile(user)
+        if profile:
+            profile.test_completed = False
+            profile.save()
+        return redirect('dashboard')
     return render(request, 'cb_login.html')
 
 @login_required
@@ -91,6 +130,12 @@ def update_profile_view(request):
     form = UserProfileForm(request.POST, instance=profile)
     if form.is_valid():
         form.save()
+    else:
+        problems = [
+            f"{form.fields[field].label if field in form.fields else field}: {' '.join(errors)}"
+            for field, errors in form.errors.items()
+        ]
+        messages.error(request, "Profile not saved. " + " ".join(problems))
     return redirect('dashboard')
 
 

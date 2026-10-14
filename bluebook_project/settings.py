@@ -35,8 +35,9 @@ if not SECRET_KEY:
         from django.core.exceptions import ImproperlyConfigured
         raise ImproperlyConfigured("The SECRET_KEY setting must not be empty in production.")
 
-allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'bbtest.shop')
-ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()] if allowed_hosts_env else ['bbtest.shop', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()
+] or ['bbtest.shop']
 
 
 # Application definition
@@ -93,6 +94,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        # Several gunicorn workers write concurrently: WAL lets reads run during
+        # writes, and IMMEDIATE + timeout make writers wait instead of failing
+        # with "database is locked".
+        'OPTIONS': {
+            'init_command': 'PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;',
+            'transaction_mode': 'IMMEDIATE',
+            'timeout': 20,
+        },
     }
 }
 
@@ -133,10 +142,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-import os
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'ui', 'static'),
-]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STORAGES = {
     'default': {

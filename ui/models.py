@@ -51,3 +51,13 @@ class QueuedEmail(models.Model):
 
     def __str__(self):
         return f"{self.subject} -> {', '.join(self.recipient_list)}"
+
+
+class LoginFailure(models.Model):
+    """A failed sign-in, used to rate-limit password guessing per account."""
+
+    username = models.CharField(max_length=254, db_index=True)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+    def __str__(self):
+        return f"{self.username} at {self.created_at}"

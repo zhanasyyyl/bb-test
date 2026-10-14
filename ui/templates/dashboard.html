@@ -183,6 +183,10 @@
 <div id="profile-modal" class="profile-modal-overlay" style="display: none;">
     <div class="modal-content profile-edit-modal">
         <h3 style="margin-top: 0;">Edit Profile</h3>
+        {% for message in messages %}
+        <p class="profile-error" role="alert"
+            style="font-weight: bold; margin: 0 0 10px; color: #d32f2f; font-size: 14px; text-align: left;">{{ message }}</p>
+        {% endfor %}
         <form method="POST" action="{% url 'update_profile' %}"
             style="display: flex; flex-direction: column; gap: 15px;">
             {% csrf_token %}
@@ -220,6 +224,11 @@
     const profilePic = document.getElementById('profile-pic');
     const profileModal = document.getElementById('profile-modal');
     const closeModalBtn = document.getElementById('close-modal-btn');
+
+    // Reopen the modal when the last save was rejected
+    if (document.querySelector('.profile-error')) {
+        profileModal.style.display = 'flex';
+    }
 
     profilePic.addEventListener('click', () => {
         profileModal.style.display = 'flex';

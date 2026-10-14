@@ -12,6 +12,8 @@ ENV/
 # Database
 db.sqlite3
 db.sqlite3-journal
+db.sqlite3-wal
+db.sqlite3-shm
 
 # Static files generated locally during collectstatic
 staticfiles/
