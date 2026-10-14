@@ -3,6 +3,12 @@
 
 {% block body_class %}body-test{% endblock %}
 
+{% block extra_head %}
+<!-- Fetch the math font up front: it's otherwise only requested when math first
+     appears, which may be after the student's connection has dropped -->
+<link rel="preload" href="{% static 'vendor/mathquill/font/Symbola.woff2' %}" as="font" type="font/woff2" crossorigin>
+{% endblock %}
+
 {% block content %}
 <style>
     /* Timer 5-minute warning toast */
@@ -3030,18 +3036,58 @@
                         this.renderQuestion();
                     }
                 } else {
-                    document.getElementById('screen-loading').style.display = 'none';
-                    // Mark test as completed in the backend
-                    fetch('/api/mark-test-completed/', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}',
-                        },
-                    }).catch(() => { });
-                    // Redirect to congrats page
-                    window.location.href = '/congrats/';
+                    // Keep the "module is over" screen up while we finish
+                    this.finishTest();
                 }
             }, 1000);
+        },
+
+        // Records completion, then goes to the congrats page. If the device is
+        // offline, shows a reconnect message and finishes automatically once
+        // the connection is back (refreshing would lose the page).
+        async finishTest() {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+            let showedOffline = false;
+            while (true) {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 10000);
+                try {
+                    await fetch('/api/mark-test-completed/', {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': csrfToken },
+                        signal: controller.signal,
+                    });
+                    // Any reply from the server, even an error, means we're online
+                    break;
+                } catch (e) {
+                    if (!showedOffline) {
+                        this.showReconnectMessage();
+                        showedOffline = true;
+                    }
+                    // Retry when the browser reports a connection, or every 5 seconds
+                    await new Promise(resolve => {
+                        const done = () => {
+                            window.removeEventListener('online', done);
+                            clearTimeout(retry);
+                            resolve();
+                        };
+                        const retry = setTimeout(done, 5000);
+                        window.addEventListener('online', done);
+                    });
+                } finally {
+                    clearTimeout(timeout);
+                }
+            }
+            window.location.href = '/congrats/';
+        },
+
+        showReconnectMessage() {
+            const screen = document.getElementById('screen-loading');
+            const lines = screen.querySelectorAll('p');
+            screen.querySelector('h2').textContent = 'Reconnect to Finish';
+            lines[0].textContent = 'Your test is over, but this device isn\'t connected to the internet.';
+            lines[1].textContent = 'Reconnect and you\'ll move on automatically.';
+            lines[2].textContent = 'Do not refresh this page or quit the app.';
         },
 
         // ===== Highlight and Annotation Logic =====
