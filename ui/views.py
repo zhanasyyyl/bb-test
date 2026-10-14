@@ -63,10 +63,10 @@ def dashboard_view(request):
 
 START_CODE_RE = re.compile(r'[0-9]{6}')
 
-# Start-code emails one user can trigger per hour. Anyone signed in can set
-# their contact email to any address, so without a cap the form could be used
-# to send unlimited mail from our domain.
-START_CODE_EMAILS_PER_HOUR = 5
+# Start-code emails one user can trigger per hour. High enough that people
+# testing the flow repeatedly won't hit it; it only stops scripted abuse
+# (anyone signed in can point their contact email at any address).
+START_CODE_EMAILS_PER_HOUR = 50
 
 
 @login_required
