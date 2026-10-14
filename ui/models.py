@@ -34,6 +34,8 @@ class QueuedEmail(models.Model):
         (FAILED, 'Failed'),
     ]
 
+    # Who triggered the email, for per-user limits (None for system emails)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     subject = models.CharField(max_length=255)
     message = models.TextField()
     from_email = models.CharField(max_length=255)

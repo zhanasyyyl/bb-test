@@ -11,7 +11,7 @@ from django.core import mail
 from django.test import TestCase, override_settings
 from django.utils import timezone
 
-from . import email_queue, views
+from . import auth_backends, email_queue, views
 from .models import LoginFailure, QueuedEmail, UserProfile
 
 
@@ -180,7 +180,7 @@ class EmailQueueTests(TestCase):
 
     def test_failure_schedules_retry_then_gives_up(self):
         email = self.enqueue()
-        with mock.patch.object(email_queue, 'send_mail', side_effect=RuntimeError('boom')):
+        with mock.patch.object(email_queue.EmailMessage, 'send', side_effect=RuntimeError('boom')):
             for attempt in range(1, email_queue._MAX_ATTEMPTS + 1):
                 self.assertTrue(email_queue.process_one())
                 email.refresh_from_db()
@@ -232,7 +232,7 @@ class LoginTests(TestCase):
         self.assertContains(self.login(password=''), 'Enter your email and password.')
 
     def test_account_locks_after_too_many_failures(self):
-        for _ in range(views.LOGIN_MAX_FAILURES):
+        for _ in range(auth_backends.LOGIN_MAX_FAILURES):
             self.login(password='wrong')
         # Even the right password is refused while locked
         response = self.login()
@@ -243,10 +243,10 @@ class LoginTests(TestCase):
         self.assertEqual(self.login(email='STUDENT@example.com').status_code, 429)
 
     def test_lock_expires_after_window(self):
-        for _ in range(views.LOGIN_MAX_FAILURES):
+        for _ in range(auth_backends.LOGIN_MAX_FAILURES):
             self.login(password='wrong')
         LoginFailure.objects.update(
-            created_at=timezone.now() - views.LOGIN_FAILURE_WINDOW - timedelta(seconds=1))
+            created_at=timezone.now() - auth_backends.LOGIN_FAILURE_WINDOW - timedelta(seconds=1))
         self.assertRedirects(self.login(), '/dashboard/')
 
     def test_success_clears_failures(self):
@@ -256,7 +256,7 @@ class LoginTests(TestCase):
 
     def test_lock_is_per_account(self):
         User.objects.create_user('other@example.com', 'other@example.com', 'other-pw')
-        for _ in range(views.LOGIN_MAX_FAILURES):
+        for _ in range(auth_backends.LOGIN_MAX_FAILURES):
             self.login(password='wrong')
         self.assertRedirects(self.login(email='other@example.com', password='other-pw'), '/dashboard/')
 
@@ -278,3 +278,97 @@ class UpdateProfileTests(TestCase):
         self.assertContains(response, 'Profile not saved.')
         self.assertContains(response, 'Contact email')
         self.assertIsNone(UserProfile.objects.get(user=self.user).contact_email)
+
+
+class AdminLockoutTests(TestCase):
+    def test_admin_login_is_locked_too(self):
+        User.objects.create_superuser('boss@example.com', 'boss@example.com', 'right-pw')
+        for _ in range(auth_backends.LOGIN_MAX_FAILURES):
+            self.client.post('/admin/login/', {'username': 'boss@example.com', 'password': 'wrong'})
+        self.client.post('/admin/login/', {'username': 'boss@example.com', 'password': 'right-pw'})
+        self.assertNotIn('_auth_user_id', self.client.session)
+
+    def test_lock_is_shared_with_student_sign_in(self):
+        User.objects.create_user('student@example.com', 'student@example.com', 'right-pw')
+        for _ in range(auth_backends.LOGIN_MAX_FAILURES):
+            self.client.post('/admin/login/', {'username': 'student@example.com', 'password': 'wrong'})
+        response = self.client.post('/cb_login/', {'email': 'student@example.com', 'password': 'right-pw'})
+        self.assertEqual(response.status_code, 429)
+
+
+class LogoutTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
+        self.client.force_login(self.user)
+
+    def test_post_logs_out(self):
+        self.assertRedirects(self.client.post('/logout/'), '/', fetch_redirect_response=False)
+        self.assertNotIn('_auth_user_id', self.client.session)
+        self.assertRedirects(self.client.get('/dashboard/'), '/?next=/dashboard/', fetch_redirect_response=False)
+
+    def test_get_does_not_log_out(self):
+        self.assertEqual(self.client.get('/logout/').status_code, 405)
+        self.assertIn('_auth_user_id', self.client.session)
+
+    def test_dashboard_sign_out_posts_to_logout(self):
+        UserProfile.objects.create(user=self.user, test_completed=True)
+        self.assertContains(self.client.get('/dashboard/'), 'action="/logout/"')
+
+
+class StartCodeTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
+        UserProfile.objects.create(user=self.user, contact_email='student@example.com')
+        self.client.force_login(self.user)
+
+    def post(self, code):
+        return self.client.post('/start-code/', {'full_code': code})
+
+    def test_valid_code_queues_email(self):
+        self.assertRedirects(self.post('123456'), '/test/', fetch_redirect_response=False)
+        email = QueuedEmail.objects.get()
+        self.assertEqual(email.user, self.user)
+        self.assertIn('123456', email.subject)
+
+    def test_sender_identifies_student_and_tags_are_sent(self):
+        profile = self.user.userprofile
+        profile.full_name = 'Ana María Lee'
+        profile.save()
+        self.post('123456')
+        email = QueuedEmail.objects.get()
+        self.assertEqual(email.from_email, f'Bluebook <messages+u{self.user.pk}-ana-maria-lee@bbtest.shop>')
+
+        self.assertTrue(email_queue.process_one())
+        sent = mail.outbox[0]
+        self.assertEqual(sent.from_email, email.from_email)
+        self.assertEqual(sent.esp_extra['tags'], [
+            {'name': 'user_id', 'value': str(self.user.pk)},
+            {'name': 'username', 'value': 'student_example_com'},
+        ])
+
+    def test_sender_without_name_uses_username(self):
+        self.assertEqual(email_queue.user_sender(self.user),
+                         f'Bluebook <messages+u{self.user.pk}-student@bbtest.shop>')
+        self.user.username = 'Жанна@example.com'
+        self.user.save()
+        # Nothing ASCII to slug: the user id alone still identifies them
+        self.assertEqual(email_queue.user_sender(self.user),
+                         f'Bluebook <messages+u{self.user.pk}@bbtest.shop>')
+
+    def test_invalid_codes_are_rejected(self):
+        for code in ['12345', '1234567', '123456\n', 'abcdef', '12345\n', 'Click here http://evil.example', '']:
+            response = self.post(code)
+            self.assertEqual(response.status_code, 200, code)
+            self.assertContains(response, 'display: block')
+        self.assertFalse(QueuedEmail.objects.exists())
+        self.assertIsNone(UserProfile.objects.get(user=self.user).start_code)
+
+    def test_emails_capped_per_hour(self):
+        for _ in range(views.START_CODE_EMAILS_PER_HOUR + 3):
+            self.assertRedirects(self.post('123456'), '/test/', fetch_redirect_response=False)
+        self.assertEqual(QueuedEmail.objects.count(), views.START_CODE_EMAILS_PER_HOUR)
+
+        # Older emails no longer count
+        QueuedEmail.objects.update(created_at=timezone.now() - timedelta(hours=2))
+        self.post('123456')
+        self.assertEqual(QueuedEmail.objects.count(), views.START_CODE_EMAILS_PER_HOUR + 1)

@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import logging
 import tempfile
@@ -12,12 +13,11 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from django.contrib import messages
-from django.db import transaction
 from django.utils import timezone
 
-from .models import LoginFailure, UserProfile
+from .models import QueuedEmail, UserProfile
 from .forms import UserProfileForm
-from .email_queue import enqueue_email
+from .email_queue import enqueue_email, user_sender
 
 logger = logging.getLogger(__name__)
 
@@ -30,30 +30,6 @@ def _get_profile(user):
 def login_view(request):
     return render(request, 'login.html')
 
-# Failed sign-ins allowed per account within the window before it is locked.
-# Limited per account, not per IP: students at a test center share one IP.
-LOGIN_MAX_FAILURES = 10
-LOGIN_FAILURE_WINDOW = timedelta(minutes=15)
-
-
-def _reserve_login_attempt(username):
-    """Count this attempt as a failure before checking the password.
-
-    Returns False if the account is locked. The check and the insert run in
-    one transaction; with SQLite's IMMEDIATE transaction mode (see settings)
-    that takes the write lock up front, so simultaneous attempts from
-    different workers are serialized and can't all slip under the limit.
-    The caller deletes the account's failures if the password is right.
-    """
-    cutoff = timezone.now() - LOGIN_FAILURE_WINDOW
-    with transaction.atomic():
-        LoginFailure.objects.filter(created_at__lt=cutoff).delete()
-        if LoginFailure.objects.filter(username=username).count() >= LOGIN_MAX_FAILURES:
-            return False
-        LoginFailure.objects.create(username=username)
-        return True
-
-
 def cb_login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
@@ -63,17 +39,14 @@ def cb_login_view(request):
             context['error'] = 'Enter your email and password.'
             return render(request, 'cb_login.html', context)
 
-        failure_key = email.lower()
-        if not _reserve_login_attempt(failure_key):
-            context['error'] = 'Too many sign-in attempts. Try again in 15 minutes.'
-            return render(request, 'cb_login.html', context, status=429)
-
         user = authenticate(request, username=email, password=password)
         if user is None:
+            if getattr(request, 'login_locked', False):
+                context['error'] = 'Too many sign-in attempts. Try again in 15 minutes.'
+                return render(request, 'cb_login.html', context, status=429)
             context['error'] = 'Invalid email or password.'
             return render(request, 'cb_login.html', context)
 
-        LoginFailure.objects.filter(username=failure_key).delete()
         login(request, user)
         # Reset test_completed so registration card shows on every login
         profile = _get_profile(user)
@@ -88,28 +61,45 @@ def dashboard_view(request):
     return render(request, 'dashboard.html')
 
 
+START_CODE_RE = re.compile(r'[0-9]{6}')
+
+# Start-code emails one user can trigger per hour. Anyone signed in can set
+# their contact email to any address, so without a cap the form could be used
+# to send unlimited mail from our domain.
+START_CODE_EMAILS_PER_HOUR = 5
+
+
 @login_required
 def start_code_view(request):
     if request.method == 'POST':
         full_code = request.POST.get('full_code', '')
-        
+        if not START_CODE_RE.fullmatch(full_code):
+            return render(request, 'start_code.html', {'code_error': True})
+
         # Save start code to user profile
         profile = _get_profile(request.user)
         if profile:
             profile.start_code = full_code
             profile.save()
 
-        # Queue email — delivered by the rate-limited background senders
         if profile and profile.contact_email:
-            enqueue_email(
-                subject=f"{full_code} - Bluebook Testing Code",
-                message=f"This is the code - {full_code}. Enter this code in the app to start the test.",
-                from_email="Bluebook <messages@bbtest.shop>",
-                recipient_list=[profile.contact_email],
-            )
+            sent_recently = QueuedEmail.objects.filter(
+                user=request.user, created_at__gte=timezone.now() - timedelta(hours=1),
+            ).count()
+            if sent_recently < START_CODE_EMAILS_PER_HOUR:
+                # Queue email — delivered by the rate-limited background senders
+                enqueue_email(
+                    subject=f"{full_code} - Bluebook Testing Code",
+                    message=f"This is the code - {full_code}. Enter this code in the app to start the test.",
+                    from_email=user_sender(request.user),
+                    recipient_list=[profile.contact_email],
+                    user=request.user,
+                )
+            else:
+                logger.warning("Start-code email limit reached for user %s", request.user.pk)
 
         return redirect('test_interface')
-        
+
     return render(request, 'start_code.html')
 
 

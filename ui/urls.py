@@ -1,11 +1,13 @@
 from django.urls import path
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LogoutView
 from . import views
 
 urlpatterns = [
     path('', views.login_view, name='login'),
     path('cb_login/', views.cb_login_view, name='cb_login'),
+    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('update-profile/', views.update_profile_view, name='update_profile'),
     path('start-code/', views.start_code_view, name='start_code'),

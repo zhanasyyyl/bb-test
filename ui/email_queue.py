@@ -12,14 +12,16 @@ Keep that setting in sync with `workers` in gunicorn.conf.py.
 """
 
 import logging
+import re
 import threading
 import time
 from datetime import timedelta
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.db import close_old_connections
 from django.utils import timezone
+from django.utils.text import slugify
 
 from .models import QueuedEmail
 
@@ -49,6 +51,33 @@ _wake = threading.Event()
 # Sliding-window rate limiter shared by this process's sender threads
 _rate_lock = threading.Lock()
 _send_times: list[float] = []
+
+
+def user_sender(user, display_name="Bluebook"):
+    """Sender address that identifies the student in Resend's email list.
+
+    "Bluebook <messages+u42-ana-lee@bbtest.shop>": inboxes show only the
+    display name, so students still see plain "Bluebook".
+    """
+    local, domain = settings.DEFAULT_FROM_EMAIL.split("@")
+    profile = getattr(user, "userprofile", None)
+    name = (profile and profile.full_name) or user.get_username().split("@")[0]
+    tag = f"u{user.pk}"
+    slug = slugify(name)[:30].strip("-")
+    if slug:
+        tag += f"-{slug}"
+    return f"{display_name} <{local}+{tag}@{domain}>"
+
+
+def _resend_tags(user):
+    """Resend tags (shown on each email in the Resend dashboard).
+    Tag values may only contain ASCII letters, digits, underscores and dashes."""
+    def clean(value):
+        return re.sub(r"[^A-Za-z0-9_-]", "_", value)[:256]
+    return [
+        {"name": "user_id", "value": str(user.pk)},
+        {"name": "username", "value": clean(user.get_username())},
+    ]
 
 
 def _acquire_rate_slot():
@@ -86,7 +115,7 @@ def _claim_next():
             id=email_id, status=status, claimed_at=claimed_at,
         ).update(status=QueuedEmail.SENDING, claimed_at=now)
         if won:
-            return QueuedEmail.objects.get(id=email_id)
+            return QueuedEmail.objects.select_related('user').get(id=email_id)
     return None
 
 
@@ -98,12 +127,16 @@ def process_one():
 
     _acquire_rate_slot()
     try:
-        send_mail(
+        message = EmailMessage(
             subject=email.subject,
-            message=email.message,
+            body=email.message,
             from_email=email.from_email,
-            recipient_list=email.recipient_list,
+            to=email.recipient_list,
         )
+        if email.user is not None:
+            # Only Anymail backends read esp_extra; others ignore it
+            message.esp_extra = {"tags": _resend_tags(email.user)}
+        message.send()
     except Exception as e:
         email.attempts += 1
         email.last_error = repr(e)
@@ -161,9 +194,10 @@ def start_workers():
         _started = True
 
 
-def enqueue_email(*, subject, message, from_email, recipient_list):
+def enqueue_email(*, subject, message, from_email, recipient_list, user=None):
     """Store an email for background sending. Returns immediately."""
     QueuedEmail.objects.create(
+        user=user,
         subject=subject,
         message=message,
         from_email=from_email,

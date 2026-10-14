@@ -6,7 +6,8 @@ here is applied automatically by a deploy.
 ## Sign-in rate limit (nginx)
 
 Limits sign-in POSTs to 10 per second per IP, with a burst of 200
-(the first 50 immediately). Each sign-in costs a password hash, so this keeps
+(the first 50 immediately). The admin sign-in page (`/admin/login/`) gets the
+same rate with a burst of 10. Each sign-in costs a password hash, so this keeps
 one IP from using up the server's CPU. Page views are not limited.
 
 ```sh
@@ -32,6 +33,22 @@ sudo nginx -t && sudo systemctl reload nginx
 The limit keys on the client IP nginx sees. That is the student's real IP
 only while nothing (such as Cloudflare) sits in front of nginx; if you add a
 CDN, the key has to change.
+
+### Optional: allow /admin/ only from your own IP
+
+The strongest protection for the admin is not exposing it. If you manage the
+site from a fixed IP, add this inside the server block (replace the address):
+
+```nginx
+location /admin/ {
+    allow 203.0.113.10;
+    deny all;
+    # same proxy_pass / proxy_set_header lines as your "location /" block
+}
+```
+
+Then remove the `location = /admin/login/` block from
+`snippets/login-location.conf`, since `/admin/` already covers it.
 
 ## Static file compression and caching (nginx)
 

@@ -161,6 +161,9 @@ WHITENOISE_MAX_AGE = 60 * 60  # 1 hour
 
 LOGIN_URL = 'login'
 
+# ModelBackend plus per-account lockout after repeated failed sign-ins
+AUTHENTICATION_BACKENDS = ['ui.auth_backends.LockoutModelBackend']
+
 # For testing email sending locally
 EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
 ANYMAIL = {
