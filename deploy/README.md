@@ -5,34 +5,49 @@ here is applied automatically by a deploy.
 
 ## Sign-in rate limit (nginx)
 
-Limits sign-in POSTs to 10 per second per IP, with a burst of 200
-(the first 50 immediately). The admin sign-in page (`/admin/login/`) gets the
-same rate with a burst of 10. Each sign-in costs a password hash, so this keeps
-one IP from using up the server's CPU. Page views are not limited.
+Limits sign-in POSTs (`/cb_login/` and `/admin/login/`) to 10 per second per
+IP, with a burst of 200 (the first 50 immediately). Each sign-in costs a
+password hash, so this keeps one IP from using up the server's CPU. Page
+views and everything else are not limited.
 
 ```sh
 sudo cp deploy/nginx/login-rate-limit.conf /etc/nginx/conf.d/
-sudo cp deploy/nginx/login-location.conf /etc/nginx/snippets/
+sudo cp deploy/nginx/login-limit.conf /etc/nginx/snippets/
 ```
 
-Then add this line inside the `bbtest.shop` HTTPS `server { ... }` block in
-your site config (usually `/etc/nginx/sites-available/...`), next to
-`location /`:
+Then add this line inside your existing `location / { ... }` block, the one
+that proxies to gunicorn, next to its `proxy_pass` line:
 
 ```nginx
-include snippets/login-location.conf;
+location / {
+    include snippets/login-limit.conf;
+    # your existing proxy_pass / proxy_set_header lines, unchanged
+}
 ```
-
-Check that `proxy_pass` and the `proxy_set_header` lines in
-`login-location.conf` match your existing `location /` block, then:
 
 ```sh
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
+The snippet only adds the limit; requests still go through your own
+`proxy_pass`, so it doesn't need to know how gunicorn is reached.
+
 The limit keys on the client IP nginx sees. That is the student's real IP
 only while nothing (such as Cloudflare) sits in front of nginx; if you add a
 CDN, the key has to change.
+
+### Upgrading from the earlier version
+
+An earlier version of these files used `snippets/login-location.conf`, which
+added its own `location` blocks with a hardcoded `proxy_pass` and returned
+502 on servers where gunicorn is reached differently. If you installed it:
+
+```sh
+sudo rm /etc/nginx/snippets/login-location.conf
+```
+
+and delete the `include snippets/login-location.conf;` line (or the commented
+copy) from your site config, then install as above.
 
 ### Optional: allow /admin/ only from your own IP
 
@@ -43,12 +58,9 @@ site from a fixed IP, add this inside the server block (replace the address):
 location /admin/ {
     allow 203.0.113.10;
     deny all;
-    # same proxy_pass / proxy_set_header lines as your "location /" block
+    # copy the proxy_pass / proxy_set_header lines from your "location /" block
 }
 ```
-
-Then remove the `location = /admin/login/` block from
-`snippets/login-location.conf`, since `/admin/` already covers it.
 
 ## Static file compression and caching (nginx)
 
