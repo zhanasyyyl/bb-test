@@ -372,3 +372,29 @@ class StartCodeTests(TestCase):
         QueuedEmail.objects.update(created_at=timezone.now() - timedelta(hours=2))
         self.post('123456')
         self.assertEqual(QueuedEmail.objects.count(), views.START_CODE_EMAILS_PER_HOUR + 1)
+
+
+class PasswordHasherTests(TestCase):
+    def test_new_passwords_use_200k_iterations(self):
+        user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
+        algorithm, iterations, _, _ = user.password.split('$')
+        self.assertEqual((algorithm, iterations), ('pbkdf2_sha256', '200000'))
+
+    def test_old_1m_hash_still_works_and_is_downgraded_once(self):
+        from django.contrib.auth.hashers import PBKDF2PasswordHasher
+        user = User.objects.create_user('student@example.com', 'student@example.com', 'x')
+        old_hash = PBKDF2PasswordHasher().encode('right-pw', 'somesalt123456')
+        self.assertIn('$1000000$', old_hash)
+        User.objects.filter(pk=user.pk).update(password=old_hash)
+
+        response = self.client.post('/cb_login/', {'email': 'student@example.com', 'password': 'right-pw'})
+        self.assertRedirects(response, '/dashboard/')
+        user.refresh_from_db()
+        self.assertIn('$200000$', user.password)
+
+        # A second sign-in doesn't re-hash again
+        rehashed = user.password
+        self.client.logout()
+        self.client.post('/cb_login/', {'email': 'student@example.com', 'password': 'right-pw'})
+        user.refresh_from_db()
+        self.assertEqual(user.password, rehashed)

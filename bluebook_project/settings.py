@@ -161,6 +161,16 @@ WHITENOISE_MAX_AGE = 60 * 60  # 1 hour
 
 LOGIN_URL = 'login'
 
+# Django's defaults, with PBKDF2 at 200,000 iterations instead of 1,000,000
+# (see ui/hashers.py). Don't add Django's PBKDF2PasswordHasher back alongside it.
+PASSWORD_HASHERS = [
+    'ui.hashers.FastPBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.ScryptPasswordHasher',
+]
+
 # ModelBackend plus per-account lockout after repeated failed sign-ins
 AUTHENTICATION_BACKENDS = ['ui.auth_backends.LockoutModelBackend']
 
