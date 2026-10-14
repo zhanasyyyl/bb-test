@@ -23,7 +23,7 @@ gunicorn bluebook_project.wsgi -c gunicorn.conf.py   # production (binds 127.0.0
 
 There is no linter or formatter configured.
 
-`deploy/` holds server config that is installed by hand, not applied by deploys: an nginx per-IP rate limit for sign-in POSTs and a daily `clearsessions` cron script. See `deploy/README.md`. Production runs behind nginx, which serves `/static/` itself.
+`deploy/` holds server config that is installed by hand, not applied by deploys: an nginx per-IP rate limit for sign-in POSTs, nginx compression and cache headers for `/static/`, and a daily `clearsessions` cron script. See `deploy/README.md`. Production runs behind nginx, which serves `/static/` itself.
 
 ## Architecture
 
