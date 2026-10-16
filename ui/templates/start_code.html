@@ -40,8 +40,13 @@
         <button type="submit" id="start-btn" class="btn-secondary" disabled>Start Test</button>
     </form>
 
+    <script src="{% static 'js/battery.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Show the device's real battery level; keeps "98%" if the browser doesn't expose it
+            const batteryLabel = document.getElementById('ui-battery-1');
+            watchBattery(level => { batteryLabel.textContent = level + '%'; });
+
             const inputs = document.querySelectorAll('.code-input');
             const startBtn = document.getElementById('start-btn');
             const fullCodeInput = document.getElementById('full-code-input');

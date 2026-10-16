@@ -4,6 +4,7 @@
 {% block body_class %}body-test{% endblock %}
 
 {% block extra_head %}
+<script src="{% static 'js/battery.js' %}"></script>
 <!-- Fetch the math font up front: it's otherwise only requested when math first
      appears, which may be after the student's connection has dropped -->
 <link rel="preload" href="{% static 'vendor/mathquill/font/Symbola.woff2' %}" as="font" type="font/woff2" crossorigin>
@@ -2231,12 +2232,19 @@
 
         startBatteryTimer() {
             if (this.batteryInterval) clearInterval(this.batteryInterval);
-            this.batteryInterval = setInterval(() => {
-                if (this.batteryLevel > 0) {
-                    this.batteryLevel--;
-                    this.updateBatteryDisplays();
-                }
-            }, 120000);
+            watchBattery(level => {
+                this.batteryLevel = level;
+                this.updateBatteryDisplays();
+            }).then(isReal => {
+                if (isReal) return;
+                // Browser doesn't expose the battery: simulate a slow drain instead
+                this.batteryInterval = setInterval(() => {
+                    if (this.batteryLevel > 0) {
+                        this.batteryLevel--;
+                        this.updateBatteryDisplays();
+                    }
+                }, 120000);
+            });
         },
 
         updateBatteryDisplays() {
