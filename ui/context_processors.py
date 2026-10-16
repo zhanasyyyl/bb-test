@@ -9,7 +9,6 @@ from django.templatetags.static import static
 _PREFETCH_IMAGES = [
     'images/active-tick.png',
     'images/arrow.png',
-    'images/battery.svg',
     'images/bluebook-black.svg',
     'images/bluebook-blue.svg',
     'images/bluebook-white-logo.svg',

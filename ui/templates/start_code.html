@@ -6,7 +6,7 @@
 {% include "partials/_setup_topbar.html" with extra_class="startcode" %}
 <div style="position: absolute; right: 14px; top: 4px;">
     <span id="ui-battery-1" style="font-weight: 600; font-size: 11px; color: #1e1e1e;">98%</span>
-    <img src="{% static 'images/battery.svg' %}" style="width: 16px; height: 10px;" alt="">
+    <img src="{% static 'images/batteries/battery-black-100.svg' %}" class="battery-icon" data-theme="black" style="width: 16px; height: 8px;" alt="">
 </div>
 <div class="startcode-main">
     <h1>Start Code</h1>
@@ -41,11 +41,15 @@
     </form>
 
     <script src="{% static 'js/battery.js' %}"></script>
+    {% include "partials/_battery_icons.html" %}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Show the device's real battery level; keeps "98%" if the browser doesn't expose it
             const batteryLabel = document.getElementById('ui-battery-1');
-            watchBattery(level => { batteryLabel.textContent = level + '%'; });
+            watchBattery((level, charging) => {
+                batteryLabel.textContent = level + '%';
+                setBatteryIcons(level, charging);
+            });
 
             const inputs = document.querySelectorAll('.code-input');
             const startBtn = document.getElementById('start-btn');

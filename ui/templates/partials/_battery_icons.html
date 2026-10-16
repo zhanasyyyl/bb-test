@@ -1,0 +1,34 @@
+{% load static %}
+{# URLs of the battery icons in ui/static/images/batteries/, for battery.js (built with {% static %} so production gets the hashed file names) #}
+<script>
+    window.BATTERY_ICONS = {
+        // Low battery: red, the same on light and dark backgrounds
+        '0': "{% static 'images/batteries/battery-0.svg' %}",
+        '15': "{% static 'images/batteries/battery-15.svg' %}",
+        // black icons (light backgrounds)
+        'black-25': "{% static 'images/batteries/battery-black-25.svg' %}",
+        'black-50': "{% static 'images/batteries/battery-black-50.svg' %}",
+        'black-75': "{% static 'images/batteries/battery-black-75.svg' %}",
+        'black-100': "{% static 'images/batteries/battery-black-100.svg' %}",
+        'black-charge-0': "{% static 'images/batteries/battery-black-charge-0.svg' %}",
+        'black-charge-15': "{% static 'images/batteries/battery-black-charge-15.svg' %}",
+        'black-charge-25': "{% static 'images/batteries/battery-black-charge-25.svg' %}",
+        'black-charge-50': "{% static 'images/batteries/battery-black-charge-50.svg' %}",
+        'black-charge-75': "{% static 'images/batteries/battery-black-charge-75.svg' %}",
+        'black-charge-100': "{% static 'images/batteries/battery-black-charge-100.svg' %}",
+        // white icons (dark backgrounds)
+        'white-25': "{% static 'images/batteries/battery-white-25.svg' %}",
+        'white-50': "{% static 'images/batteries/battery-white-50.svg' %}",
+        'white-75': "{% static 'images/batteries/battery-white-75.svg' %}",
+        'white-100': "{% static 'images/batteries/battery-white-100.svg' %}",
+        'white-charge-0': "{% static 'images/batteries/battery-white-charge-0.svg' %}",
+        'white-charge-15': "{% static 'images/batteries/battery-white-charge-15.svg' %}",
+        'white-charge-25': "{% static 'images/batteries/battery-white-charge-25.svg' %}",
+        'white-charge-50': "{% static 'images/batteries/battery-white-charge-50.svg' %}",
+        'white-charge-75': "{% static 'images/batteries/battery-white-charge-75.svg' %}",
+        'white-charge-100': "{% static 'images/batteries/battery-white-charge-100.svg' %}"
+    };
+    // Load them all now (about 22 KB): a later level change, possibly while
+    // offline, then has its icon ready
+    Object.values(window.BATTERY_ICONS).forEach(function (url) { new Image().src = url; });
+</script>
