@@ -36,7 +36,10 @@
             <div class="registration-card no-upcoming-tests-card">
                 <h3 class="no-tests-title">You Have No Upcoming Tests</h3>
                 <p class="no-tests-description">Tests appear here a few weeks before test day. <strong>If you got a
-                        paper ticket from your school, <form method="POST" action="{% url 'logout' %}" style="display: inline;">{% csrf_token %}<button type="submit" class="no-tests-link" style="background: none; border: none; padding: 0; font: inherit; cursor: pointer;">sign out</button></form>
+                        paper ticket from your school, <form method="POST" action="{% url 'logout' %}"
+                            style="display: inline;">{% csrf_token %}<button type="submit" class="no-tests-link"
+                                style="background: none; border: none; padding: 0; font: inherit; cursor: pointer;">sign
+                                out</button></form>
                         and sign in with<br>it.</strong></p>
             </div>
             {% else %}
@@ -44,7 +47,7 @@
                 <div class="reg-title">SAT</div>
                 <div class="reg-details">
                     <div class="reg-left">
-                        <p><strong>Date:</strong> Sat, Oct 3, 2026</p>
+                        <p><strong>Date:</strong> Sat, Nov 7, 2026</p>
                         <p><strong>Arrival Time:</strong> 7:45 a.m. <span class="tz-offset"></span></p>
                         <p><strong>Doors Close:</strong> 8:00 a.m. <span class="tz-offset"></span></p>
                         <script>
@@ -185,7 +188,9 @@
         <h3 style="margin-top: 0;">Edit Profile</h3>
         {% for message in messages %}
         <p class="profile-error" role="alert"
-            style="font-weight: bold; margin: 0 0 10px; color: #d32f2f; font-size: 14px; text-align: left;">{{ message }}</p>
+            style="font-weight: bold; margin: 0 0 10px; color: #d32f2f; font-size: 14px; text-align: left;">
+            {{ message }}
+        </p>
         {% endfor %}
         <form method="POST" action="{% url 'update_profile' %}"
             style="display: flex; flex-direction: column; gap: 15px;">

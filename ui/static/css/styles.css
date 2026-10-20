@@ -1201,6 +1201,14 @@ input[type="radio"] {
     text-decoration: none;
 }
 
+#forgot-password {
+    text-decoration: underline;
+}
+
+#forgot-password:hover {
+    text-decoration: none;
+}
+
 /* ========================================================= */
 /* TEST INTERFACE                                            */
 /* ========================================================= */
