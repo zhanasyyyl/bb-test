@@ -283,6 +283,25 @@
         background: #fff;
     }
 
+    /* Math questions without a passage show one centered column. The pane
+       itself stays full width so its scrollbar is at the right edge of the
+       screen; the column width goes on its children instead (same size as
+       the old 50%-wide, min 400px pane minus its 48px padding on each side).
+       !important overrides the inline width the resizer sets in other modules. */
+    .question-pane.single-column {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        overflow-x: hidden;
+    }
+
+    .question-pane.single-column>* {
+        /* !important: the question border <img> has an inline width: 100% */
+        width: calc(50% - 48px) !important;
+        min-width: 304px;
+        transform: translateX(var(--column-shift, 0px));
+        transition: transform 0.8s ease;
+    }
+
     .question-img-container {
         position: absolute;
         top: -110px;
@@ -1395,7 +1414,8 @@
 
     <div style="position: absolute; right: 14px; top: 4px;">
         <span id="ui-battery-1" style="font-weight: 600; font-size: 11px; color: #1e1e1e;">98%</span>
-        <img src="{% static 'images/batteries/battery-black-100.svg' %}" class="battery-icon" data-theme="black" style="width: 16px; height: 8px;" alt="">
+        <img src="{% static 'images/batteries/battery-black-100.svg' %}" class="battery-icon" data-theme="black"
+            style="width: 16px; height: 8px;" alt="">
     </div>
 </div>
 <img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: 2px;">
@@ -1472,7 +1492,7 @@
 <div class="modal-overlay" id="modal-nav">
     <div class="nav-modal">
         <div class="nav-modal-header">
-            <span id="nav-modal-title">Section 1, Module 1: Reading and Writing Questions</span>
+            <span id="nav-modal-title-1">Section 1, Module 1: Reading and Writing Questions</span>
             <svg class="nav-modal-close" onclick="document.getElementById('modal-nav').style.display='none'" width="20"
                 height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1907,7 +1927,8 @@
 
         <div style="position: absolute; right: 14px; top: 4px;">
             <span id="ui-battery-2" style="font-weight: 600; font-size: 11px; color: #1e1e1e;">98%</span>
-            <img src="{% static 'images/batteries/battery-black-100.svg' %}" class="battery-icon" data-theme="black" style="width: 16px; height: 8px;" alt="">
+            <img src="{% static 'images/batteries/battery-black-100.svg' %}" class="battery-icon" data-theme="black"
+                style="width: 16px; height: 8px;" alt="">
         </div>
     </div>
     <img src="{% static 'images/dashed-border.png' %}" alt=""
@@ -1939,7 +1960,7 @@
     <div style="flex: 1; display:flex; justify-content:center; padding: 24px; overflow-y:auto;">
         <div class="nav-modal-fullscreen">
             <div class="nav-legend-fullscreen">
-                <span class="nav-modal-title" style="font-size: 18px; font-weight: 600; display: block;">Section
+                <span id="nav-modal-title-2" style="font-size: 18px; font-weight: 600; display: block;">Section
                     1,
                     Module 1: Reading
                     and Writing Questions</span>
@@ -2276,16 +2297,14 @@
             const qData = modulesData[this.modIdx]?.questions[this.qIdx];
             const isSPR = isMath && (!qData.options || qData.options.length === 0);
 
-            if (isMath && !isSPR) {
-                if (this.isCalculatorOpen) {
-                    const offset = (workspace.offsetWidth - questionPane.offsetWidth) / 2 - 120;
-                    questionPane.style.transform = `translateX(${offset}px)`;
-                } else {
-                    questionPane.style.transform = 'translateX(0)';
-                }
-            } else {
-                questionPane.style.transform = 'none';
+            let shift = 0;
+            if (isMath && !isSPR && this.isCalculatorOpen) {
+                // Slide the question column right to make room for the calculator.
+                // The column is 50% of the workspace (at least 400px) including its padding.
+                const columnWidth = Math.max(400, workspace.offsetWidth / 2);
+                shift = (workspace.offsetWidth - columnWidth) / 2 - 120;
             }
+            questionPane.style.setProperty('--column-shift', shift + 'px');
         },
 
         toggleCalculator() {
@@ -2650,7 +2669,8 @@
 
             document.getElementById('ui-test-title').innerText = mod.title;
             document.getElementById('review-test-title').innerText = mod.title;
-            document.getElementById('nav-modal-title').innerText = mod.title + " Questions";
+            document.getElementById('nav-modal-title-1').innerText = mod.title + " Questions";
+            document.getElementById('nav-modal-title-2').innerText = mod.title + " Questions";
             document.getElementById('ui-q-nav').innerText = `Question ${this.qIdx + 1} of ${mod.count}`;
             document.getElementById('ui-q-num').innerText = this.qIdx + 1;
 
@@ -2700,19 +2720,13 @@
             if (isMath && !isSPR) {
                 passagePane.style.display = 'none';
                 resizer.style.display = 'none';
-                questionPane.style.maxWidth = '50%';
-                questionPane.style.margin = '0 auto';
-                questionPane.style.minWidth = '400px';
-                questionPane.style.transition = 'transform 0.8s ease';
+                questionPane.classList.add('single-column');
                 this.updateQuestionPanePosition();
             } else {
                 passagePane.style.display = 'block';
                 resizer.style.display = 'flex';
-                questionPane.style.maxWidth = 'none';
-                questionPane.style.margin = '0';
-                questionPane.style.minWidth = '0';
-                questionPane.style.transform = 'none';
-                questionPane.style.transition = 'none';
+                questionPane.classList.remove('single-column');
+                questionPane.style.setProperty('--column-shift', '0px');
                 if (isSPR) {
                     passagePane.innerHTML = sprRulesHtml;
                     passagePane.style.fontFamily = 'Noto Serif';
