@@ -44,7 +44,7 @@ def cb_login_view(request):
             if getattr(request, 'login_locked', False):
                 context['error'] = 'Too many sign-in attempts. Try again in 15 minutes.'
                 return render(request, 'cb_login.html', context, status=429)
-            context['error'] = 'Invalid email or password.'
+            context['error'] = 'Your email or password is wrong. Please try again.'
             return render(request, 'cb_login.html', context)
 
         login(request, user)

@@ -3,6 +3,30 @@
 {% block body_class %}body-login{% endblock %}
 
 {% block content %}
+<style>
+    /* Sign-in error box, matching the real Bluebook's */
+    .login-error {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 15px 16px;
+        /* Pulled up towards the heading (only shown with an error, so the
+           normal layout is unchanged); spacing measured from the real app */
+        margin: -21px 0 34px;
+        border: 1px solid #752329;
+        border-radius: 7px;
+        background: #faf4f5;
+        color: #1e1e1e;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+    }
+
+    .login-error-icon {
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+</style>
 
 {% include "partials/_login_header.html" %}
 
@@ -34,12 +58,14 @@
             {% csrf_token %}
 
             {% if error %}
-            <p id="login-error" role="alert"
-                style="font-weight: bold; margin: 0 0 16px; color: #d32f2f; font-size: 14px; line-height: 1.3;">
-                <img src="{% static 'images/warning.png' %}" alt=""
-                    style="width: 18px; height: 18px; position: relative; top: 4px; right: 2px;">
-                {{ error }}
-            </p>
+            <div id="login-error" class="login-error" role="alert">
+                <svg class="login-error-icon" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                    <circle cx="7" cy="7" r="7" fill="#9d3038" />
+                    <rect x="6.25" y="3" width="1.5" height="5" rx="0.75" fill="#faf4f5" />
+                    <circle cx="7" cy="10.25" r="0.9" fill="#faf4f5" />
+                </svg>
+                <span>{{ error }}</span>
+            </div>
             {% endif %}
 
             <div style="margin-bottom: 20px; position: relative;">

@@ -225,7 +225,7 @@ class LoginTests(TestCase):
 
     def test_wrong_password_shows_error_and_keeps_email(self):
         response = self.login(password='wrong')
-        self.assertContains(response, 'Invalid email or password.')
+        self.assertContains(response, 'Your email or password is wrong. Please try again.')
         self.assertContains(response, 'value="student@example.com"')
 
     def test_empty_fields_show_error(self):
