@@ -19,8 +19,9 @@ If gunicorn runs as a systemd service, restart that instead of sending HUP:
 GUNICORN_SERVICE=gunicorn deploy/update.sh   # use your service's name
 ```
 
-Set `PORT` if gunicorn doesn't listen on 8000. The nginx files and cron job
-below are not applied by the script; it prints a note when they change.
+The health check requests `https://bbtest.shop/cb_login/` through nginx (set
+`SITE_HOST` for another domain). The nginx files and cron job below are not
+applied by the script; it prints a note when they change.
 
 ## One-time setup
 

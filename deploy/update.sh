@@ -7,11 +7,11 @@
 # Options (environment variables):
 #   GUNICORN_SERVICE=name  restart this systemd service (with sudo) instead of
 #                          sending HUP to the running gunicorn master
-#   PORT=8000              port gunicorn listens on, for the health check
+#   SITE_HOST=bbtest.shop  site to request for the health check
 set -eu
 
 cd "$(dirname "$0")/.."
-PORT="${PORT:-8000}"
+SITE_HOST="${SITE_HOST:-bbtest.shop}"
 
 if [ -x venv/bin/python ]; then
     PY=venv/bin/python
@@ -67,19 +67,23 @@ else
 fi
 
 step "Health check"
+# Go through nginx like a visitor does, so it doesn't matter whether gunicorn
+# listens on a port or a socket. Try this machine's nginx directly first,
+# then the normal public address.
+url="https://$SITE_HOST/cb_login/"
 code=000
 for _ in 1 2 3 4 5 6 7 8 9 10; do
     sleep 1
-    # Host and X-Forwarded-Proto as nginx sends them, so ALLOWED_HOSTS and
-    # the HTTPS redirect behave as in production
-    code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: bbtest.shop' \
-        -H 'X-Forwarded-Proto: https' "http://127.0.0.1:$PORT/cb_login/" || true)
+    code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 \
+        --resolve "$SITE_HOST:443:127.0.0.1" "$url" || true)
+    [ "$code" = "200" ] && break
+    code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 "$url" || true)
     [ "$code" = "200" ] && break
 done
 if [ "$code" = "200" ]; then
-    echo "Site is answering (HTTP 200)."
+    echo "$url is answering (HTTP 200)."
 else
-    echo "Health check failed (HTTP $code). Check gunicorn's logs." >&2
+    echo "Health check failed: $url gave HTTP $code. Check gunicorn's and nginx's logs." >&2
     exit 1
 fi
 
