@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import tempfile
+import time
 from datetime import timedelta
 from unittest import mock
 
@@ -192,6 +193,27 @@ class EmailQueueTests(TestCase):
                     QueuedEmail.objects.filter(id=email.id).update(next_attempt_at=timezone.now())
         self.assertEqual(email.status, QueuedEmail.FAILED)
         self.assertIn('boom', email.last_error)
+
+    def test_first_retry_after_20_seconds(self):
+        email = self.enqueue()
+        with mock.patch.object(email_queue.EmailMultiAlternatives, 'send', side_effect=RuntimeError('boom')):
+            before = timezone.now()
+            email_queue.process_one()
+        email.refresh_from_db()
+        delay = (email.next_attempt_at - before).total_seconds()
+        self.assertAlmostEqual(delay, 20, delta=1)
+
+    def test_email_queued_during_check_is_not_slept_through(self):
+        # An email arrives while the sender is checking the table and finds
+        # nothing: the sender must not then sleep for the whole poll interval
+        def check_while_email_arrives():
+            email_queue._wake.set()      # what enqueue_email() does
+            return False                 # the check itself saw no email yet
+        with mock.patch.object(email_queue, 'process_one', side_effect=check_while_email_arrives), \
+                mock.patch.object(email_queue, '_POLL_SECONDS', 5):
+            started = time.monotonic()
+            email_queue._work_then_wait()
+            self.assertLess(time.monotonic() - started, 1)
 
     def test_email_claimed_by_another_worker_is_skipped(self):
         email = self.enqueue()

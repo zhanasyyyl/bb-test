@@ -36,7 +36,8 @@ _MAX_ATTEMPTS = 5
 _STALE_CLAIM = timedelta(minutes=5)
 
 # How often idle senders check the table for emails queued by other processes
-_POLL_SECONDS = 5
+# (an email queued in this process wakes them at once)
+_POLL_SECONDS = 1
 
 
 def _per_process_rps():
@@ -131,7 +132,8 @@ def process_one():
                          email.id, email.attempts, e)
         else:
             email.status = QueuedEmail.PENDING
-            email.next_attempt_at = timezone.now() + timedelta(seconds=30 * 2 ** email.attempts)
+            # 20s, 40s, 80s, 160s: a brief hiccup costs seconds, not minutes
+            email.next_attempt_at = timezone.now() + timedelta(seconds=10 * 2 ** email.attempts)
             logger.warning("Email %s failed (attempt %s), will retry: %r",
                            email.id, email.attempts, e)
         email.claimed_at = None
@@ -143,20 +145,27 @@ def process_one():
     return True
 
 
+def _work_then_wait():
+    """One pass of a sender thread: send a due email, or idle until woken or polled."""
+    close_old_connections()
+    # Clear before checking, not after: an email queued after this point sets
+    # the event again, so the wait below can't sleep through it
+    _wake.clear()
+    try:
+        if process_one():
+            return
+    except Exception:
+        # e.g. "database is locked" under SQLite write contention
+        logger.exception("Email sender error")
+        time.sleep(1)
+        return
+    _wake.wait(_POLL_SECONDS)
+
+
 def _worker():
-    """Background sender: delivers due emails, then idles until woken or polled."""
+    """Background sender thread."""
     while True:
-        close_old_connections()
-        try:
-            if process_one():
-                continue
-        except Exception:
-            # e.g. "database is locked" under SQLite write contention
-            logger.exception("Email sender error")
-            time.sleep(1)
-            continue
-        _wake.clear()
-        _wake.wait(_POLL_SECONDS)
+        _work_then_wait()
 
 
 _start_lock = threading.Lock()
