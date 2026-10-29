@@ -1,7 +1,30 @@
 # Server setup
 
-Files in this folder are installed on the production server by hand; nothing
-here is applied automatically by a deploy.
+## Deploying updates
+
+Run on the server, from the project folder, as the user that runs gunicorn:
+
+```sh
+deploy/update.sh
+```
+
+It pulls the latest `main` (fast-forward only), installs requirements, runs
+migrations and `collectstatic`, runs Django's checks, reloads gunicorn
+gracefully (HUP to the master, so in-flight requests finish) and checks that
+the site answers. It stops at the first step that fails.
+
+If gunicorn runs as a systemd service, restart that instead of sending HUP:
+
+```sh
+GUNICORN_SERVICE=gunicorn deploy/update.sh   # use your service's name
+```
+
+Set `PORT` if gunicorn doesn't listen on 8000. The nginx files and cron job
+below are not applied by the script; it prints a note when they change.
+
+## One-time setup
+
+The other files in this folder are installed on the server by hand.
 
 ## Sign-in rate limit (nginx)
 
