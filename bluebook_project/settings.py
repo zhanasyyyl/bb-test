@@ -179,7 +179,10 @@ EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
 ANYMAIL = {
     "RESEND_API_KEY": os.getenv('RESEND_API_KEY', ''),
 }
-DEFAULT_FROM_EMAIL = "messages@bbtest.shop"
+# One fixed sender under our own name: a well-known brand name on an
+# unrelated domain, or a different address per email, looks like phishing
+# to spam filters
+DEFAULT_FROM_EMAIL = "BB Test <messages@bbtest.shop>"
 
 # Number of server processes running email senders (ui/email_queue.py). The
 # Resend rate limit is split across them, so keep this equal to `workers` in

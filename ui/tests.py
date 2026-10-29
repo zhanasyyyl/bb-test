@@ -180,7 +180,7 @@ class EmailQueueTests(TestCase):
 
     def test_failure_schedules_retry_then_gives_up(self):
         email = self.enqueue()
-        with mock.patch.object(email_queue.EmailMessage, 'send', side_effect=RuntimeError('boom')):
+        with mock.patch.object(email_queue.EmailMultiAlternatives, 'send', side_effect=RuntimeError('boom')):
             for attempt in range(1, email_queue._MAX_ATTEMPTS + 1):
                 self.assertTrue(email_queue.process_one())
                 email.refresh_from_db()
@@ -330,30 +330,24 @@ class StartCodeTests(TestCase):
         self.assertEqual(email.user, self.user)
         self.assertIn('123456', email.subject)
 
-    def test_sender_identifies_student_and_tags_are_sent(self):
-        profile = self.user.userprofile
-        profile.full_name = 'Ana María Lee'
-        profile.save()
+    def test_email_content_sender_and_tags(self):
         self.post('123456')
-        email = QueuedEmail.objects.get()
-        self.assertEqual(email.from_email, f'Bluebook <messages+u{self.user.pk}-ana-maria-lee@bbtest.shop>')
-
         self.assertTrue(email_queue.process_one())
         sent = mail.outbox[0]
-        self.assertEqual(sent.from_email, email.from_email)
+        self.assertEqual(sent.from_email, 'BB Test <messages@bbtest.shop>')
+        self.assertEqual(sent.subject, 'Your practice test start code: 123456')
+        self.assertEqual(sent.to, ['student@example.com'])
+        self.assertIn('Your start code is 123456', sent.body)
+        html, mimetype = sent.alternatives[0]
+        self.assertEqual(mimetype, 'text/html')
+        self.assertIn('123456', html)
+        for text in (sent.from_email, sent.subject, sent.body, html):
+            self.assertNotIn('Bluebook', text)
+        # Resend tags still identify the student
         self.assertEqual(sent.esp_extra['tags'], [
             {'name': 'user_id', 'value': str(self.user.pk)},
             {'name': 'username', 'value': 'student_example_com'},
         ])
-
-    def test_sender_without_name_uses_username(self):
-        self.assertEqual(email_queue.user_sender(self.user),
-                         f'Bluebook <messages+u{self.user.pk}-student@bbtest.shop>')
-        self.user.username = 'Жанна@example.com'
-        self.user.save()
-        # Nothing ASCII to slug: the user id alone still identifies them
-        self.assertEqual(email_queue.user_sender(self.user),
-                         f'Bluebook <messages+u{self.user.pk}@bbtest.shop>')
 
     def test_invalid_codes_are_rejected(self):
         for code in ['12345', '1234567', '123456\n', 'abcdef', '12345\n', 'Click here http://evil.example', '']:

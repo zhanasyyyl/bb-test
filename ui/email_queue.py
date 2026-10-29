@@ -18,10 +18,9 @@ import time
 from datetime import timedelta
 
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.db import close_old_connections
 from django.utils import timezone
-from django.utils.text import slugify
 
 from .models import QueuedEmail
 
@@ -51,22 +50,6 @@ _wake = threading.Event()
 # Sliding-window rate limiter shared by this process's sender threads
 _rate_lock = threading.Lock()
 _send_times: list[float] = []
-
-
-def user_sender(user, display_name="Bluebook"):
-    """Sender address that identifies the student in Resend's email list.
-
-    "Bluebook <messages+u42-ana-lee@bbtest.shop>": inboxes show only the
-    display name, so students still see plain "Bluebook".
-    """
-    local, domain = settings.DEFAULT_FROM_EMAIL.split("@")
-    profile = getattr(user, "userprofile", None)
-    name = (profile and profile.full_name) or user.get_username().split("@")[0]
-    tag = f"u{user.pk}"
-    slug = slugify(name)[:30].strip("-")
-    if slug:
-        tag += f"-{slug}"
-    return f"{display_name} <{local}+{tag}@{domain}>"
 
 
 def _resend_tags(user):
@@ -127,12 +110,14 @@ def process_one():
 
     _acquire_rate_slot()
     try:
-        message = EmailMessage(
+        message = EmailMultiAlternatives(
             subject=email.subject,
             body=email.message,
             from_email=email.from_email,
             to=email.recipient_list,
         )
+        if email.html_message:
+            message.attach_alternative(email.html_message, "text/html")
         if email.user is not None:
             # Only Anymail backends read esp_extra; others ignore it
             message.esp_extra = {"tags": _resend_tags(email.user)}
@@ -194,12 +179,13 @@ def start_workers():
         _started = True
 
 
-def enqueue_email(*, subject, message, from_email, recipient_list, user=None):
+def enqueue_email(*, subject, message, from_email, recipient_list, user=None, html_message=''):
     """Store an email for background sending. Returns immediately."""
     QueuedEmail.objects.create(
         user=user,
         subject=subject,
         message=message,
+        html_message=html_message,
         from_email=from_email,
         recipient_list=list(recipient_list),
     )

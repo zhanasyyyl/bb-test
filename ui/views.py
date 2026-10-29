@@ -7,6 +7,7 @@ import threading
 from datetime import timedelta
 
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -17,7 +18,7 @@ from django.utils import timezone
 
 from .models import QueuedEmail, UserProfile
 from .forms import UserProfileForm
-from .email_queue import enqueue_email, user_sender
+from .email_queue import enqueue_email
 
 logger = logging.getLogger(__name__)
 
@@ -89,9 +90,10 @@ def start_code_view(request):
             if sent_recently < START_CODE_EMAILS_PER_HOUR:
                 # Queue email — delivered by the rate-limited background senders
                 enqueue_email(
-                    subject=f"{full_code} - Bluebook Testing Code",
-                    message=f"This is the code - {full_code}. Enter this code in the app to start the test.",
-                    from_email=user_sender(request.user),
+                    subject=f"Your practice test start code: {full_code}",
+                    message=render_to_string('emails/start_code.txt', {'code': full_code}),
+                    html_message=render_to_string('emails/start_code.html', {'code': full_code}),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[profile.contact_email],
                     user=request.user,
                 )
