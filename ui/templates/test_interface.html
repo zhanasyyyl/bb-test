@@ -3,6 +3,14 @@
 
 {% block body_class %}body-test{% endblock %}
 
+{% block extra_head %}
+<script src="{% static 'js/battery.js' %}"></script>
+{% include "partials/_battery_icons.html" %}
+<!-- Fetch the math font up front: it's otherwise only requested when math first
+     appears, which may be after the student's connection has dropped -->
+<link rel="preload" href="{% static 'vendor/mathquill/font/Symbola.woff2' %}" as="font" type="font/woff2" crossorigin>
+{% endblock %}
+
 {% block content %}
 <style>
     /* Timer 5-minute warning toast */
@@ -275,6 +283,25 @@
         background: #fff;
     }
 
+    /* Math questions without a passage show one centered column. The pane
+       itself stays full width so its scrollbar is at the right edge of the
+       screen; the column width goes on its children instead (same size as
+       the old 50%-wide, min 400px pane minus its 48px padding on each side).
+       !important overrides the inline width the resizer sets in other modules. */
+    .question-pane.single-column {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        overflow-x: hidden;
+    }
+
+    .question-pane.single-column>* {
+        /* !important: the question border <img> has an inline width: 100% */
+        width: calc(50% - 48px) !important;
+        min-width: 304px;
+        transform: translateX(var(--column-shift, 0px));
+        transition: transform 0.8s ease;
+    }
+
     .question-img-container {
         position: absolute;
         top: -110px;
@@ -391,6 +418,18 @@
         background-image: url('{% static "images/dashed-border.png" %}');
         background-size: 100% 1.5px;
         background-repeat: no-repeat;
+    }
+
+    /* The dashed lines are scaled to the page width; scale them without
+       smoothing so the dash ends stay sharp. image-rendering is inherited,
+       so reset it inside the bottom bar (only its background is the line). */
+    .dashed-line,
+    .test-bottombar {
+        image-rendering: pixelated;
+    }
+
+    .test-bottombar * {
+        image-rendering: auto;
     }
 
     /* Full Page Screens */
@@ -1387,10 +1426,11 @@
 
     <div style="position: absolute; right: 14px; top: 4px;">
         <span id="ui-battery-1" style="font-weight: 600; font-size: 11px; color: #1e1e1e;">98%</span>
-        <img src="{% static 'images/battery.svg' %}" style="width: 16px; height: 10px;" alt="">
+        <img src="{% static 'images/batteries/battery-black-100.svg' %}" class="battery-icon" data-theme="black"
+            style="width: 16px; height: 8px;" alt="">
     </div>
 </div>
-<img src="{% static 'images/dashed-border.png' %}" alt="" style="width: 100%; height: 2px;">
+<img src="{% static 'images/dashed-border.png' %}" class="dashed-line" alt="" style="width: 100%; height: 2px;">
 
 <div class="test-workspace" id="main-workspace">
     <div class="passage-pane" id="ui-passage">
@@ -1415,7 +1455,7 @@
                 style="width: 28px; height: 28px; cursor: pointer; margin-right: 8px;"
                 onclick="app.toggleCrossOutMode()">
         </div>
-        <img src="{% static 'images/question-border.png' %}"
+        <img src="{% static 'images/question-border.png' %}" class="dashed-line"
             style="width: 100%; height: 1.5px; margin-bottom: 12px; padding: 0; margin-top: 1px;">
 
         <div class="question-text" id="ui-question">
@@ -1464,7 +1504,7 @@
 <div class="modal-overlay" id="modal-nav">
     <div class="nav-modal">
         <div class="nav-modal-header">
-            <span id="nav-modal-title">Section 1, Module 1: Reading and Writing Questions</span>
+            <span id="nav-modal-title-1">Section 1, Module 1: Reading and Writing Questions</span>
             <svg class="nav-modal-close" onclick="document.getElementById('modal-nav').style.display='none'" width="20"
                 height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1723,8 +1763,8 @@
     <div class="break-top-bar">
         <div class="break-battery">
             <span id="ui-battery-break">98%</span>
-            <img src="{% static 'images/battery.svg' %}"
-                style="width: 22px; height: 11px; filter: brightness(0) invert(1);" alt="">
+            <img src="{% static 'images/batteries/battery-white-100.svg' %}" class="battery-icon" data-theme="white"
+                style="width: 22px; height: 11px;" alt="">
         </div>
     </div>
 
@@ -1797,8 +1837,8 @@
     <div class="unsched-break-top-bar">
         <div class="unsched-break-battery">
             <span id="ui-battery-unsched">98%</span>
-            <img src="{% static 'images/battery.svg' %}"
-                style="width: 22px; height: 11px; filter: brightness(0) invert(1);" alt="">
+            <img src="{% static 'images/batteries/battery-white-100.svg' %}" class="battery-icon" data-theme="white"
+                style="width: 22px; height: 11px;" alt="">
         </div>
     </div>
 
@@ -1899,10 +1939,11 @@
 
         <div style="position: absolute; right: 14px; top: 4px;">
             <span id="ui-battery-2" style="font-weight: 600; font-size: 11px; color: #1e1e1e;">98%</span>
-            <img src="{% static 'images/battery.svg' %}" style="width: 16px; height: 10px;" alt="">
+            <img src="{% static 'images/batteries/battery-black-100.svg' %}" class="battery-icon" data-theme="black"
+                style="width: 16px; height: 8px;" alt="">
         </div>
     </div>
-    <img src="{% static 'images/dashed-border.png' %}" alt=""
+    <img src="{% static 'images/dashed-border.png' %}" class="dashed-line" alt=""
         style="width: 100%; height: 1.5px; transform: scaleY(-1);">
 
     <div class="review-content"
@@ -1931,7 +1972,7 @@
     <div style="flex: 1; display:flex; justify-content:center; padding: 24px; overflow-y:auto;">
         <div class="nav-modal-fullscreen">
             <div class="nav-legend-fullscreen">
-                <span class="nav-modal-title" style="font-size: 18px; font-weight: 600; display: block;">Section
+                <span id="nav-modal-title-2" style="font-size: 18px; font-weight: 600; display: block;">Section
                     1,
                     Module 1: Reading
                     and Writing Questions</span>
@@ -2046,7 +2087,6 @@
 </div>
 
 <script>
-    const staticUrl = "{% static 'questions/' %}";
     const modulesData = JSON.parse('{{ modules_json|escapejs }}');
 
     // Global state registry
@@ -2056,6 +2096,7 @@
         modIdx: 0,
         qIdx: 0,
         batteryLevel: 98,
+        batteryCharging: false,
         batteryInterval: null,
         crossOutMode: true,
 
@@ -2140,7 +2181,7 @@
                     <span class="zoom-level">100%</span>
                     <button class="reset-btn">Reset</button>
                     <div class="divider"></div>
-                    <button class="expand-btn" title="Expand"><img src="/static/images/image-full.png"></button>
+                    <button class="expand-btn" title="Expand"><img src="{% static 'images/image-full.png' %}"></button>
                 `;
 
                 wrapper.insertBefore(toolbar, img);
@@ -2226,12 +2267,20 @@
 
         startBatteryTimer() {
             if (this.batteryInterval) clearInterval(this.batteryInterval);
-            this.batteryInterval = setInterval(() => {
-                if (this.batteryLevel > 0) {
-                    this.batteryLevel--;
-                    this.updateBatteryDisplays();
-                }
-            }, 120000);
+            watchBattery((level, charging) => {
+                this.batteryLevel = level;
+                this.batteryCharging = charging;
+                this.updateBatteryDisplays();
+            }).then(isReal => {
+                if (isReal) return;
+                // Browser doesn't expose the battery: simulate a slow drain instead
+                this.batteryInterval = setInterval(() => {
+                    if (this.batteryLevel > 0) {
+                        this.batteryLevel--;
+                        this.updateBatteryDisplays();
+                    }
+                }, 120000);
+            });
         },
 
         updateBatteryDisplays() {
@@ -2243,6 +2292,7 @@
             if (bat2) bat2.innerText = this.batteryLevel + '%';
             if (batBreak) batBreak.innerText = this.batteryLevel + '%';
             if (batUnsched) batUnsched.innerText = this.batteryLevel + '%';
+            setBatteryIcons(this.batteryLevel, this.batteryCharging);
         },
 
         desmosCalc: null,
@@ -2259,16 +2309,14 @@
             const qData = modulesData[this.modIdx]?.questions[this.qIdx];
             const isSPR = isMath && (!qData.options || qData.options.length === 0);
 
-            if (isMath && !isSPR) {
-                if (this.isCalculatorOpen) {
-                    const offset = (workspace.offsetWidth - questionPane.offsetWidth) / 2 - 120;
-                    questionPane.style.transform = `translateX(${offset}px)`;
-                } else {
-                    questionPane.style.transform = 'translateX(0)';
-                }
-            } else {
-                questionPane.style.transform = 'none';
+            let shift = 0;
+            if (isMath && !isSPR && this.isCalculatorOpen) {
+                // Slide the question column right to make room for the calculator.
+                // The column is 50% of the workspace (at least 400px) including its padding.
+                const columnWidth = Math.max(400, workspace.offsetWidth / 2);
+                shift = (workspace.offsetWidth - columnWidth) / 2 - 120;
             }
+            questionPane.style.setProperty('--column-shift', shift + 'px');
         },
 
         toggleCalculator() {
@@ -2633,7 +2681,8 @@
 
             document.getElementById('ui-test-title').innerText = mod.title;
             document.getElementById('review-test-title').innerText = mod.title;
-            document.getElementById('nav-modal-title').innerText = mod.title + " Questions";
+            document.getElementById('nav-modal-title-1').innerText = mod.title + " Questions";
+            document.getElementById('nav-modal-title-2').innerText = mod.title + " Questions";
             document.getElementById('ui-q-nav').innerText = `Question ${this.qIdx + 1} of ${mod.count}`;
             document.getElementById('ui-q-num').innerText = this.qIdx + 1;
 
@@ -2683,19 +2732,13 @@
             if (isMath && !isSPR) {
                 passagePane.style.display = 'none';
                 resizer.style.display = 'none';
-                questionPane.style.maxWidth = '50%';
-                questionPane.style.margin = '0 auto';
-                questionPane.style.minWidth = '400px';
-                questionPane.style.transition = 'transform 0.8s ease';
+                questionPane.classList.add('single-column');
                 this.updateQuestionPanePosition();
             } else {
                 passagePane.style.display = 'block';
                 resizer.style.display = 'flex';
-                questionPane.style.maxWidth = 'none';
-                questionPane.style.margin = '0';
-                questionPane.style.minWidth = '0';
-                questionPane.style.transform = 'none';
-                questionPane.style.transition = 'none';
+                questionPane.classList.remove('single-column');
+                questionPane.style.setProperty('--column-shift', '0px');
                 if (isSPR) {
                     passagePane.innerHTML = sprRulesHtml;
                     passagePane.style.fontFamily = 'Noto Serif';
@@ -2791,12 +2834,12 @@
             const btnReview = document.getElementById('btn-mark-review');
             const markReview = document.getElementById('mark-review');
             if (state.review) {
-                btnReview.src = "/static/images/marked.svg";
+                btnReview.src = "{% static 'images/marked.svg' %}";
                 markReview.style.textDecoration = "underline";
                 markReview.style.fontWeight = "600";
 
             } else {
-                btnReview.src = '/static/images/mark.svg';
+                btnReview.src = "{% static 'images/mark.svg' %}";
                 markReview.style.textDecoration = "none";
                 markReview.style.fontWeight = "400";
             }
@@ -2805,8 +2848,8 @@
             const crossOutBtn = document.getElementById('btn-cross-out');
             if (crossOutBtn) {
                 crossOutBtn.src = this.crossOutMode
-                    ? '/static/images/cross-out-abc-blue.svg'
-                    : '/static/images/cross-out-abc.svg';
+                    ? "{% static 'images/cross-out-abc-blue.svg' %}"
+                    : "{% static 'images/cross-out-abc.svg' %}";
             }
 
             ['A', 'B', 'C', 'D'].forEach(opt => {
@@ -3031,18 +3074,58 @@
                         this.renderQuestion();
                     }
                 } else {
-                    document.getElementById('screen-loading').style.display = 'none';
-                    // Mark test as completed in the backend
-                    fetch('/api/mark-test-completed/', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}',
-                        },
-                    }).catch(() => { });
-                    // Redirect to congrats page
-                    window.location.href = '/congrats/';
+                    // Keep the "module is over" screen up while we finish
+                    this.finishTest();
                 }
             }, 1000);
+        },
+
+        // Records completion, then goes to the congrats page. If the device is
+        // offline, shows a reconnect message and finishes automatically once
+        // the connection is back (refreshing would lose the page).
+        async finishTest() {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+            let showedOffline = false;
+            while (true) {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 10000);
+                try {
+                    await fetch('/api/mark-test-completed/', {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': csrfToken },
+                        signal: controller.signal,
+                    });
+                    // Any reply from the server, even an error, means we're online
+                    break;
+                } catch (e) {
+                    if (!showedOffline) {
+                        this.showReconnectMessage();
+                        showedOffline = true;
+                    }
+                    // Retry when the browser reports a connection, or every 5 seconds
+                    await new Promise(resolve => {
+                        const done = () => {
+                            window.removeEventListener('online', done);
+                            clearTimeout(retry);
+                            resolve();
+                        };
+                        const retry = setTimeout(done, 5000);
+                        window.addEventListener('online', done);
+                    });
+                } finally {
+                    clearTimeout(timeout);
+                }
+            }
+            window.location.href = '/congrats/';
+        },
+
+        showReconnectMessage() {
+            const screen = document.getElementById('screen-loading');
+            const lines = screen.querySelectorAll('p');
+            screen.querySelector('h2').textContent = 'Reconnect to Finish';
+            lines[0].textContent = 'Your test is over, but this device isn\'t connected to the internet.';
+            lines[1].textContent = 'Reconnect and you\'ll move on automatically.';
+            lines[2].textContent = 'Do not refresh this page or quit the app.';
         },
 
         // ===== Highlight and Annotation Logic =====

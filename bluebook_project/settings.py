@@ -35,8 +35,9 @@ if not SECRET_KEY:
         from django.core.exceptions import ImproperlyConfigured
         raise ImproperlyConfigured("The SECRET_KEY setting must not be empty in production.")
 
-allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'bbtest.shop')
-ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()] if allowed_hosts_env else ['bbtest.shop', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()
+] or ['bbtest.shop']
 
 
 # Application definition
@@ -93,6 +94,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        # Several gunicorn workers write concurrently: WAL lets reads run during
+        # writes, and IMMEDIATE + timeout make writers wait instead of failing
+        # with "database is locked".
+        'OPTIONS': {
+            'init_command': 'PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;',
+            'transaction_mode': 'IMMEDIATE',
+            'timeout': 20,
+        },
     }
 }
 
@@ -133,25 +142,52 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-import os
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'ui', 'static'),
-]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-if DEBUG:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-else:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_MAX_AGE = 31536000  # 1 year — safe because hashed filenames auto-bust cache
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': (
+            'django.contrib.staticfiles.storage.StaticFilesStorage' if DEBUG
+            else 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+        ),
+    },
+}
+# WhiteNoise always caches hashed filenames (from {% static %}) forever. This
+# max-age only applies to unhashed paths such as the /static/images/... URLs
+# embedded in ui/data/questions.json, so keep it short enough for edits to show.
+WHITENOISE_MAX_AGE = 60 * 60  # 1 hour
 
 LOGIN_URL = 'login'
+
+# Django's defaults, with PBKDF2 at 200,000 iterations instead of 1,000,000
+# (see ui/hashers.py). Don't add Django's PBKDF2PasswordHasher back alongside it.
+PASSWORD_HASHERS = [
+    'ui.hashers.FastPBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.ScryptPasswordHasher',
+]
+
+# ModelBackend plus per-account lockout after repeated failed sign-ins
+AUTHENTICATION_BACKENDS = ['ui.auth_backends.LockoutModelBackend']
 
 # For testing email sending locally
 EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
 ANYMAIL = {
     "RESEND_API_KEY": os.getenv('RESEND_API_KEY', ''),
 }
-DEFAULT_FROM_EMAIL = "messages@bbtest.shop"
+# One fixed sender under our own name: a well-known brand name on an
+# unrelated domain, or a different address per email, looks like phishing
+# to spam filters
+DEFAULT_FROM_EMAIL = "BB Test <messages@bbtest.shop>"
+
+# Number of server processes running email senders (ui/email_queue.py). The
+# Resend rate limit is split across them, so keep this equal to `workers` in
+# gunicorn.conf.py.
+EMAIL_SENDER_PROCESSES = int(os.getenv('EMAIL_SENDER_PROCESSES', '9'))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

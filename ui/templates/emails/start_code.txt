@@ -1,0 +1,8 @@
+Your start code is {{ code }}
+
+Enter this code on the Start Code screen to begin your practice test.
+
+You're receiving this because this address is the contact email on a BB Test account, and a start code was just entered on that account. If that wasn't you, you can ignore this email.
+
+BB Test is an independent SAT practice site.
+https://bbtest.shop

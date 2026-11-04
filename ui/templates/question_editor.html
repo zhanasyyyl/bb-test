@@ -984,8 +984,13 @@
         },
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error('Failed to save');
-      return await res.json();
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const details = (body.details || []).slice(0, 3).join(' ');
+        throw new Error([body.error || 'Failed to save', details].filter(Boolean).join(': '));
+      }
+      (body.warnings || []).forEach(w => showToast(w, 'info'));
+      return body;
     }
 
     // ===== INIT =====
