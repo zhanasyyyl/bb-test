@@ -1756,6 +1756,36 @@
         border-width: 2.5px;
     }
 
+    .hl-color-btn.selected,
+    .hl-color-btn.selected:hover {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-width: 3px;
+    }
+
+    .hl-drop {
+        display: none;
+        width: 18px;
+        height: 18px;
+    }
+
+    .hl-color-btn.selected .hl-drop {
+        display: block;
+    }
+
+    .hl-yellow .hl-drop {
+        fill: #fedb00;
+    }
+
+    .hl-blue .hl-drop {
+        fill: #91cdfa;
+    }
+
+    .hl-pink .hl-drop {
+        fill: #f799de;
+    }
+
     .hl-yellow {
         background-color: #fef0b5;
     }
@@ -2112,10 +2142,22 @@
 </div>
 
 <!-- Highlight Menu -->
+<svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+    <symbol id="hl-drop-icon" viewBox="0 0 24 24">
+        <path d="M12 3C12 3 5.5 10.5 5.5 15a6.5 6.5 0 0 0 13 0C18.5 10.5 12 3 12 3Z" stroke="#1e1e1e" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M15.2 15.6a3.4 3.4 0 0 1-2.4 2.4" fill="none" stroke="#1e1e1e" stroke-width="1.4" stroke-linecap="round"/>
+    </symbol>
+</svg>
 <div id="highlight-menu">
-    <div class="hl-color-btn hl-yellow" onclick="app.applyHighlight('highlight-yellow')"></div>
-    <div class="hl-color-btn hl-blue" onclick="app.applyHighlight('highlight-blue')"></div>
-    <div class="hl-color-btn hl-pink" onclick="app.applyHighlight('highlight-pink')"></div>
+    <div class="hl-color-btn hl-yellow" data-color="highlight-yellow" onclick="app.applyHighlight('highlight-yellow')">
+        <svg class="hl-drop"><use href="#hl-drop-icon"></use></svg>
+    </div>
+    <div class="hl-color-btn hl-blue" data-color="highlight-blue" onclick="app.applyHighlight('highlight-blue')">
+        <svg class="hl-drop"><use href="#hl-drop-icon"></use></svg>
+    </div>
+    <div class="hl-color-btn hl-pink" data-color="highlight-pink" onclick="app.applyHighlight('highlight-pink')">
+        <svg class="hl-drop"><use href="#hl-drop-icon"></use></svg>
+    </div>
 
     <div class="hl-action-btn" onclick="app.applyHighlight('highlight-underline')" style="gap: 2px;">
         <img src="{% static 'images/highlight-format.png' %}">
@@ -3283,13 +3325,26 @@
             if (rects.length === 0) return;
             const rect = rects[0];
             this.positionMenu(rect);
+            this.markSelectedColor(null);
             this.currentHighlightId = null;
             this.currentRange = range.cloneRange();
+        },
+
+        // Marks the menu's button for this highlight's color; null clears it
+        markSelectedColor(span) {
+            // Underlined highlights have a yellow background
+            const color = span && span.classList.contains('highlight-underline')
+                ? 'highlight-yellow'
+                : span && Array.from(span.classList).find(name => name.startsWith('highlight-'));
+            document.querySelectorAll('.hl-color-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.color === color);
+            });
         },
 
         showMenuForHighlight(target, highlightId) {
             const rect = target.getBoundingClientRect();
             this.positionMenu(rect);
+            this.markSelectedColor(target);
             this.currentHighlightId = highlightId;
             this.currentRange = null;
             window.getSelection().removeAllRanges();
@@ -3307,6 +3362,8 @@
                 let left = rect.left + (rect.width / 2) - (menuWidth / 2);
 
                 if (top < 0) top = rect.bottom + 8;
+                // Keep the whole menu on screen for text near either edge
+                left = Math.max(8, Math.min(left, window.innerWidth - menuWidth - 8));
 
                 menu.style.top = top + 'px';
                 menu.style.left = left + 'px';
@@ -3314,13 +3371,7 @@
         },
 
         hideHighlightMenu() {
-            document.querySelectorAll('.highlight-yellow.active').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.querySelectorAll('.highlight-blue.active').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.querySelectorAll('.highlight-pink.active').forEach(el => {
+            document.querySelectorAll('.user-highlight.active').forEach(el => {
                 el.classList.remove('active');
             });
             const menu = document.getElementById('highlight-menu');
