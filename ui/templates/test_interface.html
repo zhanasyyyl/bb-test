@@ -1720,15 +1720,19 @@
         background-color: #f799de;
     }
 
-    .highlight-underline {
-        text-decoration: underline;
+    .hl-underline-solid,
+    .hl-underline-dashed,
+    .hl-underline-dotted {
+        text-decoration-line: underline;
         text-underline-offset: 4px;
-        background-color: #fff4b1;
     }
 
-    .highlight-underline:hover,
-    .highlight-underline.active {
-        background-color: #fedb00;
+    .hl-underline-dashed {
+        text-decoration-style: dashed;
+    }
+
+    .hl-underline-dotted {
+        text-decoration-style: dotted;
     }
 
     #highlight-menu {
@@ -1836,7 +1840,123 @@
         display: block;
     }
 
-    .hl-underline-btn:hover::after {
+    .hl-underline-wrap {
+        position: relative;
+    }
+
+    /* The button's icon shows the current choice. "None" uses the default image. */
+    .hl-chevron-up,
+    .hl-chevron-down,
+    .hl-underline-btn[data-current="none"] .hl-format-choice,
+    .hl-underline-btn[data-current="none"].open .hl-chevron-down {
+        display: none;
+    }
+
+    .hl-underline-btn[data-current="none"] .hl-chevron-down,
+    .hl-underline-btn[data-current="none"].open .hl-chevron-up {
+        display: block;
+    }
+
+    /* Same size as the default image, so the menu doesn't shift when the icon changes */
+    .hl-format-choice {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 38.66px;
+        height: 32px;
+        padding-left: 4px;
+    }
+
+    .hl-format-choice .hl-underline-sample {
+        margin-bottom: 0;
+    }
+
+    .hl-format-chevron {
+        width: 10px;
+        height: 6px;
+        margin-top: 8px;
+    }
+
+    .hl-underline-btn.open .hl-format-chevron {
+        transform: rotate(180deg);
+    }
+
+    .hl-underline-menu {
+        display: none;
+        position: absolute;
+        /* Touches the menu's bottom edge (its 6px padding + 1px border), centered on the U */
+        top: calc(100% + 7px);
+        left: -11px;
+        width: 49px;
+        padding-bottom: 3px;
+        background: #fff;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .hl-underline-menu.open {
+        display: block;
+    }
+
+    /* Opens upward when there's no room below */
+    .hl-underline-menu.up {
+        top: auto;
+        bottom: calc(100% + 7px);
+        padding: 3px 0 0;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .hl-underline-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        color: #1e1e1e;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: -0.25px;
+        cursor: pointer;
+    }
+
+    .hl-underline-option:last-child {
+        height: 28px;
+    }
+
+    .hl-underline-option:hover {
+        background: #d9d9d9;
+        box-shadow: inset 2px 0 0 #1e1e1e;
+    }
+
+    .hl-underline-sample {
+        display: block;
+        width: 20px;
+        margin-bottom: 3px;
+        padding-top: 1px;
+        color: #1e1e1e;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 10px;
+        text-align: center;
+    }
+
+    .hl-underline-sample::after {
+        content: "";
+        display: block;
+        height: 1px;
+        margin-top: 3px;
+        background: #1e1e1e;
+    }
+
+    .hl-underline-sample.dashed::after {
+        background: linear-gradient(90deg, #1e1e1e 4px, transparent 4px) 0 0 / 8px 1px repeat-x;
+    }
+
+    .hl-underline-sample.dotted::after {
+        background: linear-gradient(90deg, #1e1e1e 2px, transparent 2px) 0 0 / 3px 1px repeat-x;
+    }
+
+    .hl-underline-btn:hover::after,
+    .hl-underline-btn.open::after {
         content: "";
         position: absolute;
         left: -5px;
@@ -2196,8 +2316,21 @@
         <svg class="hl-drop"><use href="#hl-drop-icon"></use></svg>
     </div>
 
-    <div class="hl-action-btn hl-underline-btn" onclick="app.applyHighlight('highlight-underline')" style="gap: 2px;">
-        <img src="{% static 'images/highlight-format.png' %}">
+    <div class="hl-underline-wrap">
+        <div class="hl-action-btn hl-underline-btn" data-current="none" onclick="app.toggleUnderlineMenu()" style="gap: 2px;">
+            <img class="hl-chevron-down" src="{% static 'images/highlight-format.png' %}">
+            <img class="hl-chevron-up" src="{% static 'images/highlight-format-open.png' %}">
+            <span class="hl-format-choice">
+                <span class="hl-underline-sample">U</span>
+                <svg class="hl-format-chevron" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#1e1e1e" stroke-width="1.1"/></svg>
+            </span>
+        </div>
+        <div class="hl-underline-menu">
+            <div class="hl-underline-option" data-underline="solid" onclick="app.setUnderlineStyle('solid')"><span class="hl-underline-sample">U</span></div>
+            <div class="hl-underline-option" data-underline="dashed" onclick="app.setUnderlineStyle('dashed')"><span class="hl-underline-sample dashed">U</span></div>
+            <div class="hl-underline-option" data-underline="dotted" onclick="app.setUnderlineStyle('dotted')"><span class="hl-underline-sample dotted">U</span></div>
+            <div class="hl-underline-option" data-underline="none" onclick="app.setUnderlineStyle('none')">None</div>
+        </div>
     </div>
 
     <div class="hl-action-btn hl-delete-btn" onclick="app.removeHighlight()">
@@ -3263,6 +3396,8 @@
         currentRange: null,
         highlightMode: false,
         highlightTipShown: false,
+        // Applied to every new highlight: 'none', 'solid', 'dashed' or 'dotted'
+        underlineStyle: 'none',
 
         toggleHighlightMode(button) {
             this.setHighlightMode(!this.highlightMode);
@@ -3311,6 +3446,7 @@
 
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.highlight-tool')) this.hideHighlightTip();
+                if (!e.target.closest('.hl-underline-wrap')) this.closeUnderlineMenu();
             });
 
             document.addEventListener('mouseup', (e) => {
@@ -3364,26 +3500,29 @@
             if (rects.length === 0) return;
             const rect = rects[0];
             this.positionMenu(rect);
-            this.markSelectedColor(null);
+            this.syncMenuToHighlight(null);
             this.currentHighlightId = null;
             this.currentRange = range.cloneRange();
         },
 
-        // Marks the menu's button for this highlight's color; null clears it
-        markSelectedColor(span) {
-            // Underlined highlights have a yellow background
-            const color = span && span.classList.contains('highlight-underline')
-                ? 'highlight-yellow'
-                : span && Array.from(span.classList).find(name => name.startsWith('highlight-'));
+        // Shows this highlight's color and underline in the menu. With no
+        // highlight (null), no color is marked and the saved underline is shown.
+        syncMenuToHighlight(span) {
             document.querySelectorAll('.hl-color-btn').forEach(btn => {
-                btn.classList.toggle('selected', btn.dataset.color === color);
+                btn.classList.toggle('selected', Boolean(span) && span.classList.contains(btn.dataset.color));
             });
+
+            const underline = span
+                ? (['solid', 'dashed', 'dotted'].find(style => span.classList.contains(`hl-underline-${style}`)) || 'none')
+                : this.underlineStyle;
+            document.querySelector('.hl-underline-btn').dataset.current = underline;
+            document.querySelector('.hl-format-choice .hl-underline-sample').className = `hl-underline-sample ${underline}`;
         },
 
         showMenuForHighlight(target, highlightId) {
             const rect = target.getBoundingClientRect();
             this.positionMenu(rect);
-            this.markSelectedColor(target);
+            this.syncMenuToHighlight(target);
             this.currentHighlightId = highlightId;
             this.currentRange = null;
             window.getSelection().removeAllRanges();
@@ -3404,12 +3543,52 @@
                 // Keep the whole menu on screen for text near either edge
                 left = Math.max(8, Math.min(left, window.innerWidth - menuWidth - 8));
 
-                menu.style.top = top + 'px';
-                menu.style.left = left + 'px';
+                // Whole pixels keep the icons and dropdown lines crisp
+                menu.style.top = Math.round(top) + 'px';
+                menu.style.left = Math.round(left) + 'px';
             }, 0);
         },
 
+        toggleUnderlineMenu() {
+            const dropdown = document.querySelector('.hl-underline-menu');
+            if (dropdown.classList.contains('open')) {
+                this.closeUnderlineMenu();
+                return;
+            }
+
+            document.querySelector('.hl-underline-btn').classList.add('open');
+            dropdown.classList.remove('up');
+            dropdown.classList.add('open');
+            if (dropdown.getBoundingClientRect().bottom > window.innerHeight) {
+                dropdown.classList.add('up');
+            }
+        },
+
+        closeUnderlineMenu() {
+            document.querySelector('.hl-underline-btn').classList.remove('open');
+            document.querySelector('.hl-underline-menu').classList.remove('open');
+        },
+
+        setUnderlineStyle(style) {
+            this.underlineStyle = style;
+            if (this.currentHighlightId) {
+                document.querySelectorAll(`.user-highlight[data-highlight-id="${this.currentHighlightId}"]`).forEach(el => {
+                    el.classList.remove('hl-underline-solid', 'hl-underline-dashed', 'hl-underline-dotted');
+                    if (style !== 'none') el.classList.add(`hl-underline-${style}`);
+                });
+                this.saveHighlights();
+            } else if (this.currentRange && style !== 'none') {
+                // Underlining plain selected text creates a yellow highlight
+                this.applyHighlight('highlight-yellow');
+                return;
+            } else {
+                window.getSelection().removeAllRanges();
+            }
+            this.hideHighlightMenu();
+        },
+
         hideHighlightMenu() {
+            this.closeUnderlineMenu();
             document.querySelectorAll('.user-highlight.active').forEach(el => {
                 el.classList.remove('active');
             });
@@ -3419,8 +3598,10 @@
 
         applyHighlight(colorClass) {
             if (this.currentHighlightId) {
+                // Recoloring keeps the highlight's underline
                 document.querySelectorAll(`.user-highlight[data-highlight-id="${this.currentHighlightId}"]`).forEach(el => {
-                    el.className = `user-highlight ${colorClass}`;
+                    el.classList.remove('highlight-yellow', 'highlight-blue', 'highlight-pink');
+                    el.classList.add(colorClass);
                 });
                 this.saveHighlights();
                 this.hideHighlightMenu();
@@ -3474,6 +3655,7 @@
 
                 const span = document.createElement('span');
                 span.className = `user-highlight ${colorClass}`;
+                if (this.underlineStyle !== 'none') span.classList.add(`hl-underline-${this.underlineStyle}`);
                 span.dataset.highlightId = highlightId;
 
                 const text = node.textContent;
