@@ -16,7 +16,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils import timezone
 
-from .models import QueuedEmail, UserProfile
+from .models import QueuedEmail, SiteSettings, UserProfile
 from .forms import UserProfileForm
 from .email_queue import enqueue_email
 
@@ -261,6 +261,7 @@ def test_interface_view(request):
     return render(request, 'test_interface.html', {
         'modules_json': modules_json,
         'desmos_api_key': settings.DESMOS_API_KEY,
+        'can_skip': request.user.is_staff or SiteSettings.skipping_enabled(),
     })
 
 

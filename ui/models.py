@@ -65,3 +65,20 @@ class LoginFailure(models.Model):
 
     def __str__(self):
         return f"{self.username} at {self.created_at}"
+
+
+class SiteSettings(models.Model):
+    """Site-wide switches, kept in one row (pk=1) so all server processes share them."""
+
+    allow_skipping = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = "site settings"
+
+    @classmethod
+    def skipping_enabled(cls):
+        """Whether students may skip by clicking the timer. Off until the row says otherwise."""
+        return cls.objects.filter(pk=1, allow_skipping=True).exists()
+
+    def __str__(self):
+        return "Site settings"

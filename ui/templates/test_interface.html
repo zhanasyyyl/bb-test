@@ -2593,6 +2593,8 @@
 
 <script>
     const modulesData = JSON.parse('{{ modules_json|escapejs }}');
+    // Set on the server with `manage.py skip_test on|off`; staff can always skip
+    const canSkip = {{ can_skip|yesno:"true,false" }};
 
     // Global state registry
     const moduleState = {};
@@ -3139,6 +3141,7 @@
         },
 
         skipModule() {
+            if (!canSkip) return;
             this.moduleTimeRemaining = 0;
         },
 
@@ -3563,6 +3566,7 @@
         },
 
         skipBreak() {
+            if (!canSkip) return;
             if (this.breakTimeRemaining > 0) {
                 this.breakTimeRemaining = 0; // skip to 1 second remaining cleanly
             }

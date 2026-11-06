@@ -1,3 +1,4 @@
+import io
 import json
 import os
 import shutil
@@ -9,11 +10,12 @@ from unittest import mock
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core import mail
+from django.core.management import CommandError, call_command
 from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from . import auth_backends, email_queue, views
-from .models import LoginFailure, QueuedEmail, UserProfile
+from .models import LoginFailure, QueuedEmail, SiteSettings, UserProfile
 
 
 def make_questions(rw=54, math=44):
@@ -414,3 +416,61 @@ class PasswordHasherTests(TestCase):
         self.client.post('/cb_login/', {'email': 'student@example.com', 'password': 'right-pw'})
         user.refresh_from_db()
         self.assertEqual(user.password, rehashed)
+
+
+class SkipSettingTests(QuestionsFileTestCase):
+    STUDENT_ALLOWED = 'const canSkip = true;'
+    NOT_ALLOWED = 'const canSkip = false;'
+
+    def setUp(self):
+        super().setUp()
+        self.student = User.objects.create_user('student@example.com', password='pw')
+        self.staff = User.objects.create_user('staff@example.com', password='pw', is_staff=True)
+
+    def page_for(self, user):
+        self.client.force_login(user)
+        return self.client.get('/test/').content.decode()
+
+    def run_command(self, *args):
+        out = io.StringIO()
+        call_command('skip_test', *args, stdout=out)
+        return out.getvalue()
+
+    def test_off_by_default_for_students(self):
+        self.assertIn(self.NOT_ALLOWED, self.page_for(self.student))
+
+    def test_reading_the_setting_does_not_create_the_row(self):
+        self.page_for(self.student)
+        self.assertFalse(SiteSettings.objects.exists())
+
+    def test_staff_can_always_skip(self):
+        self.assertIn(self.STUDENT_ALLOWED, self.page_for(self.staff))
+        self.run_command('off')
+        self.assertIn(self.STUDENT_ALLOWED, self.page_for(self.staff))
+
+    def test_superuser_who_is_not_staff_follows_the_setting(self):
+        admin = User.objects.create_user('root@example.com', password='pw', is_superuser=True)
+        self.assertIn(self.NOT_ALLOWED, self.page_for(admin))
+
+    def test_on_then_off_for_students(self):
+        self.run_command('on')
+        self.assertIn(self.STUDENT_ALLOWED, self.page_for(self.student))
+        self.run_command('off')
+        self.assertIn(self.NOT_ALLOWED, self.page_for(self.student))
+
+    def test_repeating_a_state_keeps_one_row(self):
+        self.run_command('on')
+        self.run_command('on')
+        self.assertEqual(SiteSettings.objects.count(), 1)
+        self.assertTrue(SiteSettings.skipping_enabled())
+
+    def test_command_reports_the_state(self):
+        self.assertIn('OFF', self.run_command())
+        self.assertFalse(SiteSettings.objects.exists())
+        self.assertIn('ON', self.run_command('on'))
+        self.assertIn('ON', self.run_command())
+        self.assertIn('OFF', self.run_command('off'))
+
+    def test_command_rejects_other_values(self):
+        with self.assertRaises(CommandError):
+            self.run_command('maybe')

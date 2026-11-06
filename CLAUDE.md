@@ -17,6 +17,7 @@ python manage.py createsuperuser  # needed for /question-editor/ and /admin/
 python manage.py test ui          # run tests
 python manage.py test ui.tests.SomeTestCase.test_method   # single test
 python manage.py deactivate_users # sets is_active=False on every non-staff user
+python manage.py skip_test [on|off] # lets students skip modules and breaks by clicking the timer, or shows the state
 python manage.py collectstatic    # required in production (nginx serves staticfiles/)
 gunicorn bluebook_project.wsgi -c gunicorn.conf.py   # production (binds 127.0.0.1:8000, 9 workers)
 ```
@@ -40,7 +41,7 @@ There is no linter or formatter configured.
 - `scripts/` holds one-off JSON migration scripts. Run them from the repo root, since they use the relative path `ui/data/questions.json`.
 - Tests that touch the file should subclass `QuestionsFileTestCase` in `ui/tests.py`, which points `views.QUESTIONS_FILE` at a temp copy.
 
-**Test interface** (`ui/templates/test_interface.html`, ~3400 lines) is a single-page app in one template. The server injects `modules_json` (parsed with `escapejs`) and `desmos_api_key`. All test state lives in a global JS `app` object plus `moduleState`, in memory only (no `localStorage`). Nothing about answers is sent to the server; the only server call is `POST /api/mark-test-completed/`, made by `finishTest()` at the end. If the device is offline, `finishTest()` shows a "Reconnect to Finish" message and retries until it gets through, then goes to `/congrats/`. The Desmos calculator (`ui/static/calculator.js`) is lazy-loaded on first use. MathQuill's stylesheet and Symbola font are served from `ui/static/vendor/mathquill/` (cdnjs fonts are blocked by the CSP); `mathquill.js` and jQuery still come from CDNs, loaded in `base.html` with SRI hashes.
+**Test interface** (`ui/templates/test_interface.html`, ~3400 lines) is a single-page app in one template. The server injects `modules_json` (parsed with `escapejs`) and `desmos_api_key`. All test state lives in a global JS `app` object plus `moduleState`, in memory only (no `localStorage`). Nothing about answers is sent to the server; the only server call is `POST /api/mark-test-completed/`, made by `finishTest()` at the end. If the device is offline, `finishTest()` shows a "Reconnect to Finish" message and retries until it gets through, then goes to `/congrats/`. Clicking the module or break timer skips it only when `can_skip` is true: always for staff, and for students when `SiteSettings.allow_skipping` is on (`manage.py skip_test`, off by default). The value is read when `/test/` loads, so open tests keep theirs until reloaded. The Desmos calculator (`ui/static/calculator.js`) is lazy-loaded on first use. MathQuill's stylesheet and Symbola font are served from `ui/static/vendor/mathquill/` (cdnjs fonts are blocked by the CSP); `mathquill.js` and jQuery still come from CDNs, loaded in `base.html` with SRI hashes.
 
 **Templates:** every page extends `base.html` except `question_editor.html`, which is standalone. `base.html` depends on these context values:
 - `debug_mode` (from the `ui.context_processors.debug_mode_context` context processor) gates the anti-inspection script, which blocks right-click and devtools. That script only runs when `DEBUG=False`.
