@@ -2663,6 +2663,7 @@
             const workspace = document.querySelector('.test-workspace');
             if (isMath) {
                 workspace.classList.add('math-mode');
+                this.hideHighlightMenu();
                 document.getElementById('ui-tools-reading-1').style.display = 'none';
                 document.getElementById('ui-tools-reading-2').style.display = 'none';
                 document.getElementById('ui-tools-math-1').style.display = 'flex';
@@ -3134,6 +3135,9 @@
 
         initHighlights() {
             document.addEventListener('mouseup', (e) => {
+                // Highlighting is only available in Reading and Writing
+                if (this.modIdx >= 2) return;
+
                 const menu = document.getElementById('highlight-menu');
                 if (e.target.closest('#highlight-menu')) return;
 
