@@ -25,6 +25,7 @@ _PREFETCH_IMAGES = [
     'images/full-length-practice.svg',
     'images/graphing.png',
     'images/help.svg',
+    'images/highlight-cursor.svg',
     'images/highlights.svg',
     'images/home.png',
     'images/loaded.png',

@@ -1381,11 +1381,12 @@
 
     <div class="test-tools"
         style="display: flex; align-items: center; gap: 16px; margin-top: 12px; margin-right: 18px;">
-        <div id="ui-tools-reading-1" style="display: flex; align-items: flex-end;">
-            <div class="tool-item">
+        <div id="ui-tools-reading-1" style="display: flex; align-items: flex-end; position: relative;">
+            <div class="tool-item highlight-tool" onclick="app.toggleHighlightMode(this)">
                 <img src="{% static 'images/highlights.svg' %}" style="height: 16px;" alt="">
                 Highlights & Notes
             </div>
+            <div class="highlight-tip"><b>Highlight mode on:</b><br>Select text to create a highlight automatically.</div>
         </div>
         <div id="ui-tools-math-1" style="display: none; gap: 16px; align-items: flex-end;">
             <div class="tool-item" id="tool-calculator" onclick="app.toggleCalculator()">
@@ -1646,6 +1647,50 @@
         font-weight: 600;
     }
 
+    /* ===== Highlight Mode ===== */
+
+    .highlight-tool.on {
+        border-bottom: 2px solid #1e1e1e;
+    }
+
+    .highlight-tip {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 14px;
+        width: 238px;
+        padding: 12px 16px;
+        background: #505050;
+        color: #fff;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.6;
+        z-index: 3000;
+    }
+
+    .highlight-tip.open {
+        display: block;
+    }
+
+    .highlight-tip::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 8px solid transparent;
+        border-top: none;
+        border-bottom-color: #505050;
+    }
+
+    body.highlight-cursor,
+    body.highlight-cursor * {
+        cursor: url("{% static 'images/highlight-cursor.svg' %}") 6 12, text !important;
+    }
+
     /* ===== Highlight Menu and Styles ===== */
 
     .highlight-yellow {
@@ -1894,11 +1939,12 @@
 
         <div class="test-tools"
             style="display: flex; align-items: center; gap: 16px; margin-top: 12px; margin-right: 18px;">
-            <div id="ui-tools-reading-2" style="display: flex; align-items: flex-end;">
-                <div class="tool-item">
+            <div id="ui-tools-reading-2" style="display: flex; align-items: flex-end; position: relative;">
+                <div class="tool-item highlight-tool" onclick="app.toggleHighlightMode(this)">
                     <img src="{% static 'images/highlights.svg' %}" style="height: 16px;" alt="">
                     Highlights & Notes
                 </div>
+                <div class="highlight-tip"><b>Highlight mode on:</b><br>Select text to create a highlight automatically.</div>
             </div>
             <div id="ui-tools-math-2" style="display: none; gap: 16px; align-items: flex-end;">
                 <div class="tool-item" id="tool-calculator-2" onclick="app.toggleCalculator()">
@@ -2105,7 +2151,7 @@
             for (let i = 0; i < modulesData.length; i++) {
                 moduleState[i] = [];
                 for (let j = 0; j < modulesData[i].count; j++) {
-                    moduleState[i].push({ review: false, answer: null, crossedOut: [] });
+                    moduleState[i].push({ review: false, answer: null, crossedOut: [], highlights: null });
                 }
             }
             this.startModuleTimer();
@@ -2663,6 +2709,7 @@
             const workspace = document.querySelector('.test-workspace');
             if (isMath) {
                 workspace.classList.add('math-mode');
+                this.setHighlightMode(false);
                 this.hideHighlightMenu();
                 document.getElementById('ui-tools-reading-1').style.display = 'none';
                 document.getElementById('ui-tools-reading-2').style.display = 'none';
@@ -2687,7 +2734,8 @@
             document.getElementById('ui-q-nav').innerText = `Question ${this.qIdx + 1} of ${mod.count}`;
             document.getElementById('ui-q-num').innerText = this.qIdx + 1;
 
-            document.getElementById('ui-question').innerHTML = qData.question;
+            const savedHighlights = moduleState[this.modIdx][this.qIdx].highlights || {};
+            document.getElementById('ui-question').innerHTML = savedHighlights.question ?? qData.question;
 
             const passagePane = document.getElementById('ui-passage');
             const resizer = document.querySelector('.resizer');
@@ -2744,7 +2792,7 @@
                     passagePane.innerHTML = sprRulesHtml;
                     passagePane.style.fontFamily = 'Noto Serif';
                 } else {
-                    passagePane.innerHTML = qData.passage;
+                    passagePane.innerHTML = savedHighlights.passage ?? qData.passage;
                 }
             }
 
@@ -2777,7 +2825,7 @@
                     optRow.innerHTML = `
                         <div class="option-box">
                             <div class="option-letter">${optLetter}</div>
-                            <div class="option-text">${optText}</div>
+                            <div class="option-text">${savedHighlights.options?.[index] ?? optText}</div>
                         </div>
                         <div class="cross-btn-wrap" id="cross-wrap-${optLetter}">
                             <div class="cross-btn" id="cross-btn-${optLetter}" onclick="event.stopPropagation(); app.toggleCrossOut('${optLetter}')" title="Cross out">
@@ -3132,8 +3180,58 @@
         // ===== Highlight and Annotation Logic =====
         currentHighlightId: null,
         currentRange: null,
+        highlightMode: false,
+        highlightTipShown: false,
+
+        toggleHighlightMode(button) {
+            this.setHighlightMode(!this.highlightMode);
+            if (this.highlightMode && !this.highlightTipShown) {
+                this.highlightTipShown = true;
+                button.parentElement.querySelector('.highlight-tip').classList.add('open');
+            }
+        },
+
+        setHighlightMode(on) {
+            this.highlightMode = on;
+            document.querySelectorAll('.highlight-tool').forEach(el => el.classList.toggle('on', on));
+            if (!on) {
+                this.hideHighlightTip();
+                document.body.classList.remove('highlight-cursor');
+            }
+        },
+
+        hideHighlightTip() {
+            document.querySelectorAll('.highlight-tip.open').forEach(el => el.classList.remove('open'));
+        },
+
+        // The pane's elements span blank space too, so CSS alone can't target just the text
+        isOverText(x, y) {
+            const pos = document.caretPositionFromPoint
+                ? document.caretPositionFromPoint(x, y)
+                : document.caretRangeFromPoint(x, y);
+            const node = pos && (pos.offsetNode || pos.startContainer);
+            if (!node || node.nodeType !== Node.TEXT_NODE) return false;
+
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            return Array.from(range.getClientRects()).some(rect =>
+                x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+            );
+        },
 
         initHighlights() {
+            document.addEventListener('mousemove', (e) => {
+                if (!this.highlightMode) return;
+                const highlightable = e.target.closest('#ui-passage, #ui-question, .option-text')
+                    && !e.target.closest('.mq-math');
+                document.body.classList.toggle('highlight-cursor',
+                    Boolean(highlightable) && this.isOverText(e.clientX, e.clientY));
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.highlight-tool')) this.hideHighlightTip();
+            });
+
             document.addEventListener('mouseup', (e) => {
                 // Highlighting is only available in Reading and Writing
                 if (this.modIdx >= 2) return;
@@ -3155,7 +3253,11 @@
                     const element = container.nodeType === 3 ? container.parentElement : container;
 
                     if (element.closest('.passage-pane') || element.closest('.question-pane')) {
-                        this.showMenuForSelection(range);
+                        if (this.highlightMode) {
+                            this.highlightSelection(range);
+                        } else {
+                            this.showMenuForSelection(range);
+                        }
                     } else {
                         this.hideHighlightMenu();
                     }
@@ -3163,6 +3265,17 @@
                     this.hideHighlightMenu();
                 }
             });
+        },
+
+        highlightSelection(range) {
+            this.currentHighlightId = null;
+            this.currentRange = range.cloneRange();
+            const highlightId = this.applyHighlight('highlight-yellow');
+            const span = document.querySelector(`.user-highlight[data-highlight-id="${highlightId}"]`);
+            if (span) {
+                this.showMenuForHighlight(span, highlightId);
+                span.classList.add('active');
+            }
         },
 
         showMenuForSelection(range) {
@@ -3219,6 +3332,7 @@
                 document.querySelectorAll(`.user-highlight[data-highlight-id="${this.currentHighlightId}"]`).forEach(el => {
                     el.className = `user-highlight ${colorClass}`;
                 });
+                this.saveHighlights();
                 this.hideHighlightMenu();
                 return;
             }
@@ -3287,7 +3401,32 @@
             }
 
             window.getSelection().removeAllRanges();
+            this.saveHighlights();
             this.hideHighlightMenu();
+            return highlightId;
+        },
+
+        // renderQuestion rebuilds the question from modulesData, so keep the
+        // highlighted markup per question and render that instead
+        saveHighlights() {
+            const snapshot = (el) => {
+                // Typeset math can't be rendered a second time, so keep the original
+                if (el.querySelector('.mq-math')) return null;
+                const copy = el.cloneNode(true);
+                // renderQuestion builds image toolbars and zoom afresh
+                copy.querySelectorAll('.question-image-toolbar').forEach(toolbar => toolbar.remove());
+                copy.querySelectorAll('.question-image img').forEach(img => {
+                    img.style.transform = '';
+                    img.style.transformOrigin = '';
+                });
+                copy.querySelectorAll('.user-highlight.active').forEach(span => span.classList.remove('active'));
+                return copy.innerHTML;
+            };
+            moduleState[this.modIdx][this.qIdx].highlights = {
+                passage: snapshot(document.getElementById('ui-passage')),
+                question: snapshot(document.getElementById('ui-question')),
+                options: Array.from(document.querySelectorAll('#ui-options .option-text'), snapshot),
+            };
         },
 
         removeHighlight() {
@@ -3300,6 +3439,7 @@
                     parent.removeChild(span);
                     parent.normalize();
                 });
+                this.saveHighlights();
             }
             this.hideHighlightMenu();
         },
