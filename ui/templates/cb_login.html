@@ -26,6 +26,13 @@
         flex-shrink: 0;
         margin-top: 1px;
     }
+
+    /* Edge adds its own reveal and clear buttons on top of ours */
+    #password::-ms-reveal,
+    #password::-ms-clear,
+    #email::-ms-clear {
+        display: none;
+    }
 </style>
 
 {% include "partials/_login_header.html" %}
@@ -83,7 +90,7 @@
                 <label for="password"
                     style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 16px; color: #111;">Password</label>
                 <input type="password" id="password" name="password" required
-                    style="width: 100%; padding: 15px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
+                    style="width: 100%; padding: 15px; padding-right: 40px; border: 1px solid #777; border-radius: 6px; font-size: 14px; box-sizing: border-box; cursor: pointer;">
                 <img id="toggle-password" src="{% static 'images/password-eye-crossed.png' %}"
                     style="position: absolute; right: 12px; top: 46px; height: 12px; cursor: pointer;"
                     alt="Toggle password visibility">
