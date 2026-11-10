@@ -474,3 +474,31 @@ class SkipSettingTests(QuestionsFileTestCase):
     def test_command_rejects_other_values(self):
         with self.assertRaises(CommandError):
             self.run_command('maybe')
+
+
+class AdminUserListTests(TestCase):
+    def setUp(self):
+        self.client.force_login(User.objects.create_superuser('admin@example.com', 'admin@example.com', 'pw'))
+        now = timezone.now()
+        for i, days_ago in enumerate([3, 1, 2]):
+            u = User.objects.create_user(f'u{i}@example.com', f'u{i}@example.com', 'pw')
+            User.objects.filter(pk=u.pk).update(date_joined=now - timedelta(days=days_ago))
+            UserProfile.objects.create(user=u)
+
+    def names_in_order(self, html, names):
+        return sorted(names, key=html.index)
+
+    def test_users_sortable_by_date_joined(self):
+        names = ['u0@example.com', 'u1@example.com', 'u2@example.com']
+        # Columns: 1 username, 2 email, 3 first, 4 last, 5 staff, 6 date joined
+        newest_first = self.client.get('/admin/auth/user/?o=-6').content.decode()
+        self.assertIn('Date joined', newest_first)
+        self.assertEqual(self.names_in_order(newest_first, names), ['u1@example.com', 'u2@example.com', 'u0@example.com'])
+        oldest_first = self.client.get('/admin/auth/user/?o=6').content.decode()
+        self.assertEqual(self.names_in_order(oldest_first, names), ['u0@example.com', 'u2@example.com', 'u1@example.com'])
+
+    def test_profiles_sortable_by_date_joined(self):
+        names = ['u0@example.com', 'u1@example.com', 'u2@example.com']
+        # Columns: 1 user, 2 name, 3 address, 4 email, 5 start code, 6 date joined
+        newest_first = self.client.get('/admin/ui/userprofile/?o=-6').content.decode()
+        self.assertEqual(self.names_in_order(newest_first, names), ['u1@example.com', 'u2@example.com', 'u0@example.com'])
