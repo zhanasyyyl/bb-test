@@ -530,14 +530,54 @@ class AdminUserProfileFilterTests(TestCase):
             self.assertIn(title, html)
 
     def test_filtering(self):
-        self.assertEqual(self.listed('?user__is_active__exact=0'), {'inactive@example.com'})
+        self.assertEqual(self.listed('?active=no'), {'inactive@example.com'})
         self.assertEqual(self.listed('?user__is_staff__exact=1'), {'staff@example.com'})
         self.assertEqual(self.listed(f'?user__groups__id__exact={self.group.pk}'), {'active@example.com'})
 
     def test_date_bar(self):
-        self.assertEqual(self.listed('?user__date_joined__year=2025'), {'inactive@example.com'})
+        self.assertEqual(self.listed('?user__date_joined__year=2025&active=all'), {'inactive@example.com'})
 
     def test_search_covers_account_and_profile(self):
         self.assertEqual(self.listed('?q=staff@'), {'staff@example.com'})
         self.assertEqual(self.listed('?q=Ana Lee'), {'active@example.com'})
         self.assertEqual(self.listed('?q=parent@example.org'), {'active@example.com'})
+
+
+class AdminListDefaultsTests(TestCase):
+    """Users and User Profiles open newest first, showing only active users."""
+
+    def setUp(self):
+        self.client.force_login(User.objects.create_superuser('admin@example.com', 'admin@example.com', 'pw'))
+        now = timezone.now()
+        for name, days_ago, active in [('old', 9, True), ('new', 1, True), ('mid', 5, True), ('gone', 3, False)]:
+            u = User.objects.create_user(f'{name}@example.com', f'{name}@example.com', 'pw', is_active=active)
+            User.objects.filter(pk=u.pk).update(date_joined=now - timedelta(days=days_ago))
+            UserProfile.objects.create(user=u)
+        User.objects.filter(username='admin@example.com').update(date_joined=now - timedelta(days=30))
+
+    def rows(self, url):
+        html = self.client.get(url).content.decode()
+        names = ['new@example.com', 'gone@example.com', 'mid@example.com', 'old@example.com']
+        return [n for n in sorted(names, key=lambda n: html.find(f'>{n}</a>')) if f'>{n}</a>' in html]
+
+    def test_users_open_newest_first_active_only(self):
+        self.assertEqual(self.rows('/admin/auth/user/'), ['new@example.com', 'mid@example.com', 'old@example.com'])
+
+    def test_profiles_open_newest_first_active_only(self):
+        self.assertEqual(self.rows('/admin/ui/userprofile/'), ['new@example.com', 'mid@example.com', 'old@example.com'])
+
+    def test_all_and_inactive_choices(self):
+        for url in ('/admin/auth/user/', '/admin/ui/userprofile/'):
+            self.assertEqual(self.rows(url + '?active=all'),
+                             ['new@example.com', 'gone@example.com', 'mid@example.com', 'old@example.com'])
+            self.assertEqual(self.rows(url + '?active=no'), ['gone@example.com'])
+
+    def test_filter_shows_yes_selected_by_default(self):
+        html = self.client.get('/admin/auth/user/').content.decode()
+        self.assertRegex(html, r'<li class="selected">\s*<a href="\?active=yes"[^>]*>Yes</a>')
+
+    def test_counts(self):
+        html = self.client.get('/admin/auth/user/?_facets=True').content.decode()
+        # 4 active users (incl. admin), 1 inactive, 5 in total
+        for label in ('Yes (4)', 'No (1)', 'All (5)'):
+            self.assertIn(label, html)
