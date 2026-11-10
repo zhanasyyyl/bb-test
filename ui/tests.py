@@ -8,7 +8,7 @@ from datetime import timedelta
 from unittest import mock
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.core import mail
 from django.core.management import CommandError, call_command
 from django.test import TestCase, override_settings
@@ -502,3 +502,42 @@ class AdminUserListTests(TestCase):
         # Columns: 1 user, 2 name, 3 address, 4 email, 5 start code, 6 date joined
         newest_first = self.client.get('/admin/ui/userprofile/?o=-6').content.decode()
         self.assertEqual(self.names_in_order(newest_first, names), ['u1@example.com', 'u2@example.com', 'u0@example.com'])
+
+
+class AdminUserProfileFilterTests(TestCase):
+    def setUp(self):
+        self.client.force_login(User.objects.create_superuser('admin@example.com', 'admin@example.com', 'pw'))
+        group = Group.objects.create(name='Morning class')
+        active = User.objects.create_user('active@example.com', 'active@example.com', 'pw')
+        inactive = User.objects.create_user('inactive@example.com', 'inactive@example.com', 'pw', is_active=False)
+        staff = User.objects.create_user('staff@example.com', 'staff@example.com', 'pw', is_staff=True)
+        active.groups.add(group)
+        User.objects.filter(pk=inactive.pk).update(date_joined=timezone.now().replace(year=2025))
+        UserProfile.objects.create(user=active, full_name='Ana Lee', contact_email='parent@example.org')
+        UserProfile.objects.create(user=inactive)
+        UserProfile.objects.create(user=staff)
+        self.group = group
+
+    def listed(self, query=''):
+        html = self.client.get('/admin/ui/userprofile/' + query).content.decode()
+        # Match the username as the list's link text: "active@example.com" is
+        # also part of "inactive@example.com"
+        return {n for n in ('active@example.com', 'inactive@example.com', 'staff@example.com') if f'>{n}</a>' in html}
+
+    def test_filters_match_users_page(self):
+        html = self.client.get('/admin/ui/userprofile/').content.decode()
+        for title in ('By staff status', 'By superuser status', 'By active', 'By groups'):
+            self.assertIn(title, html)
+
+    def test_filtering(self):
+        self.assertEqual(self.listed('?user__is_active__exact=0'), {'inactive@example.com'})
+        self.assertEqual(self.listed('?user__is_staff__exact=1'), {'staff@example.com'})
+        self.assertEqual(self.listed(f'?user__groups__id__exact={self.group.pk}'), {'active@example.com'})
+
+    def test_date_bar(self):
+        self.assertEqual(self.listed('?user__date_joined__year=2025'), {'inactive@example.com'})
+
+    def test_search_covers_account_and_profile(self):
+        self.assertEqual(self.listed('?q=staff@'), {'staff@example.com'})
+        self.assertEqual(self.listed('?q=Ana Lee'), {'active@example.com'})
+        self.assertEqual(self.listed('?q=parent@example.org'), {'active@example.com'})

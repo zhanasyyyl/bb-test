@@ -19,6 +19,12 @@ class UserAdmin(BaseUserAdmin):
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'full_name', 'test_center_address','contact_email', 'start_code', 'date_joined')
     list_select_related = ('user',)
+    # Same filters, date bar and search as the Users page, applied to each
+    # profile's account (search also covers the profile's own name and email)
+    list_filter = ('user__is_staff', 'user__is_superuser', 'user__is_active', 'user__groups')
+    date_hierarchy = 'user__date_joined'
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'user__email',
+                     'full_name', 'contact_email')
 
     @admin.display(description='Date joined', ordering='user__date_joined')
     def date_joined(self, profile):
