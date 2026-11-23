@@ -43,6 +43,7 @@ class QueuedEmail(models.Model):
     # What the email is about; used for per-user hourly caps and as a Resend tag
     START_CODE = 'start_code'
     UNSCHEDULED_BREAK = 'unscheduled_break'
+    NOTE = 'note'
     category = models.CharField(max_length=30, blank=True, default='')
     from_email = models.CharField(max_length=255)
     recipient_list = models.JSONField()

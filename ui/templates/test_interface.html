@@ -3998,6 +3998,41 @@
             this.hideHighlightMenu();
         },
 
+        // ===== Notices to the server =====
+        // Break notices and notes are sent in order, one at a time. Ones that
+        // can't be sent (offline) stay queued and are retried when the
+        // connection is back (see the 'online' listener below).
+        pendingNotices: [],
+        sendingNotices: false,
+
+        queueNotice(url, data) {
+            this.pendingNotices.push({ url, data });
+            this.sendNotices();
+        },
+
+        async sendNotices() {
+            if (this.sendingNotices) return;
+            this.sendingNotices = true;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+            try {
+                while (this.pendingNotices.length) {
+                    const { url, data } = this.pendingNotices[0];
+                    await fetch(url, {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': csrfToken },
+                        body: new URLSearchParams(data),
+                        keepalive: true,
+                    });
+                    // Any reply, even an error, means it reached the server
+                    this.pendingNotices.shift();
+                }
+            } catch (e) {
+                // Offline: tried again when the connection is back
+            } finally {
+                this.sendingNotices = false;
+            }
+        },
+
         // ===== Notes =====
         // Each note belongs to one highlight (same id) and is kept per question.
         notesCollapsed: false,
@@ -4006,6 +4041,16 @@
 
         currentNotes() {
             return moduleState[this.modIdx][this.qIdx].notes;
+        },
+
+        // Emails a note to the student's contact address, if its text changed
+        // since it was last sent. Called when the student clicks away from the
+        // note and when the notes panel is collapsed.
+        sendNote(note, modIdx, qIdx) {
+            const text = note.text.trim();
+            if (!text || text === note.sentText) return;
+            note.sentText = text;
+            this.queueNotice('/api/note/', { module: modIdx, question: qIdx, text });
         },
 
         highlightSpans(id) {
@@ -4030,7 +4075,12 @@
         },
 
         renderNotes() {
+            // A note being typed in is about to be replaced: send it first
+            // (removing a focused textarea doesn't fire its blur event)
+            if (document.activeElement?.classList.contains('note-text')) document.activeElement.blur();
+
             const notes = this.currentNotes();
+            const modIdx = this.modIdx, qIdx = this.qIdx;
             const list = document.getElementById('notes-list');
             list.innerHTML = '';
             this.setNotesPanelOpen(notes.length > 0);
@@ -4058,6 +4108,7 @@
                     fitText();
                     this.layoutNotes();
                 });
+                text.addEventListener('blur', () => this.sendNote(note, modIdx, qIdx));
 
                 const setConfirming = (confirming) => {
                     card.classList.toggle('confirming', confirming);
@@ -4115,6 +4166,9 @@
 
         toggleNotesPanel() {
             this.notesCollapsed = !this.notesCollapsed;
+            if (this.notesCollapsed) {
+                this.currentNotes().forEach(note => this.sendNote(note, this.modIdx, this.qIdx));
+            }
             this.renderNotes();
         },
 
@@ -4157,12 +4211,9 @@
         isOnUnscheduledBreak: false,
         unschedTimerInterval: null,
         breakStartedAt: null,
-        pendingBreakNotices: [],
-        sendingBreakNotices: false,
 
         // Tells the server a break started or ended, so it can email the
-        // student's contact address. Only numbers are sent. Notices that
-        // can't be sent (offline) are retried when the connection is back.
+        // student's contact address. Only numbers are sent.
         notifyUnscheduledBreak(event) {
             const notice = {
                 event,
@@ -4175,30 +4226,7 @@
                 const seconds = Math.round((Date.now() - (this.breakStartedAt || Date.now())) / 1000);
                 notice.break_seconds = Math.min(7200, Math.max(0, seconds));
             }
-            this.pendingBreakNotices.push(notice);
-            this.sendBreakNotices();
-        },
-
-        async sendBreakNotices() {
-            if (this.sendingBreakNotices) return;
-            this.sendingBreakNotices = true;
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
-            try {
-                while (this.pendingBreakNotices.length) {
-                    await fetch('/api/unscheduled-break/', {
-                        method: 'POST',
-                        headers: { 'X-CSRFToken': csrfToken },
-                        body: new URLSearchParams(this.pendingBreakNotices[0]),
-                        keepalive: true,
-                    });
-                    // Any reply, even an error, means it reached the server
-                    this.pendingBreakNotices.shift();
-                }
-            } catch (e) {
-                // Offline: the 'online' listener below tries again
-            } finally {
-                this.sendingBreakNotices = false;
-            }
+            this.queueNotice('/api/unscheduled-break/', notice);
         },
 
         openUnscheduledBreakModal() {
@@ -4293,8 +4321,8 @@
 
     app.init();
 
-    // Send any unscheduled-break notices that failed while offline
-    window.addEventListener('online', () => app.sendBreakNotices());
+    // Send any break notices and notes that couldn't be sent while offline
+    window.addEventListener('online', () => app.sendNotices());
 
     // Wire up unscheduled break buttons
     document.querySelectorAll('.unscheduled-break').forEach(btn => {

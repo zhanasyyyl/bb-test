@@ -662,3 +662,84 @@ class UnscheduledBreakEmailTests(TestCase):
         # Start codes still go out
         self.client.post('/start-code/', {'full_code': '123456'})
         self.assertEqual(QueuedEmail.objects.filter(category='start_code').count(), 1)
+
+
+class NoteEmailTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
+        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee', contact_email='parent@example.org')
+        self.client.force_login(self.user)
+
+    def post(self, **data):
+        return self.client.post('/api/note/', data)
+
+    def sent(self):
+        self.assertTrue(email_queue.process_one())
+        return mail.outbox[-1]
+
+    def test_note_email(self):
+        r = self.post(module=1, question=4, text='Check the second paragraph')
+        self.assertEqual(r.json(), {'status': 'ok'})
+        msg = self.sent()
+        self.assertEqual(msg.to, ['parent@example.org'])
+        self.assertEqual(msg.subject, 'Ana Lee wrote a note (Question 5, Section 1, Module 2)')
+        self.assertIn('Ana Lee wrote a note on Question 5 in Section 1, Module 2: Reading and Writing.', msg.body)
+        self.assertIn('Note:\nCheck the second paragraph', msg.body)
+        self.assertNotIn('Highlighted text', msg.body)
+        self.assertNotIn('Highlighted text', msg.alternatives[0][0])
+        self.assertIn({'name': 'category', 'value': 'note'}, msg.esp_extra['tags'])
+
+    def test_line_breaks_kept_and_html_escaped(self):
+        self.post(module=0, question=0, text="line one\n<script>alert(1)</script> & it's")
+        msg = self.sent()
+        self.assertIn("line one\n<script>alert(1)</script> & it's", msg.body)
+        html = msg.alternatives[0][0]
+        self.assertIn('line one<br>&lt;script&gt;alert(1)&lt;/script&gt; &amp; it&#x27;s', html)
+        self.assertNotIn('<script>', html)
+
+    def test_subject_never_contains_the_note(self):
+        self.post(module=0, question=0, text='BUY CHEAP WATCHES\nhttp://spam.example')
+        self.assertNotIn('WATCHES', self.sent().subject)
+
+    def test_long_note_is_cut(self):
+        self.post(module=0, question=0, text='n' * 5000)
+        body = self.sent().body
+        self.assertIn('n' * views.NOTE_MAX_CHARS + '…', body)
+        self.assertNotIn('n' * (views.NOTE_MAX_CHARS + 1), body)
+
+    def test_highlighted_text_is_ignored(self):
+        # Pages opened before this change still send the highlight; it must not reach the email
+        self.post(module=0, question=0, quote='SECRET HIGHLIGHT', text='my note')
+        msg = self.sent()
+        self.assertNotIn('SECRET HIGHLIGHT', msg.body)
+        self.assertNotIn('SECRET HIGHLIGHT', msg.alternatives[0][0])
+
+    def test_question_must_exist_in_that_module(self):
+        self.assertEqual(self.post(module=0, question=26, text='ok').status_code, 200)   # last of 27
+        self.assertEqual(self.post(module=1, question=27, text='x').status_code, 400)    # module 2 has 27
+        self.assertEqual(self.post(module=2, question=22, text='x').status_code, 400)    # math has 22
+        self.assertEqual(self.post(module=3, question=21, text='ok').status_code, 200)
+        for data in [dict(module=4, question=0, text='x'), dict(module=0, question=-1, text='x'),
+                     dict(module='a', question=0, text='x'), dict(module=0, question=0, text='   '),
+                     dict(module=0, question=0)]:
+            self.assertEqual(self.post(**data).status_code, 400, data)
+        self.assertEqual(QueuedEmail.objects.count(), 2)
+
+    def test_no_contact_email_no_email(self):
+        self.profile.contact_email = ''
+        self.profile.save()
+        self.assertEqual(self.post(module=0, question=0, text='hi').json(), {'status': 'no contact email'})
+        self.assertFalse(QueuedEmail.objects.exists())
+
+    def test_capped_per_hour_separately(self):
+        for _ in range(views.NOTE_EMAILS_PER_HOUR + 2):
+            self.post(module=0, question=0, text='hi')
+        self.assertEqual(QueuedEmail.objects.filter(category='note').count(), views.NOTE_EMAILS_PER_HOUR)
+        self.client.post('/api/unscheduled-break/', dict(event='start', module=0, time_left=60))
+        self.assertEqual(QueuedEmail.objects.filter(category='unscheduled_break').count(), 1)
+
+    def test_login_and_post_required(self):
+        self.assertEqual(self.client.get('/api/note/').status_code, 405)
+        self.client.logout()
+        self.assertEqual(self.post(module=0, question=0, text='hi').status_code, 302)
+        self.assertFalse(QueuedEmail.objects.exists())

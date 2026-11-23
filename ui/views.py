@@ -69,6 +69,10 @@ START_CODE_RE = re.compile(r'[0-9]{6}')
 # (anyone signed in can point their contact email at any address).
 START_CODE_EMAILS_PER_HOUR = 50
 UNSCHEDULED_BREAK_EMAILS_PER_HOUR = 30
+NOTE_EMAILS_PER_HOUR = 60
+
+# Longest note put in a note email; longer ones are cut
+NOTE_MAX_CHARS = 2000
 
 
 def _emails_sent_recently(user, category):
@@ -140,8 +144,7 @@ def unscheduled_break_view(request):
         logger.warning("Unscheduled-break email limit reached for user %s", request.user.pk)
         return JsonResponse({'status': 'limit reached'})
 
-    # One line, no control characters: the name goes into the subject header
-    name = ' '.join((profile.full_name or request.user.get_username()).split())[:80]
+    name = _email_name(profile, request.user)
     context = {
         'name': name,
         'event': event,
@@ -160,6 +163,61 @@ def unscheduled_break_view(request):
         recipient_list=[profile.contact_email],
         user=request.user,
         category=QueuedEmail.UNSCHEDULED_BREAK,
+    )
+    return JsonResponse({'status': 'ok'})
+
+
+def _shorten(text, limit):
+    text = text.strip()
+    return text if len(text) <= limit else text[:limit].rstrip() + '…'
+
+
+def _email_name(profile, user):
+    # One line, no control characters: the name goes into the subject header
+    return ' '.join((profile.full_name or user.get_username()).split())[:80]
+
+
+@login_required
+@require_POST
+def note_view(request):
+    """Emails a note the student wrote on a highlight to their contact
+    address. Unlike the other emails the note is free text, so it is capped
+    per hour, cut to NOTE_MAX_CHARS, kept out of the subject and escaped in
+    the HTML version."""
+    try:
+        module_index = int(request.POST.get('module', ''))
+        question_index = int(request.POST.get('question', ''))
+    except ValueError:
+        return JsonResponse({'error': 'Invalid input'}, status=400)
+    text = request.POST.get('text', '').strip()
+    if not 0 <= module_index < len(MODULES) or not text:
+        return JsonResponse({'error': 'Invalid input'}, status=400)
+    _, _, start, end = MODULES[module_index]
+    if not 0 <= question_index < end - start:
+        return JsonResponse({'error': 'Invalid input'}, status=400)
+
+    profile = _get_profile(request.user)
+    if not profile or not profile.contact_email:
+        return JsonResponse({'status': 'no contact email'})
+    if _emails_sent_recently(request.user, QueuedEmail.NOTE) >= NOTE_EMAILS_PER_HOUR:
+        logger.warning("Note email limit reached for user %s", request.user.pk)
+        return JsonResponse({'status': 'limit reached'})
+
+    name = _email_name(profile, request.user)
+    context = {
+        'name': name,
+        'module': MODULES[module_index][0],
+        'question': question_index + 1,
+        'text': _shorten(text, NOTE_MAX_CHARS),
+    }
+    enqueue_email(
+        subject=f"{name} wrote a note (Question {question_index + 1}, {context['module'].split(':')[0]})",
+        message=render_to_string('emails/note.txt', context),
+        html_message=render_to_string('emails/note.html', context),
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[profile.contact_email],
+        user=request.user,
+        category=QueuedEmail.NOTE,
     )
     return JsonResponse({'status': 'ok'})
 

@@ -14,6 +14,7 @@ urlpatterns = [
     path('test/', views.test_interface_view, name='test_interface'),
     path('api/mark-test-completed/', views.mark_test_completed_view, name='mark_test_completed'),
     path('api/unscheduled-break/', views.unscheduled_break_view, name='unscheduled_break'),
+    path('api/note/', views.note_view, name='note'),
     path('congrats/', views.congrats_view, name='congrats'),
     path('quit/', views.dashboard_view, name='quit'),
     path('question-editor/', views.question_editor_view, name='question_editor'),
