@@ -371,6 +371,7 @@ class StartCodeTests(TestCase):
         self.assertEqual(sent.esp_extra['tags'], [
             {'name': 'user_id', 'value': str(self.user.pk)},
             {'name': 'username', 'value': 'student_example_com'},
+            {'name': 'category', 'value': 'start_code'},
         ])
 
     def test_invalid_codes_are_rejected(self):
@@ -581,3 +582,83 @@ class AdminListDefaultsTests(TestCase):
         # 4 active users (incl. admin), 1 inactive, 5 in total
         for label in ('Yes (4)', 'No (1)', 'All (5)'):
             self.assertIn(label, html)
+
+
+class UnscheduledBreakEmailTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
+        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee', contact_email='parent@example.org')
+        self.client.force_login(self.user)
+
+    def post(self, **data):
+        return self.client.post('/api/unscheduled-break/', data)
+
+    def sent(self):
+        self.assertTrue(email_queue.process_one())
+        return mail.outbox[-1]
+
+    def test_start_email(self):
+        self.assertEqual(self.post(event='start', module=1, time_left=754).json(), {'status': 'ok'})
+        msg = self.sent()
+        self.assertEqual(msg.to, ['parent@example.org'])
+        self.assertEqual(msg.subject, 'Ana Lee started an unscheduled break')
+        self.assertIn('Ana Lee started an unscheduled break during Section 1, Module 2: Reading and Writing.', msg.body)
+        self.assertIn('Time left in the module: 12:34.', msg.body)
+        self.assertIn('12:34', msg.alternatives[0][0])
+        self.assertIn({'name': 'category', 'value': 'unscheduled_break'}, msg.esp_extra['tags'])
+
+    def test_end_email(self):
+        self.post(event='end', module=2, time_left=554, break_seconds=200)
+        msg = self.sent()
+        self.assertEqual(msg.subject, 'Ana Lee ended an unscheduled break (3 min 20 s)')
+        self.assertIn("They're back to Section 2, Module 1: Math with 9:14 left in the module.", msg.body)
+
+    def test_end_email_when_module_time_ran_out(self):
+        self.post(event='end', module=0, time_left=0, break_seconds=45)
+        msg = self.sent()
+        self.assertEqual(msg.subject, 'Ana Lee ended an unscheduled break (45 s)')
+        self.assertIn('ran out during the break', msg.body)
+
+    def test_name_is_one_line_and_html_escaped(self):
+        self.profile.full_name = "Ana\nO'Neil <b>"
+        self.profile.save()
+        self.post(event='start', module=0, time_left=60)
+        msg = self.sent()
+        self.assertEqual(msg.subject, "Ana O'Neil <b> started an unscheduled break")
+        self.assertIn("Ana O'Neil <b> started", msg.body)                        # plain text: as typed
+        self.assertIn('Ana O&#x27;Neil &lt;b&gt;', msg.alternatives[0][0])      # HTML: escaped
+
+    def test_falls_back_to_username(self):
+        self.profile.full_name = ''
+        self.profile.save()
+        self.post(event='start', module=0, time_left=60)
+        self.assertEqual(self.sent().subject, 'student@example.com started an unscheduled break')
+
+    def test_no_contact_email_no_email(self):
+        self.profile.contact_email = ''
+        self.profile.save()
+        self.assertEqual(self.post(event='start', module=0, time_left=60).json(), {'status': 'no contact email'})
+        self.assertFalse(QueuedEmail.objects.exists())
+
+    def test_invalid_input_rejected(self):
+        for data in [dict(event='pause', module=0, time_left=1), dict(event='start', module=4, time_left=1),
+                     dict(event='start', module=0, time_left=-1), dict(event='start', module=0, time_left=99999),
+                     dict(event='start', module='x', time_left=1), dict(event='end', module=0, time_left=1, break_seconds=-5),
+                     dict(event='start')]:
+            self.assertEqual(self.post(**data).status_code, 400, data)
+        self.assertFalse(QueuedEmail.objects.exists())
+
+    def test_login_and_post_required(self):
+        self.assertEqual(self.client.get('/api/unscheduled-break/').status_code, 405)
+        self.client.logout()
+        self.assertEqual(self.post(event='start', module=0, time_left=60).status_code, 302)
+        self.assertFalse(QueuedEmail.objects.exists())
+
+    def test_capped_per_hour_separately_from_start_codes(self):
+        for _ in range(views.UNSCHEDULED_BREAK_EMAILS_PER_HOUR + 2):
+            self.post(event='start', module=0, time_left=60)
+        self.assertEqual(QueuedEmail.objects.filter(category='unscheduled_break').count(),
+                         views.UNSCHEDULED_BREAK_EMAILS_PER_HOUR)
+        # Start codes still go out
+        self.client.post('/start-code/', {'full_code': '123456'})
+        self.assertEqual(QueuedEmail.objects.filter(category='start_code').count(), 1)

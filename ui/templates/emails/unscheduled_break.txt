@@ -1,0 +1,12 @@
+{% autoescape off %}{% if event == 'start' %}{{ name }} started an unscheduled break during {{ module }}.
+
+Time left in the module: {{ time_left }}. The module timer keeps running during the break.{% else %}{{ name }} ended their unscheduled break after {{ break_length }}.
+{% if time_ran_out %}
+The time for {{ module }} ran out during the break, so they were moved on to the next part of the test.{% else %}
+They're back to {{ module }} with {{ time_left }} left in the module.{% endif %}{% endif %}
+
+You're receiving this because this address is the contact email on a BB Test account.
+
+BB Test is an independent SAT practice site.
+https://bbtest.shop
+{% endautoescape %}

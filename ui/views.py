@@ -64,10 +64,17 @@ def dashboard_view(request):
 
 START_CODE_RE = re.compile(r'[0-9]{6}')
 
-# Start-code emails one user can trigger per hour. High enough that people
-# testing the flow repeatedly won't hit it; it only stops scripted abuse
+# Emails of each kind one user can trigger per hour. High enough that people
+# testing the flow repeatedly won't hit them; they only stop scripted abuse
 # (anyone signed in can point their contact email at any address).
 START_CODE_EMAILS_PER_HOUR = 50
+UNSCHEDULED_BREAK_EMAILS_PER_HOUR = 30
+
+
+def _emails_sent_recently(user, category):
+    return QueuedEmail.objects.filter(
+        user=user, category=category, created_at__gte=timezone.now() - timedelta(hours=1),
+    ).count()
 
 
 @login_required
@@ -84,10 +91,7 @@ def start_code_view(request):
             profile.save()
 
         if profile and profile.contact_email:
-            sent_recently = QueuedEmail.objects.filter(
-                user=request.user, created_at__gte=timezone.now() - timedelta(hours=1),
-            ).count()
-            if sent_recently < START_CODE_EMAILS_PER_HOUR:
+            if _emails_sent_recently(request.user, QueuedEmail.START_CODE) < START_CODE_EMAILS_PER_HOUR:
                 # Queue email — delivered by the rate-limited background senders
                 enqueue_email(
                     subject=f"Your practice test start code: {full_code}",
@@ -96,6 +100,7 @@ def start_code_view(request):
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[profile.contact_email],
                     user=request.user,
+                    category=QueuedEmail.START_CODE,
                 )
             else:
                 logger.warning("Start-code email limit reached for user %s", request.user.pk)
@@ -103,6 +108,60 @@ def start_code_view(request):
         return redirect('test_interface')
 
     return render(request, 'start_code.html')
+
+
+def _format_duration(seconds):
+    """1:05 style for times left, "3 min 20 s" style for break lengths."""
+    minutes, secs = divmod(seconds, 60)
+    return f"{minutes}:{secs:02d}", (f"{minutes} min {secs} s" if minutes else f"{secs} s")
+
+
+@login_required
+@require_POST
+def unscheduled_break_view(request):
+    """Emails the student's contact address when an unscheduled break starts
+    or ends. The page sends only numbers (module index and timings), never
+    text, so the email content can't be chosen by the caller."""
+    event = request.POST.get('event')
+    try:
+        module_index = int(request.POST.get('module', ''))
+        time_left = int(request.POST.get('time_left', ''))
+        break_seconds = int(request.POST.get('break_seconds', '0'))
+    except ValueError:
+        return JsonResponse({'error': 'Invalid input'}, status=400)
+    if (event not in ('start', 'end') or not 0 <= module_index < len(MODULES)
+            or not 0 <= time_left <= 7200 or not 0 <= break_seconds <= 7200):
+        return JsonResponse({'error': 'Invalid input'}, status=400)
+
+    profile = _get_profile(request.user)
+    if not profile or not profile.contact_email:
+        return JsonResponse({'status': 'no contact email'})
+    if _emails_sent_recently(request.user, QueuedEmail.UNSCHEDULED_BREAK) >= UNSCHEDULED_BREAK_EMAILS_PER_HOUR:
+        logger.warning("Unscheduled-break email limit reached for user %s", request.user.pk)
+        return JsonResponse({'status': 'limit reached'})
+
+    # One line, no control characters: the name goes into the subject header
+    name = ' '.join((profile.full_name or request.user.get_username()).split())[:80]
+    context = {
+        'name': name,
+        'event': event,
+        'module': MODULES[module_index][0],
+        'time_left': _format_duration(time_left)[0],
+        'break_length': _format_duration(break_seconds)[1],
+        'time_ran_out': event == 'end' and time_left == 0,
+    }
+    subject = (f"{name} started an unscheduled break" if event == 'start'
+               else f"{name} ended an unscheduled break ({context['break_length']})")
+    enqueue_email(
+        subject=subject,
+        message=render_to_string('emails/unscheduled_break.txt', context),
+        html_message=render_to_string('emails/unscheduled_break.html', context),
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[profile.contact_email],
+        user=request.user,
+        category=QueuedEmail.UNSCHEDULED_BREAK,
+    )
+    return JsonResponse({'status': 'ok'})
 
 
 @login_required

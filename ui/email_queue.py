@@ -53,15 +53,18 @@ _rate_lock = threading.Lock()
 _send_times: list[float] = []
 
 
-def _resend_tags(user):
+def _resend_tags(user, category=''):
     """Resend tags (shown on each email in the Resend dashboard).
     Tag values may only contain ASCII letters, digits, underscores and dashes."""
     def clean(value):
         return re.sub(r"[^A-Za-z0-9_-]", "_", value)[:256]
-    return [
+    tags = [
         {"name": "user_id", "value": str(user.pk)},
         {"name": "username", "value": clean(user.get_username())},
     ]
+    if category:
+        tags.append({"name": "category", "value": clean(category)})
+    return tags
 
 
 def _acquire_rate_slot():
@@ -121,7 +124,7 @@ def process_one():
             message.attach_alternative(email.html_message, "text/html")
         if email.user is not None:
             # Only Anymail backends read esp_extra; others ignore it
-            message.esp_extra = {"tags": _resend_tags(email.user)}
+            message.esp_extra = {"tags": _resend_tags(email.user, email.category)}
         message.send()
     except Exception as e:
         email.attempts += 1
@@ -188,10 +191,12 @@ def start_workers():
         _started = True
 
 
-def enqueue_email(*, subject, message, from_email, recipient_list, user=None, html_message=''):
+def enqueue_email(*, subject, message, from_email, recipient_list, user=None, html_message='',
+                  category=''):
     """Store an email for background sending. Returns immediately."""
     QueuedEmail.objects.create(
         user=user,
+        category=category,
         subject=subject,
         message=message,
         html_message=html_message,

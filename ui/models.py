@@ -40,6 +40,10 @@ class QueuedEmail(models.Model):
     message = models.TextField()
     # Optional HTML version, sent alongside the plain-text message
     html_message = models.TextField(blank=True)
+    # What the email is about; used for per-user hourly caps and as a Resend tag
+    START_CODE = 'start_code'
+    UNSCHEDULED_BREAK = 'unscheduled_break'
+    category = models.CharField(max_length=30, blank=True, default='')
     from_email = models.CharField(max_length=255)
     recipient_list = models.JSONField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)

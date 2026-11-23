@@ -4156,6 +4156,50 @@
         // ===== Unscheduled Break =====
         isOnUnscheduledBreak: false,
         unschedTimerInterval: null,
+        breakStartedAt: null,
+        pendingBreakNotices: [],
+        sendingBreakNotices: false,
+
+        // Tells the server a break started or ended, so it can email the
+        // student's contact address. Only numbers are sent. Notices that
+        // can't be sent (offline) are retried when the connection is back.
+        notifyUnscheduledBreak(event) {
+            const notice = {
+                event,
+                module: this.modIdx,
+                time_left: Math.min(7200, Math.max(0, this.moduleTimeRemaining)),
+            };
+            if (event === 'start') {
+                this.breakStartedAt = Date.now();
+            } else {
+                const seconds = Math.round((Date.now() - (this.breakStartedAt || Date.now())) / 1000);
+                notice.break_seconds = Math.min(7200, Math.max(0, seconds));
+            }
+            this.pendingBreakNotices.push(notice);
+            this.sendBreakNotices();
+        },
+
+        async sendBreakNotices() {
+            if (this.sendingBreakNotices) return;
+            this.sendingBreakNotices = true;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+            try {
+                while (this.pendingBreakNotices.length) {
+                    await fetch('/api/unscheduled-break/', {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': csrfToken },
+                        body: new URLSearchParams(this.pendingBreakNotices[0]),
+                        keepalive: true,
+                    });
+                    // Any reply, even an error, means it reached the server
+                    this.pendingBreakNotices.shift();
+                }
+            } catch (e) {
+                // Offline: the 'online' listener below tries again
+            } finally {
+                this.sendingBreakNotices = false;
+            }
+        },
 
         openUnscheduledBreakModal() {
             // Close any open More dropdown
@@ -4204,6 +4248,7 @@
             // Show unscheduled break screen
             document.getElementById('screen-unscheduled-break').style.display = 'flex';
             this.isOnUnscheduledBreak = true;
+            this.notifyUnscheduledBreak('start');
 
             // Start updating the break screen timer display from the module timer
             this.updateUnschedBreakDisplay();
@@ -4230,6 +4275,8 @@
                 clearInterval(this.unschedTimerInterval);
                 this.unschedTimerInterval = null;
             }
+            // Before finishModule() below can move on to the next module
+            if (this.isOnUnscheduledBreak) this.notifyUnscheduledBreak('end');
             this.isOnUnscheduledBreak = false;
             document.getElementById('screen-unscheduled-break').style.display = 'none';
 
@@ -4245,6 +4292,9 @@
     };
 
     app.init();
+
+    // Send any unscheduled-break notices that failed while offline
+    window.addEventListener('online', () => app.sendBreakNotices());
 
     // Wire up unscheduled break buttons
     document.querySelectorAll('.unscheduled-break').forEach(btn => {
