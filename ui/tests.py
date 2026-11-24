@@ -950,3 +950,82 @@ class TelegramSetupCommandTests(TestCase):
         results = {'getMe': {'username': 'bbtest_bot'}, 'setWebhook': True, 'getWebhookInfo': {'url': 'x'}}
         with mock.patch.object(telegram, 'call', side_effect=lambda method, payload: results[method]):
             self.assertIn("connect links won't work", self.run_command())
+
+
+@override_settings(TELEGRAM_BOT_USERNAME='bbtest_bot')
+class EmailTelegramLinksCommandTests(TestCase):
+    def setUp(self):
+        def profile(username, contact, active=True, chat=None, name=''):
+            u = User.objects.create_user(username, password='pw', is_active=active)
+            return UserProfile.objects.create(user=u, full_name=name, contact_email=contact, telegram_chat_id=chat)
+        self.ana = profile('ana@example.com', 'Parent@Example.org', name='Ana Lee')
+        self.ben = profile('ben@example.com', 'parent@example.org ', name='Ben <Lee>')    # same parent, case/space differ
+        self.cat = profile('cat@example.com', 'cat.mom@example.org')                      # no full name: username
+        profile('dan@example.com', 'dan@example.org', chat=999)                           # already connected
+        profile('eve@example.com', 'eve@example.org', active=False)                       # inactive
+        profile('fay@example.com', '')                                                    # no contact email
+        self.sent = []
+
+    def run_command(self, *args, env=None):
+        out = io.StringIO()
+
+        def fake_urlopen(request, timeout):
+            self.sent.append((request.headers, json.loads(request.data)))
+            return mock.MagicMock()
+        with mock.patch.dict(os.environ, env or {}), mock.patch('urllib.request.urlopen', side_effect=fake_urlopen), \
+                mock.patch('ui.management.commands.email_telegram_links.time.sleep'):
+            call_command('email_telegram_links', *args, stdout=out)
+        return out.getvalue()
+
+    def test_dry_run_sends_nothing(self):
+        out = self.run_command(env={'RESEND_API_KEY': 're_test'})
+        self.assertIn('2 addresses for 3 students. Skipped: 1 already connected, 1 inactive, 1 without a contact email.', out)
+        self.assertIn('parent@example.org: Ana Lee, Ben <Lee>', out)
+        self.assertIn('Dry run: nothing sent', out)
+        self.assertEqual(self.sent, [])
+
+    def test_send_groups_by_address(self):
+        out = self.run_command('--send', env={'RESEND_API_KEY': 're_test'})
+        self.assertIn('Sent 2 emails.', out)
+        by_address = {payload['to'][0]: (headers, payload) for headers, payload in self.sent}
+        self.assertEqual(set(by_address), {'parent@example.org', 'cat.mom@example.org'})
+        headers, payload = by_address['parent@example.org']
+        self.assertEqual(headers['Authorization'], 'Bearer re_test')
+        self.assertEqual(payload['from'], 'BB Test <messages@bbtest.shop>')
+        for p in (self.ana, self.ben):
+            p.refresh_from_db()
+            link = f'https://t.me/bbtest_bot?start={p.telegram_link_token}'
+            self.assertIn(link, payload['text'])
+            self.assertIn(link, payload['html'])
+        self.assertIn('Ben <Lee>: https://t.me/', payload['text'])
+        self.assertIn('<strong>Ben &lt;Lee&gt;</strong>', payload['html'])
+        self.assertIn('for each student', payload['text'])
+        self.assertIn('cat@example.com: https://t.me/', by_address['cat.mom@example.org'][1]['text'])
+
+    def test_include_inactive(self):
+        self.assertIn('3 addresses for 4 students', self.run_command('--include-inactive'))
+
+    def test_send_needs_api_key(self):
+        with mock.patch.dict(os.environ, {'RESEND_API_KEY': ''}):
+            with self.assertRaises(CommandError):
+                call_command('email_telegram_links', '--send', stdout=io.StringIO())
+
+    def test_retries_rate_limit_and_reports_failures(self):
+        def http_error(code):
+            return urllib.error.HTTPError('https://api.resend.com/emails', code, 'x', {}, io.BytesIO(b'{"message":"nope"}'))
+        calls = {'n': 0}
+
+        def flaky(request, timeout):
+            calls['n'] += 1
+            to = json.loads(request.data)['to'][0]
+            if to == 'parent@example.org' and calls['n'] == 1:
+                raise http_error(429)               # retried, then succeeds
+            if to == 'cat.mom@example.org':
+                raise http_error(422)               # real failure
+            return mock.MagicMock()
+        out = io.StringIO()
+        with mock.patch.dict(os.environ, {'RESEND_API_KEY': 're_test'}), mock.patch('urllib.request.urlopen', side_effect=flaky), \
+                mock.patch('ui.management.commands.email_telegram_links.time.sleep'):
+            call_command('email_telegram_links', '--send', stdout=out)
+        self.assertIn('Sent 1 emails.', out.getvalue())
+        self.assertIn('Failed: cat.mom@example.org: Resend returned HTTP 422', out.getvalue())
