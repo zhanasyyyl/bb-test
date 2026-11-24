@@ -42,8 +42,9 @@ Start codes, unscheduled breaks and notes are sent by a Telegram bot.
    `https://bbtest.shop/telegram/webhook/`. update.sh repeats this on every
    deploy, which is harmless.
 
-Students then connect a chat from their profile window ("Connect Telegram").
-Students without a connected chat get no messages.
+Students then copy the connect link from their profile window and send it to
+their assistant, who opens it in Telegram and presses Start. Students without
+a connected chat get no messages.
 
 ## One-time setup
 

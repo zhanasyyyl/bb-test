@@ -206,19 +206,23 @@
                 {% with chat=profile.telegram_chat_name %}
                 {% if profile.telegram_chat_id %}
                 <p style="margin: 0 0 6px; font-size: 14px;">
-                    Connected{% if chat %} to <strong>{{ chat }}</strong>{% endif %}. Start codes, unscheduled breaks
-                    and notes are sent there.</p>
+                    Connected{% if chat %} to <strong>{{ chat }}</strong>{% endif %}. Your start codes, unscheduled
+                    breaks and notes are sent there.</p>
                 {% else %}
-                <p style="margin: 0 0 6px; font-size: 14px;">Not connected. Connect a Telegram chat to get start codes,
-                    unscheduled breaks and notes.</p>
+                <p style="margin: 0 0 6px; font-size: 14px;">Not connected yet.</p>
                 {% endif %}
                 {% endwith %}
                 {% if telegram_link %}
-                <a href="{{ telegram_link }}" target="_blank" rel="noopener" class="telegram-connect-link"
-                    style="color: #324dc7; font-size: 14px; text-decoration: underline;">
-                    {% if profile.telegram_chat_id %}Connect a different chat{% else %}Connect Telegram{% endif %}</a>
-                <p style="margin: 4px 0 0; font-size: 12px; color: #666;">Open the link and press Start. You can
-                    also send it to a parent or tutor; one chat is connected at a time.</p>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="telegram-link" value="{{ telegram_link }}" readonly
+                        aria-label="Telegram connect link" onfocus="this.select()"
+                        style="flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: inherit; color: #1e1e1e; background: #f6f6f6; user-select: text; -webkit-user-select: text;">
+                    <button type="button" id="copy-telegram-link"
+                        style="padding: 8px 16px; border: 1px solid #1e1e1e; border-radius: 20px; background: #fff; font-weight: 600; cursor: pointer; white-space: nowrap;">Copy</button>
+                </div>
+                <p style="margin: 6px 0 0; font-size: 12px; color: #666;">Copy this link and send it to your
+                    assistant. When they open it in Telegram and press Start, they'll get your start codes,
+                    unscheduled breaks and notes. One chat is connected at a time.</p>
                 {% else %}
                 <p style="margin: 0; font-size: 12px; color: #666;">Telegram isn't set up on this site yet.</p>
                 {% endif %}
@@ -240,6 +244,27 @@
 </div>
 
 <script>
+    // Copies the Telegram connect link for the student to send to their assistant
+    const copyLinkButton = document.getElementById('copy-telegram-link');
+    if (copyLinkButton) {
+        copyLinkButton.addEventListener('click', () => {
+            const input = document.getElementById('telegram-link');
+            const done = () => {
+                copyLinkButton.textContent = 'Copied';
+                setTimeout(() => { copyLinkButton.textContent = 'Copy'; }, 2000);
+            };
+            const fallback = () => {
+                input.select();
+                if (document.execCommand('copy')) done();
+            };
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(input.value).then(done, fallback);
+            } else {
+                fallback();
+            }
+        });
+    }
+
     const profilePic = document.getElementById('profile-pic');
     const profileModal = document.getElementById('profile-modal');
     const closeModalBtn = document.getElementById('close-modal-btn');

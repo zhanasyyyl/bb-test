@@ -847,7 +847,7 @@ class TelegramWebhookTests(TestCase):
     def test_start_without_or_with_wrong_token(self):
         for text in ('/start', '/start nope'):
             reply = self.update(text).json()
-            self.assertIn('Connect Telegram link', reply['text'])
+            self.assertIn('open the connect link the student sent you', reply['text'])
         self.profile.refresh_from_db()
         self.assertIsNone(self.profile.telegram_chat_id)
 
@@ -894,8 +894,12 @@ class DashboardTelegramTests(TestCase):
         token = self.profile.telegram_link_token
         self.assertRegex(token, r'^[A-Za-z0-9_-]{20,64}$')
         self.assertIn(f'https://t.me/bbtest_bot?start={token}', html)
-        self.assertIn('Not connected', html)
-        self.assertIn('Connect Telegram', html)
+        self.assertIn('Not connected yet.', html)
+        # Shown to copy and send to the assistant, not as a link to open
+        self.assertIn(f'id="telegram-link" value="https://t.me/bbtest_bot?start={token}" readonly', html)
+        self.assertIn('id="copy-telegram-link"', html)
+        self.assertIn('send it to your', html)
+        self.assertNotIn(f'href="https://t.me/', html)
         # The same link every time
         self.dashboard()
         self.profile.refresh_from_db()
@@ -906,7 +910,7 @@ class DashboardTelegramTests(TestCase):
         self.profile.save()
         html = self.dashboard()
         self.assertIn('Connected to <strong>Dana (@dana_parent)</strong>', html)
-        self.assertIn('Connect a different chat', html)
+        self.assertIn('id="copy-telegram-link"', html)
 
     @override_settings(TELEGRAM_BOT_USERNAME='')
     def test_without_bot_username(self):

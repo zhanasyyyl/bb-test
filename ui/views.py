@@ -244,7 +244,7 @@ def telegram_webhook_view(request):
             reply = render_to_string('telegram/connected.html', {
                 'name': _display_name(profile, profile.user)}).strip()
         else:
-            reply = 'To get messages here, open the Connect Telegram link in your BB Test profile.'
+            reply = 'To get messages here, open the connect link the student sent you.'
     else:
         unlinked = UserProfile.objects.filter(telegram_chat_id=chat_id).update(
             telegram_chat_id=None, telegram_chat_name='')
