@@ -915,6 +915,14 @@ class DashboardTelegramTests(TestCase):
     def test_contact_email_field_is_gone(self):
         self.assertNotIn('name="contact_email"', self.dashboard())
 
+    def test_account_without_profile_gets_one_and_can_connect(self):
+        user = User.objects.create_user('admin-made@example.com', password='pw')
+        self.client.force_login(user)
+        html = self.dashboard()
+        profile = UserProfile.objects.get(user=user)
+        self.assertIn(f'https://t.me/bbtest_bot?start={profile.telegram_link_token}', html)
+        self.assertNotIn("isn't set up", html)
+
 
 class TelegramSetupCommandTests(TestCase):
     def run_command(self, *args):

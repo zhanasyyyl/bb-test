@@ -62,9 +62,13 @@ def cb_login_view(request):
 
 @login_required
 def dashboard_view(request):
-    profile = _get_profile(request.user)
+    # Accounts made with createsuperuser or in the admin may have no profile
+    # yet; create it so they can connect Telegram too (saving the profile form
+    # does the same)
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
     return render(request, 'dashboard.html', {
-        'telegram_link': telegram.connect_link(profile) if profile else None,
+        'profile': profile,
+        'telegram_link': telegram.connect_link(profile),
     })
 
 
