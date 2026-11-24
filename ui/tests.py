@@ -4,18 +4,18 @@ import os
 import shutil
 import tempfile
 import time
+import urllib.error
 from datetime import timedelta
 from unittest import mock
 
 from django.conf import settings
 from django.contrib.auth.models import Group, User
-from django.core import mail
 from django.core.management import CommandError, call_command
 from django.test import TestCase, override_settings
 from django.utils import timezone
 
-from . import auth_backends, email_queue, views
-from .models import LoginFailure, QueuedEmail, SiteSettings, UserProfile
+from . import auth_backends, message_queue, telegram, views
+from .models import LoginFailure, QueuedMessage, SiteSettings, UserProfile
 
 
 def make_questions(rw=54, math=44):
@@ -163,80 +163,6 @@ class ModulesCacheTests(QuestionsFileTestCase):
         self.assertEqual(len(json.loads(views.get_cached_modules_json())), 4)
 
 
-class EmailQueueTests(TestCase):
-    def enqueue(self):
-        email_queue.enqueue_email(
-            subject='Code', message='Body', from_email='from@example.com',
-            recipient_list=['to@example.com'],
-        )
-        return QueuedEmail.objects.latest('id')
-
-    def test_enqueue_stores_and_process_one_sends(self):
-        email = self.enqueue()
-        self.assertEqual(email.status, QueuedEmail.PENDING)
-        self.assertTrue(email_queue.process_one())
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].to, ['to@example.com'])
-        email.refresh_from_db()
-        self.assertEqual(email.status, QueuedEmail.SENT)
-        self.assertFalse(email_queue.process_one())
-
-    def test_failure_schedules_retry_then_gives_up(self):
-        email = self.enqueue()
-        with mock.patch.object(email_queue.EmailMultiAlternatives, 'send', side_effect=RuntimeError('boom')):
-            for attempt in range(1, email_queue._MAX_ATTEMPTS + 1):
-                self.assertTrue(email_queue.process_one())
-                email.refresh_from_db()
-                self.assertEqual(email.attempts, attempt)
-                if email.status == QueuedEmail.PENDING:
-                    self.assertGreater(email.next_attempt_at, timezone.now())
-                    # Not due yet, so nothing to send
-                    self.assertFalse(email_queue.process_one())
-                    QueuedEmail.objects.filter(id=email.id).update(next_attempt_at=timezone.now())
-        self.assertEqual(email.status, QueuedEmail.FAILED)
-        self.assertIn('boom', email.last_error)
-
-    def test_first_retry_after_20_seconds(self):
-        email = self.enqueue()
-        with mock.patch.object(email_queue.EmailMultiAlternatives, 'send', side_effect=RuntimeError('boom')):
-            before = timezone.now()
-            email_queue.process_one()
-        email.refresh_from_db()
-        delay = (email.next_attempt_at - before).total_seconds()
-        self.assertAlmostEqual(delay, 20, delta=1)
-
-    def test_email_queued_during_check_is_not_slept_through(self):
-        # An email arrives while the sender is checking the table and finds
-        # nothing: the sender must not then sleep for the whole poll interval
-        def check_while_email_arrives():
-            email_queue._wake.set()      # what enqueue_email() does
-            return False                 # the check itself saw no email yet
-        with mock.patch.object(email_queue, 'process_one', side_effect=check_while_email_arrives), \
-                mock.patch.object(email_queue, '_POLL_SECONDS', 5):
-            started = time.monotonic()
-            email_queue._work_then_wait()
-            self.assertLess(time.monotonic() - started, 1)
-
-    def test_email_claimed_by_another_worker_is_skipped(self):
-        email = self.enqueue()
-        QueuedEmail.objects.filter(id=email.id).update(
-            status=QueuedEmail.SENDING, claimed_at=timezone.now())
-        self.assertFalse(email_queue.process_one())
-
-    def test_stale_claim_is_retried(self):
-        email = self.enqueue()
-        QueuedEmail.objects.filter(id=email.id).update(
-            status=QueuedEmail.SENDING, claimed_at=timezone.now() - timedelta(minutes=10))
-        self.assertTrue(email_queue.process_one())
-        email.refresh_from_db()
-        self.assertEqual(email.status, QueuedEmail.SENT)
-
-    @override_settings(EMAIL_SENDER_PROCESSES=9)
-    def test_rate_budget_is_split_across_processes(self):
-        self.assertLessEqual(email_queue._per_process_rps() * settings.EMAIL_SENDER_PROCESSES,
-                             email_queue._MAX_RPS_TOTAL)
-
-
 class LoginTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user('student@example.com', 'student@example.com', 'right-pw')
@@ -285,25 +211,6 @@ class LoginTests(TestCase):
         self.assertRedirects(self.login(email='other@example.com', password='other-pw'), '/dashboard/')
 
 
-class UpdateProfileTests(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
-        self.client.force_login(self.user)
-
-    def test_valid_profile_saves(self):
-        self.client.post('/update-profile/', {
-            'full_name': 'Ana Lee', 'contact_email': 'ana@example.com', 'test_center_address': 'Here'})
-        self.assertEqual(UserProfile.objects.get(user=self.user).contact_email, 'ana@example.com')
-
-    def test_invalid_profile_shows_error_on_dashboard(self):
-        response = self.client.post('/update-profile/', {
-            'full_name': 'Ana Lee', 'contact_email': 'not-an-email', 'test_center_address': 'Here'},
-            follow=True)
-        self.assertContains(response, 'Profile not saved.')
-        self.assertContains(response, 'Contact email')
-        self.assertIsNone(UserProfile.objects.get(user=self.user).contact_email)
-
-
 class AdminLockoutTests(TestCase):
     def test_admin_login_is_locked_too(self):
         User.objects.create_superuser('boss@example.com', 'boss@example.com', 'right-pw')
@@ -337,60 +244,6 @@ class LogoutTests(TestCase):
     def test_dashboard_sign_out_posts_to_logout(self):
         UserProfile.objects.create(user=self.user, test_completed=True)
         self.assertContains(self.client.get('/dashboard/'), 'action="/logout/"')
-
-
-class StartCodeTests(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
-        UserProfile.objects.create(user=self.user, contact_email='student@example.com')
-        self.client.force_login(self.user)
-
-    def post(self, code):
-        return self.client.post('/start-code/', {'full_code': code})
-
-    def test_valid_code_queues_email(self):
-        self.assertRedirects(self.post('123456'), '/test/', fetch_redirect_response=False)
-        email = QueuedEmail.objects.get()
-        self.assertEqual(email.user, self.user)
-        self.assertIn('123456', email.subject)
-
-    def test_email_content_sender_and_tags(self):
-        self.post('123456')
-        self.assertTrue(email_queue.process_one())
-        sent = mail.outbox[0]
-        self.assertEqual(sent.from_email, 'BB Test <messages@bbtest.shop>')
-        self.assertEqual(sent.subject, 'Your practice test start code: 123456')
-        self.assertEqual(sent.to, ['student@example.com'])
-        self.assertIn('Your start code is 123456', sent.body)
-        html, mimetype = sent.alternatives[0]
-        self.assertEqual(mimetype, 'text/html')
-        self.assertIn('123456', html)
-        for text in (sent.from_email, sent.subject, sent.body, html):
-            self.assertNotIn('Bluebook', text)
-        # Resend tags still identify the student
-        self.assertEqual(sent.esp_extra['tags'], [
-            {'name': 'user_id', 'value': str(self.user.pk)},
-            {'name': 'username', 'value': 'student_example_com'},
-            {'name': 'category', 'value': 'start_code'},
-        ])
-
-    def test_invalid_codes_are_rejected(self):
-        for code in ['12345', '1234567', '123456\n', 'abcdef', '12345\n', 'Click here http://evil.example', '']:
-            response = self.post(code)
-            self.assertEqual(response.status_code, 200, code)
-            self.assertContains(response, 'display: block')
-        self.assertFalse(QueuedEmail.objects.exists())
-        self.assertIsNone(UserProfile.objects.get(user=self.user).start_code)
-
-    def test_emails_capped_per_hour(self):
-        for _ in range(views.START_CODE_EMAILS_PER_HOUR + 3):
-            self.assertRedirects(self.post('123456'), '/test/', fetch_redirect_response=False)
-        self.assertEqual(QueuedEmail.objects.count(), views.START_CODE_EMAILS_PER_HOUR)
-
-        # Older emails no longer count
-        QueuedEmail.objects.update(created_at=timezone.now() - timedelta(hours=2))
-        self.post('123456')
-        self.assertEqual(QueuedEmail.objects.count(), views.START_CODE_EMAILS_PER_HOUR + 1)
 
 
 class PasswordHasherTests(TestCase):
@@ -505,45 +358,6 @@ class AdminUserListTests(TestCase):
         self.assertEqual(self.names_in_order(newest_first, names), ['u1@example.com', 'u2@example.com', 'u0@example.com'])
 
 
-class AdminUserProfileFilterTests(TestCase):
-    def setUp(self):
-        self.client.force_login(User.objects.create_superuser('admin@example.com', 'admin@example.com', 'pw'))
-        group = Group.objects.create(name='Morning class')
-        active = User.objects.create_user('active@example.com', 'active@example.com', 'pw')
-        inactive = User.objects.create_user('inactive@example.com', 'inactive@example.com', 'pw', is_active=False)
-        staff = User.objects.create_user('staff@example.com', 'staff@example.com', 'pw', is_staff=True)
-        active.groups.add(group)
-        User.objects.filter(pk=inactive.pk).update(date_joined=timezone.now().replace(year=2025))
-        UserProfile.objects.create(user=active, full_name='Ana Lee', contact_email='parent@example.org')
-        UserProfile.objects.create(user=inactive)
-        UserProfile.objects.create(user=staff)
-        self.group = group
-
-    def listed(self, query=''):
-        html = self.client.get('/admin/ui/userprofile/' + query).content.decode()
-        # Match the username as the list's link text: "active@example.com" is
-        # also part of "inactive@example.com"
-        return {n for n in ('active@example.com', 'inactive@example.com', 'staff@example.com') if f'>{n}</a>' in html}
-
-    def test_filters_match_users_page(self):
-        html = self.client.get('/admin/ui/userprofile/').content.decode()
-        for title in ('By staff status', 'By superuser status', 'By active', 'By groups'):
-            self.assertIn(title, html)
-
-    def test_filtering(self):
-        self.assertEqual(self.listed('?active=no'), {'inactive@example.com'})
-        self.assertEqual(self.listed('?user__is_staff__exact=1'), {'staff@example.com'})
-        self.assertEqual(self.listed(f'?user__groups__id__exact={self.group.pk}'), {'active@example.com'})
-
-    def test_date_bar(self):
-        self.assertEqual(self.listed('?user__date_joined__year=2025&active=all'), {'inactive@example.com'})
-
-    def test_search_covers_account_and_profile(self):
-        self.assertEqual(self.listed('?q=staff@'), {'staff@example.com'})
-        self.assertEqual(self.listed('?q=Ana Lee'), {'active@example.com'})
-        self.assertEqual(self.listed('?q=parent@example.org'), {'active@example.com'})
-
-
 class AdminListDefaultsTests(TestCase):
     """Users and User Profiles open newest first, showing only active users."""
 
@@ -584,61 +398,331 @@ class AdminListDefaultsTests(TestCase):
             self.assertIn(label, html)
 
 
-class UnscheduledBreakEmailTests(TestCase):
+TELEGRAM = dict(TELEGRAM_BOT_TOKEN='123:TEST-TOKEN', TELEGRAM_BOT_USERNAME='bbtest_bot',
+                TELEGRAM_WEBHOOK_SECRET='webhook-secret-123456')
+
+
+class SentTelegramMixin:
+    """Replaces the Bot API call; self.telegram_sent collects (chat_id, text)."""
+
+    def setUp(self):
+        super().setUp()
+        self.telegram_sent = []
+        patcher = mock.patch.object(telegram, 'send_message',
+                                    side_effect=lambda chat_id, text: self.telegram_sent.append((chat_id, text)))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def deliver(self):
+        """Sends the next queued message and returns its text."""
+        self.assertTrue(message_queue.process_one())
+        return self.telegram_sent[-1][1]
+
+
+class MessageQueueTests(SentTelegramMixin, TestCase):
+    def enqueue(self, chat_id=111):
+        message_queue.enqueue_message(chat_id=chat_id, text='<b>Hi</b>')
+        return QueuedMessage.objects.latest('id')
+
+    def test_enqueue_stores_and_process_one_sends(self):
+        message = self.enqueue()
+        self.assertEqual(message.status, QueuedMessage.PENDING)
+        self.assertTrue(message_queue.process_one())
+        self.assertEqual(self.telegram_sent, [(111, '<b>Hi</b>')])
+        message.refresh_from_db()
+        self.assertEqual(message.status, QueuedMessage.SENT)
+        self.assertFalse(message_queue.process_one())
+
+    def test_failure_schedules_retry_then_gives_up(self):
+        message = self.enqueue()
+        with mock.patch.object(telegram, 'send_message', side_effect=RuntimeError('boom')):
+            for attempt in range(1, message_queue._MAX_ATTEMPTS + 1):
+                self.assertTrue(message_queue.process_one())
+                message.refresh_from_db()
+                self.assertEqual(message.attempts, attempt)
+                if message.status == QueuedMessage.PENDING:
+                    self.assertGreater(message.next_attempt_at, timezone.now())
+                    # Not due yet, so nothing to send
+                    self.assertFalse(message_queue.process_one())
+                    QueuedMessage.objects.filter(id=message.id).update(next_attempt_at=timezone.now())
+        self.assertEqual(message.status, QueuedMessage.FAILED)
+        self.assertIn('boom', message.last_error)
+
+    def test_first_retry_after_20_seconds(self):
+        message = self.enqueue()
+        with mock.patch.object(telegram, 'send_message', side_effect=RuntimeError('boom')):
+            before = timezone.now()
+            message_queue.process_one()
+        message.refresh_from_db()
+        self.assertAlmostEqual((message.next_attempt_at - before).total_seconds(), 20, delta=1)
+
+    def test_waits_as_long_as_telegram_asks(self):
+        message = self.enqueue()
+        error = telegram.TelegramError('Too Many Requests: retry after 7', retry_after=7)
+        with mock.patch.object(telegram, 'send_message', side_effect=error):
+            before = timezone.now()
+            message_queue.process_one()
+        message.refresh_from_db()
+        self.assertEqual(message.status, QueuedMessage.PENDING)
+        self.assertAlmostEqual((message.next_attempt_at - before).total_seconds(), 7, delta=1)
+
+    def test_blocked_bot_fails_at_once_and_disconnects_the_chat(self):
+        user = User.objects.create_user('student@example.com', password='pw')
+        UserProfile.objects.create(user=user, telegram_chat_id=111, telegram_chat_name='Ana')
+        message = self.enqueue(chat_id=111)
+        error = telegram.TelegramError('Forbidden: bot was blocked by the user', permanent=True)
+        with mock.patch.object(telegram, 'send_message', side_effect=error):
+            message_queue.process_one()
+        message.refresh_from_db()
+        self.assertEqual((message.status, message.attempts), (QueuedMessage.FAILED, 1))
+        profile = UserProfile.objects.get(user=user)
+        self.assertEqual((profile.telegram_chat_id, profile.telegram_chat_name), (None, ''))
+
+    def test_message_queued_during_check_is_not_slept_through(self):
+        # A message arrives while the sender is checking the table and finds
+        # nothing: the sender must not then sleep for the whole poll interval
+        def check_while_message_arrives():
+            message_queue._wake.set()      # what enqueue_message() does
+            return False                   # the check itself saw no message yet
+        with mock.patch.object(message_queue, 'process_one', side_effect=check_while_message_arrives), \
+                mock.patch.object(message_queue, '_POLL_SECONDS', 5):
+            started = time.monotonic()
+            message_queue._work_then_wait()
+            self.assertLess(time.monotonic() - started, 1)
+
+    def test_message_claimed_by_another_worker_is_skipped(self):
+        message = self.enqueue()
+        QueuedMessage.objects.filter(id=message.id).update(status=QueuedMessage.SENDING, claimed_at=timezone.now())
+        self.assertFalse(message_queue.process_one())
+
+    def test_stale_claim_is_retried(self):
+        message = self.enqueue()
+        QueuedMessage.objects.filter(id=message.id).update(
+            status=QueuedMessage.SENDING, claimed_at=timezone.now() - timedelta(minutes=10))
+        self.assertTrue(message_queue.process_one())
+        message.refresh_from_db()
+        self.assertEqual(message.status, QueuedMessage.SENT)
+
+    @override_settings(MESSAGE_SENDER_PROCESSES=9)
+    def test_rate_budget_is_split_across_processes(self):
+        self.assertLessEqual(message_queue._per_process_rps() * settings.MESSAGE_SENDER_PROCESSES,
+                             message_queue._MAX_RPS_TOTAL)
+
+
+@override_settings(**TELEGRAM)
+class TelegramApiTests(TestCase):
+    def response(self, body):
+        r = mock.MagicMock()
+        r.__enter__.return_value = io.BytesIO(json.dumps(body).encode())
+        return r
+
+    def http_error(self, code, body):
+        return urllib.error.HTTPError('https://api.telegram.org/x', code, 'error', {},
+                                      io.BytesIO(json.dumps(body).encode()))
+
+    def test_send_message(self):
+        with mock.patch('urllib.request.urlopen', return_value=self.response({'ok': True, 'result': {'message_id': 5}})) as urlopen:
+            self.assertEqual(telegram.send_message(111, '<b>Hi</b>'), {'message_id': 5})
+        request = urlopen.call_args[0][0]
+        self.assertEqual(request.full_url, 'https://api.telegram.org/bot123:TEST-TOKEN/sendMessage')
+        self.assertEqual(json.loads(request.data), {'chat_id': 111, 'text': '<b>Hi</b>', 'parse_mode': 'HTML',
+                                                    'disable_web_page_preview': True})
+
+    def test_blocked_is_permanent(self):
+        with mock.patch('urllib.request.urlopen', side_effect=self.http_error(403, {
+                'ok': False, 'description': 'Forbidden: bot was blocked by the user'})):
+            with self.assertRaises(telegram.TelegramError) as caught:
+                telegram.send_message(111, 'x')
+        self.assertTrue(caught.exception.permanent)
+        self.assertIn('blocked', str(caught.exception))
+
+    def test_rate_limit_passes_retry_after(self):
+        with mock.patch('urllib.request.urlopen', side_effect=self.http_error(429, {
+                'ok': False, 'description': 'Too Many Requests', 'parameters': {'retry_after': 12}})):
+            with self.assertRaises(telegram.TelegramError) as caught:
+                telegram.send_message(111, 'x')
+        self.assertEqual((caught.exception.permanent, caught.exception.retry_after), (False, 12))
+
+    def test_network_error_never_shows_the_token(self):
+        with mock.patch('urllib.request.urlopen', side_effect=urllib.error.URLError('timed out')):
+            with self.assertRaises(telegram.TelegramError) as caught:
+                telegram.send_message(111, 'x')
+        self.assertNotIn('TEST-TOKEN', str(caught.exception))
+        self.assertFalse(caught.exception.permanent)
+
+    @override_settings(TELEGRAM_BOT_TOKEN='')
+    def test_missing_token(self):
+        with self.assertRaises(telegram.TelegramError):
+            telegram.send_message(111, 'x')
+
+
+class UpdateProfileTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
-        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee', contact_email='parent@example.org')
+        self.client.force_login(self.user)
+
+    def test_valid_profile_saves(self):
+        self.client.post('/update-profile/', {'full_name': 'Ana Lee', 'test_center_address': 'Here'})
+        profile = UserProfile.objects.get(user=self.user)
+        self.assertEqual((profile.full_name, profile.test_center_address), ('Ana Lee', 'Here'))
+
+    def test_old_contact_email_is_kept_and_not_editable(self):
+        UserProfile.objects.create(user=self.user, contact_email='old@example.com')
+        self.client.post('/update-profile/', {'full_name': 'Ana Lee', 'test_center_address': 'Here',
+                                              'contact_email': 'new@example.com'})
+        self.assertEqual(UserProfile.objects.get(user=self.user).contact_email, 'old@example.com')
+
+    def test_invalid_profile_shows_error_on_dashboard(self):
+        response = self.client.post('/update-profile/', {'full_name': 'A' * 300, 'test_center_address': 'Here'},
+                                    follow=True)
+        self.assertContains(response, 'Profile not saved.')
+        self.assertContains(response, 'Full name')
+        self.assertFalse(UserProfile.objects.get(user=self.user).full_name)
+
+
+class StartCodeTests(SentTelegramMixin, TestCase):
+    def setUp(self):
+        super().setUp()
+        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
+        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee', telegram_chat_id=111)
+        self.client.force_login(self.user)
+
+    def post(self, code):
+        return self.client.post('/start-code/', {'full_code': code})
+
+    def test_valid_code_sends_telegram_message(self):
+        self.assertRedirects(self.post('123456'), '/test/', fetch_redirect_response=False)
+        message = QueuedMessage.objects.get()
+        self.assertEqual((message.user, message.chat_id, message.category), (self.user, 111, 'start_code'))
+        self.assertEqual(self.deliver(), 'Start code for <b>Ana Lee</b>: <code>123456</code>\n'
+                                         'Enter it on the Start Code screen to begin the practice test.')
+        self.assertEqual(self.telegram_sent[0][0], 111)
+
+    def test_no_telegram_chat_no_message(self):
+        self.profile.telegram_chat_id = None
+        self.profile.save()
+        self.assertRedirects(self.post('123456'), '/test/', fetch_redirect_response=False)
+        self.assertFalse(QueuedMessage.objects.exists())
+        self.assertEqual(UserProfile.objects.get(user=self.user).start_code, '123456')
+
+    def test_invalid_codes_are_rejected(self):
+        for code in ['12345', '1234567', '123456\n', 'abcdef', '12345\n', 'Click here http://evil.example', '']:
+            response = self.post(code)
+            self.assertEqual(response.status_code, 200, code)
+            self.assertContains(response, 'display: block')
+        self.assertFalse(QueuedMessage.objects.exists())
+        self.assertIsNone(UserProfile.objects.get(user=self.user).start_code)
+
+    def test_messages_capped_per_hour(self):
+        for _ in range(views.START_CODE_MESSAGES_PER_HOUR + 3):
+            self.assertRedirects(self.post('123456'), '/test/', fetch_redirect_response=False)
+        self.assertEqual(QueuedMessage.objects.count(), views.START_CODE_MESSAGES_PER_HOUR)
+
+        # Older messages no longer count
+        QueuedMessage.objects.update(created_at=timezone.now() - timedelta(hours=2))
+        self.post('123456')
+        self.assertEqual(QueuedMessage.objects.count(), views.START_CODE_MESSAGES_PER_HOUR + 1)
+
+
+class AdminUserProfileFilterTests(TestCase):
+    def setUp(self):
+        self.client.force_login(User.objects.create_superuser('admin@example.com', 'admin@example.com', 'pw'))
+        group = Group.objects.create(name='Morning class')
+        active = User.objects.create_user('active@example.com', 'active@example.com', 'pw')
+        inactive = User.objects.create_user('inactive@example.com', 'inactive@example.com', 'pw', is_active=False)
+        staff = User.objects.create_user('staff@example.com', 'staff@example.com', 'pw', is_staff=True)
+        active.groups.add(group)
+        User.objects.filter(pk=inactive.pk).update(date_joined=timezone.now().replace(year=2025))
+        self.connected = UserProfile.objects.create(user=active, full_name='Ana Lee', telegram_chat_id=111,
+                                                    telegram_chat_name='Dana (@dana_parent)')
+        UserProfile.objects.create(user=inactive)
+        UserProfile.objects.create(user=staff)
+        self.group = group
+
+    def listed(self, query=''):
+        html = self.client.get('/admin/ui/userprofile/' + query).content.decode()
+        # Match the username as the list's link text: "active@example.com" is
+        # also part of "inactive@example.com"
+        return {n for n in ('active@example.com', 'inactive@example.com', 'staff@example.com') if f'>{n}</a>' in html}
+
+    def test_filters_match_users_page(self):
+        html = self.client.get('/admin/ui/userprofile/').content.decode()
+        for title in ('By staff status', 'By superuser status', 'By active', 'By groups'):
+            self.assertIn(title, html)
+
+    def test_filtering(self):
+        self.assertEqual(self.listed('?active=no'), {'inactive@example.com'})
+        self.assertEqual(self.listed('?user__is_staff__exact=1'), {'staff@example.com'})
+        self.assertEqual(self.listed(f'?user__groups__id__exact={self.group.pk}'), {'active@example.com'})
+
+    def test_date_bar(self):
+        self.assertEqual(self.listed('?user__date_joined__year=2025&active=all'), {'inactive@example.com'})
+
+    def test_search_covers_account_and_profile(self):
+        self.assertEqual(self.listed('?q=staff@'), {'staff@example.com'})
+        self.assertEqual(self.listed('?q=Ana Lee'), {'active@example.com'})
+        self.assertEqual(self.listed('?q=dana_parent'), {'active@example.com'})
+
+    def test_telegram_column(self):
+        html = self.client.get('/admin/ui/userprofile/').content.decode()
+        self.assertIn('Telegram', html)
+        self.assertIn('icon-yes.svg', html)      # connected tick for Ana
+
+    @override_settings(TELEGRAM_BOT_USERNAME='bbtest_bot')
+    def test_change_page_shows_connect_link_and_read_only_email(self):
+        html = self.client.get(f'/admin/ui/userprofile/{self.connected.pk}/change/').content.decode()
+        self.connected.refresh_from_db()
+        self.assertIn(f'https://t.me/bbtest_bot?start={self.connected.telegram_link_token}', html)
+        self.assertNotIn('name="contact_email"', html)
+        self.assertNotIn('name="telegram_link_token"', html)
+
+
+class UnscheduledBreakTelegramTests(SentTelegramMixin, TestCase):
+    def setUp(self):
+        super().setUp()
+        self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
+        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee', telegram_chat_id=111)
         self.client.force_login(self.user)
 
     def post(self, **data):
         return self.client.post('/api/unscheduled-break/', data)
 
-    def sent(self):
-        self.assertTrue(email_queue.process_one())
-        return mail.outbox[-1]
-
-    def test_start_email(self):
+    def test_start_message(self):
         self.assertEqual(self.post(event='start', module=1, time_left=754).json(), {'status': 'ok'})
-        msg = self.sent()
-        self.assertEqual(msg.to, ['parent@example.org'])
-        self.assertEqual(msg.subject, 'Ana Lee started an unscheduled break')
-        self.assertIn('Ana Lee started an unscheduled break during Section 1, Module 2: Reading and Writing.', msg.body)
-        self.assertIn('Time left in the module: 12:34.', msg.body)
-        self.assertIn('12:34', msg.alternatives[0][0])
-        self.assertIn({'name': 'category', 'value': 'unscheduled_break'}, msg.esp_extra['tags'])
+        self.assertEqual(self.deliver(),
+                         '<b>Ana Lee</b> started an unscheduled break during Section 1, Module 2: Reading and Writing.\n'
+                         'Time left in the module: <b>12:34</b>. The module timer keeps running during the break.')
+        self.assertEqual(QueuedMessage.objects.get().category, 'unscheduled_break')
 
-    def test_end_email(self):
+    def test_end_message(self):
         self.post(event='end', module=2, time_left=554, break_seconds=200)
-        msg = self.sent()
-        self.assertEqual(msg.subject, 'Ana Lee ended an unscheduled break (3 min 20 s)')
-        self.assertIn("They're back to Section 2, Module 1: Math with 9:14 left in the module.", msg.body)
+        self.assertEqual(self.deliver(),
+                         '<b>Ana Lee</b> ended their unscheduled break after <b>3 min 20 s</b>.\n'
+                         "They're back to Section 2, Module 1: Math with <b>9:14</b> left in the module.")
 
-    def test_end_email_when_module_time_ran_out(self):
+    def test_end_message_when_module_time_ran_out(self):
         self.post(event='end', module=0, time_left=0, break_seconds=45)
-        msg = self.sent()
-        self.assertEqual(msg.subject, 'Ana Lee ended an unscheduled break (45 s)')
-        self.assertIn('ran out during the break', msg.body)
+        text = self.deliver()
+        self.assertIn('after <b>45 s</b>', text)
+        self.assertIn('ran out during the break', text)
 
-    def test_name_is_one_line_and_html_escaped(self):
+    def test_name_is_escaped(self):
         self.profile.full_name = "Ana\nO'Neil <b>"
         self.profile.save()
         self.post(event='start', module=0, time_left=60)
-        msg = self.sent()
-        self.assertEqual(msg.subject, "Ana O'Neil <b> started an unscheduled break")
-        self.assertIn("Ana O'Neil <b> started", msg.body)                        # plain text: as typed
-        self.assertIn('Ana O&#x27;Neil &lt;b&gt;', msg.alternatives[0][0])      # HTML: escaped
+        self.assertTrue(self.deliver().startswith('<b>Ana O&#x27;Neil &lt;b&gt;</b> started'))
 
     def test_falls_back_to_username(self):
         self.profile.full_name = ''
         self.profile.save()
         self.post(event='start', module=0, time_left=60)
-        self.assertEqual(self.sent().subject, 'student@example.com started an unscheduled break')
+        self.assertTrue(self.deliver().startswith('<b>student@example.com</b> started'))
 
-    def test_no_contact_email_no_email(self):
-        self.profile.contact_email = ''
+    def test_no_telegram_chat_no_message(self):
+        self.profile.telegram_chat_id = None
         self.profile.save()
-        self.assertEqual(self.post(event='start', module=0, time_left=60).json(), {'status': 'no contact email'})
-        self.assertFalse(QueuedEmail.objects.exists())
+        self.assertEqual(self.post(event='start', module=0, time_left=60).json(), {'status': 'no telegram chat'})
+        self.assertFalse(QueuedMessage.objects.exists())
 
     def test_invalid_input_rejected(self):
         for data in [dict(event='pause', module=0, time_left=1), dict(event='start', module=4, time_left=1),
@@ -646,73 +730,57 @@ class UnscheduledBreakEmailTests(TestCase):
                      dict(event='start', module='x', time_left=1), dict(event='end', module=0, time_left=1, break_seconds=-5),
                      dict(event='start')]:
             self.assertEqual(self.post(**data).status_code, 400, data)
-        self.assertFalse(QueuedEmail.objects.exists())
+        self.assertFalse(QueuedMessage.objects.exists())
 
     def test_login_and_post_required(self):
         self.assertEqual(self.client.get('/api/unscheduled-break/').status_code, 405)
         self.client.logout()
         self.assertEqual(self.post(event='start', module=0, time_left=60).status_code, 302)
-        self.assertFalse(QueuedEmail.objects.exists())
+        self.assertFalse(QueuedMessage.objects.exists())
 
     def test_capped_per_hour_separately_from_start_codes(self):
-        for _ in range(views.UNSCHEDULED_BREAK_EMAILS_PER_HOUR + 2):
+        for _ in range(views.UNSCHEDULED_BREAK_MESSAGES_PER_HOUR + 2):
             self.post(event='start', module=0, time_left=60)
-        self.assertEqual(QueuedEmail.objects.filter(category='unscheduled_break').count(),
-                         views.UNSCHEDULED_BREAK_EMAILS_PER_HOUR)
+        self.assertEqual(QueuedMessage.objects.filter(category='unscheduled_break').count(),
+                         views.UNSCHEDULED_BREAK_MESSAGES_PER_HOUR)
         # Start codes still go out
         self.client.post('/start-code/', {'full_code': '123456'})
-        self.assertEqual(QueuedEmail.objects.filter(category='start_code').count(), 1)
+        self.assertEqual(QueuedMessage.objects.filter(category='start_code').count(), 1)
 
 
-class NoteEmailTests(TestCase):
+class NoteTelegramTests(SentTelegramMixin, TestCase):
     def setUp(self):
+        super().setUp()
         self.user = User.objects.create_user('student@example.com', 'student@example.com', 'pw')
-        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee', contact_email='parent@example.org')
+        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee', telegram_chat_id=111)
         self.client.force_login(self.user)
 
     def post(self, **data):
         return self.client.post('/api/note/', data)
 
-    def sent(self):
-        self.assertTrue(email_queue.process_one())
-        return mail.outbox[-1]
-
-    def test_note_email(self):
-        r = self.post(module=1, question=4, text='Check the second paragraph')
-        self.assertEqual(r.json(), {'status': 'ok'})
-        msg = self.sent()
-        self.assertEqual(msg.to, ['parent@example.org'])
-        self.assertEqual(msg.subject, 'Ana Lee wrote a note (Question 5, Section 1, Module 2)')
-        self.assertIn('Ana Lee wrote a note on Question 5 in Section 1, Module 2: Reading and Writing.', msg.body)
-        self.assertIn('Note:\nCheck the second paragraph', msg.body)
-        self.assertNotIn('Highlighted text', msg.body)
-        self.assertNotIn('Highlighted text', msg.alternatives[0][0])
-        self.assertIn({'name': 'category', 'value': 'note'}, msg.esp_extra['tags'])
+    def test_note_message(self):
+        self.assertEqual(self.post(module=1, question=4, text='Check the second paragraph').json(), {'status': 'ok'})
+        self.assertEqual(self.deliver(),
+                         '<b>Ana Lee</b> wrote a note on Question 5 in Section 1, Module 2: Reading and Writing:\n'
+                         '<blockquote>Check the second paragraph</blockquote>')
+        self.assertEqual(QueuedMessage.objects.get().category, 'note')
 
     def test_line_breaks_kept_and_html_escaped(self):
         self.post(module=0, question=0, text="line one\n<script>alert(1)</script> & it's")
-        msg = self.sent()
-        self.assertIn("line one\n<script>alert(1)</script> & it's", msg.body)
-        html = msg.alternatives[0][0]
-        self.assertIn('line one<br>&lt;script&gt;alert(1)&lt;/script&gt; &amp; it&#x27;s', html)
-        self.assertNotIn('<script>', html)
-
-    def test_subject_never_contains_the_note(self):
-        self.post(module=0, question=0, text='BUY CHEAP WATCHES\nhttp://spam.example')
-        self.assertNotIn('WATCHES', self.sent().subject)
+        text = self.deliver()
+        self.assertIn('<blockquote>line one\n&lt;script&gt;alert(1)&lt;/script&gt; &amp; it&#x27;s</blockquote>', text)
+        self.assertNotIn('<script>', text)
 
     def test_long_note_is_cut(self):
         self.post(module=0, question=0, text='n' * 5000)
-        body = self.sent().body
-        self.assertIn('n' * views.NOTE_MAX_CHARS + '…', body)
-        self.assertNotIn('n' * (views.NOTE_MAX_CHARS + 1), body)
+        text = self.deliver()
+        self.assertIn('n' * views.NOTE_MAX_CHARS + '…', text)
+        self.assertNotIn('n' * (views.NOTE_MAX_CHARS + 1), text)
 
     def test_highlighted_text_is_ignored(self):
-        # Pages opened before this change still send the highlight; it must not reach the email
+        # Pages opened before this change still send the highlight; it must not reach the message
         self.post(module=0, question=0, quote='SECRET HIGHLIGHT', text='my note')
-        msg = self.sent()
-        self.assertNotIn('SECRET HIGHLIGHT', msg.body)
-        self.assertNotIn('SECRET HIGHLIGHT', msg.alternatives[0][0])
+        self.assertNotIn('SECRET HIGHLIGHT', self.deliver())
 
     def test_question_must_exist_in_that_module(self):
         self.assertEqual(self.post(module=0, question=26, text='ok').status_code, 200)   # last of 27
@@ -723,23 +791,162 @@ class NoteEmailTests(TestCase):
                      dict(module='a', question=0, text='x'), dict(module=0, question=0, text='   '),
                      dict(module=0, question=0)]:
             self.assertEqual(self.post(**data).status_code, 400, data)
-        self.assertEqual(QueuedEmail.objects.count(), 2)
+        self.assertEqual(QueuedMessage.objects.count(), 2)
 
-    def test_no_contact_email_no_email(self):
-        self.profile.contact_email = ''
+    def test_no_telegram_chat_no_message(self):
+        self.profile.telegram_chat_id = None
         self.profile.save()
-        self.assertEqual(self.post(module=0, question=0, text='hi').json(), {'status': 'no contact email'})
-        self.assertFalse(QueuedEmail.objects.exists())
+        self.assertEqual(self.post(module=0, question=0, text='hi').json(), {'status': 'no telegram chat'})
+        self.assertFalse(QueuedMessage.objects.exists())
 
     def test_capped_per_hour_separately(self):
-        for _ in range(views.NOTE_EMAILS_PER_HOUR + 2):
+        for _ in range(views.NOTE_MESSAGES_PER_HOUR + 2):
             self.post(module=0, question=0, text='hi')
-        self.assertEqual(QueuedEmail.objects.filter(category='note').count(), views.NOTE_EMAILS_PER_HOUR)
+        self.assertEqual(QueuedMessage.objects.filter(category='note').count(), views.NOTE_MESSAGES_PER_HOUR)
         self.client.post('/api/unscheduled-break/', dict(event='start', module=0, time_left=60))
-        self.assertEqual(QueuedEmail.objects.filter(category='unscheduled_break').count(), 1)
+        self.assertEqual(QueuedMessage.objects.filter(category='unscheduled_break').count(), 1)
 
     def test_login_and_post_required(self):
         self.assertEqual(self.client.get('/api/note/').status_code, 405)
         self.client.logout()
         self.assertEqual(self.post(module=0, question=0, text='hi').status_code, 302)
-        self.assertFalse(QueuedEmail.objects.exists())
+        self.assertFalse(QueuedMessage.objects.exists())
+
+
+@override_settings(**TELEGRAM)
+class TelegramWebhookTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', password='pw')
+        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee', telegram_link_token='tok_ABC-123')
+
+    def update(self, text, chat=None, secret='webhook-secret-123456'):
+        chat = chat or {'id': 555, 'type': 'private', 'first_name': 'Dana', 'username': 'dana_parent'}
+        headers = {'HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN': secret} if secret is not None else {}
+        return self.client.post('/telegram/webhook/', json.dumps({'update_id': 1, 'message': {'text': text, 'chat': chat}}),
+                                content_type='application/json', **headers)
+
+    def test_start_with_token_links_the_chat(self):
+        response = self.update('/start tok_ABC-123')
+        self.profile.refresh_from_db()
+        self.assertEqual((self.profile.telegram_chat_id, self.profile.telegram_chat_name), (555, 'Dana (@dana_parent)'))
+        reply = response.json()
+        self.assertEqual((reply['method'], reply['chat_id'], reply['parse_mode']), ('sendMessage', 555, 'HTML'))
+        self.assertIn('<b>Ana Lee</b>', reply['text'])
+
+    def test_new_chat_replaces_the_old_one(self):
+        self.update('/start tok_ABC-123')
+        self.update('/start tok_ABC-123', chat={'id': 777, 'type': 'private', 'first_name': 'Ana'})
+        self.profile.refresh_from_db()
+        self.assertEqual((self.profile.telegram_chat_id, self.profile.telegram_chat_name), (777, 'Ana'))
+
+    def test_group_chat_command_with_bot_name(self):
+        self.update('/start@bbtest_bot tok_ABC-123', chat={'id': -100, 'type': 'group', 'title': 'Lee family'})
+        self.profile.refresh_from_db()
+        self.assertEqual((self.profile.telegram_chat_id, self.profile.telegram_chat_name), (-100, 'Lee family'))
+
+    def test_start_without_or_with_wrong_token(self):
+        for text in ('/start', '/start nope'):
+            reply = self.update(text).json()
+            self.assertIn('Connect Telegram link', reply['text'])
+        self.profile.refresh_from_db()
+        self.assertIsNone(self.profile.telegram_chat_id)
+
+    def test_stop_unlinks(self):
+        self.update('/start tok_ABC-123')
+        reply = self.update('/stop').json()
+        self.assertIn('Disconnected', reply['text'])
+        self.profile.refresh_from_db()
+        self.assertEqual((self.profile.telegram_chat_id, self.profile.telegram_chat_name), (None, ''))
+        self.assertIn("isn't connected", self.update('/stop').json()['text'])
+
+    def test_other_messages_are_ignored(self):
+        response = self.update('hello')
+        self.assertEqual((response.status_code, response.content), (200, b''))
+
+    def test_secret_is_required(self):
+        for secret in (None, 'wrong'):
+            self.assertEqual(self.update('/start tok_ABC-123', secret=secret).status_code, 403)
+        with override_settings(TELEGRAM_WEBHOOK_SECRET=''):
+            self.assertEqual(self.update('/start tok_ABC-123', secret='').status_code, 403)
+        self.profile.refresh_from_db()
+        self.assertIsNone(self.profile.telegram_chat_id)
+
+    def test_bad_requests(self):
+        self.assertEqual(self.client.get('/telegram/webhook/').status_code, 405)
+        response = self.client.post('/telegram/webhook/', 'not json', content_type='application/json',
+                                    HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN='webhook-secret-123456')
+        self.assertEqual(response.status_code, 400)
+
+
+@override_settings(**TELEGRAM)
+class DashboardTelegramTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', password='pw')
+        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee')
+        self.client.force_login(self.user)
+
+    def dashboard(self):
+        return self.client.get('/dashboard/').content.decode()
+
+    def test_not_connected_shows_connect_link(self):
+        html = self.dashboard()
+        self.profile.refresh_from_db()
+        token = self.profile.telegram_link_token
+        self.assertRegex(token, r'^[A-Za-z0-9_-]{20,64}$')
+        self.assertIn(f'https://t.me/bbtest_bot?start={token}', html)
+        self.assertIn('Not connected', html)
+        self.assertIn('Connect Telegram', html)
+        # The same link every time
+        self.dashboard()
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.telegram_link_token, token)
+
+    def test_connected_shows_chat(self):
+        self.profile.telegram_chat_id, self.profile.telegram_chat_name = 555, 'Dana (@dana_parent)'
+        self.profile.save()
+        html = self.dashboard()
+        self.assertIn('Connected to <strong>Dana (@dana_parent)</strong>', html)
+        self.assertIn('Connect a different chat', html)
+
+    @override_settings(TELEGRAM_BOT_USERNAME='')
+    def test_without_bot_username(self):
+        self.assertIn("Telegram isn't set up on this site yet.", self.dashboard())
+
+    def test_contact_email_field_is_gone(self):
+        self.assertNotIn('name="contact_email"', self.dashboard())
+
+
+class TelegramSetupCommandTests(TestCase):
+    def run_command(self, *args):
+        out = io.StringIO()
+        call_command('telegram_setup', *args, stdout=out)
+        return out.getvalue()
+
+    @override_settings(TELEGRAM_BOT_TOKEN='')
+    def test_without_token(self):
+        self.assertIn('skipping', self.run_command('--if-configured'))
+        with self.assertRaises(CommandError):
+            self.run_command()
+
+    @override_settings(TELEGRAM_BOT_TOKEN='123:T', TELEGRAM_WEBHOOK_SECRET='short')
+    def test_rejects_weak_secret(self):
+        with self.assertRaises(CommandError):
+            self.run_command()
+
+    @override_settings(ALLOWED_HOSTS=['localhost', 'bbtest.shop'], **TELEGRAM)
+    def test_sets_webhook(self):
+        results = {'getMe': {'username': 'bbtest_bot'},
+                   'setWebhook': True,
+                   'getWebhookInfo': {'url': 'https://bbtest.shop/telegram/webhook/'}}
+        with mock.patch.object(telegram, 'call', side_effect=lambda method, payload: results[method]) as call:
+            out = self.run_command()
+        call.assert_any_call('setWebhook', {'url': 'https://bbtest.shop/telegram/webhook/',
+                                            'secret_token': 'webhook-secret-123456', 'allowed_updates': ['message']})
+        self.assertIn('Webhook for @bbtest_bot set to https://bbtest.shop/telegram/webhook/', out)
+        self.assertNotIn('connect links', out)
+
+    @override_settings(**{**TELEGRAM, 'TELEGRAM_BOT_USERNAME': 'other_bot'})
+    def test_warns_when_username_does_not_match(self):
+        results = {'getMe': {'username': 'bbtest_bot'}, 'setWebhook': True, 'getWebhookInfo': {'url': 'x'}}
+        with mock.patch.object(telegram, 'call', side_effect=lambda method, payload: results[method]):
+            self.assertIn("connect links won't work", self.run_command())

@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ui',
-    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -174,20 +173,17 @@ PASSWORD_HASHERS = [
 # ModelBackend plus per-account lockout after repeated failed sign-ins
 AUTHENTICATION_BACKENDS = ['ui.auth_backends.LockoutModelBackend']
 
-# For testing email sending locally
-EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
-ANYMAIL = {
-    "RESEND_API_KEY": os.getenv('RESEND_API_KEY', ''),
-}
-# One fixed sender under our own name: a well-known brand name on an
-# unrelated domain, or a different address per email, looks like phishing
-# to spam filters
-DEFAULT_FROM_EMAIL = "BB Test <messages@bbtest.shop>"
+# Telegram bot that sends start codes, break notices and notes (ui/telegram.py).
+# Token and username come from @BotFather. The webhook secret is any random
+# string; Telegram sends it with every update so the webhook can verify it.
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_BOT_USERNAME = os.getenv('TELEGRAM_BOT_USERNAME', '')
+TELEGRAM_WEBHOOK_SECRET = os.getenv('TELEGRAM_WEBHOOK_SECRET', '')
 
-# Number of server processes running email senders (ui/email_queue.py). The
-# Resend rate limit is split across them, so keep this equal to `workers` in
-# gunicorn.conf.py.
-EMAIL_SENDER_PROCESSES = int(os.getenv('EMAIL_SENDER_PROCESSES', '9'))
+# Number of server processes running message senders (ui/message_queue.py).
+# The Telegram rate limit is split across them, so keep this equal to
+# `workers` in gunicorn.conf.py. (EMAIL_SENDER_PROCESSES is the old name.)
+MESSAGE_SENDER_PROCESSES = int(os.getenv('MESSAGE_SENDER_PROCESSES', os.getenv('EMAIL_SENDER_PROCESSES', '9')))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

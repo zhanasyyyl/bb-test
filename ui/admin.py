@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import QueuedEmail, UserProfile
+from . import telegram
+from .models import QueuedMessage, UserProfile
 
 
 class ActiveFilter(admin.SimpleListFilter):
@@ -58,23 +59,38 @@ class UserAdmin(BaseUserAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'full_name', 'test_center_address','contact_email', 'start_code', 'date_joined')
+    list_display = ('user', 'full_name', 'test_center_address', 'telegram_connected', 'start_code', 'date_joined')
     list_select_related = ('user',)
     # Same filters, date bar, search and defaults as the Users page, applied to
-    # each profile's account (search also covers the profile's own name and email)
+    # each profile's account (search also covers the profile's name and Telegram chat)
     list_filter = ('user__is_staff', 'user__is_superuser', ProfileActiveFilter, 'user__groups')
     date_hierarchy = 'user__date_joined'
     ordering = ('-user__date_joined',)
     search_fields = ('user__username', 'user__first_name', 'user__last_name', 'user__email',
-                     'full_name', 'contact_email')
+                     'full_name', 'telegram_chat_name')
+    # contact_email is no longer used; it's kept read-only so old values aren't lost
+    readonly_fields = ('telegram_chat_id', 'telegram_chat_name', 'telegram_connect_link', 'contact_email')
+    exclude = ('telegram_link_token',)
 
     @admin.display(description='Date joined', ordering='user__date_joined')
     def date_joined(self, profile):
         return profile.user.date_joined
 
+    @admin.display(description='Telegram', boolean=True, ordering='telegram_chat_id')
+    def telegram_connected(self, profile):
+        return profile.telegram_chat_id is not None
 
-@admin.register(QueuedEmail)
-class QueuedEmailAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'recipient_list', 'status', 'attempts', 'created_at', 'sent_at')
-    list_filter = ('status',)
+    @admin.display(description='Telegram connect link')
+    def telegram_connect_link(self, profile):
+        # Whoever opens it and presses Start gets this student's messages
+        if not profile.pk:
+            return '-'
+        return telegram.connect_link(profile) or 'Set TELEGRAM_BOT_USERNAME to show the link'
+
+
+@admin.register(QueuedMessage)
+class QueuedMessageAdmin(admin.ModelAdmin):
+    list_display = ('category', 'user', 'chat_id', 'status', 'attempts', 'created_at', 'sent_at')
+    list_filter = ('status', 'category')
+    list_select_related = ('user',)
     readonly_fields = ('created_at', 'sent_at', 'claimed_at', 'last_error')

@@ -1,5 +1,6 @@
 import os
 import re
+import hmac
 import json
 import logging
 import tempfile
@@ -11,14 +12,16 @@ from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from django.contrib import messages
 from django.utils import timezone
 
-from .models import QueuedEmail, SiteSettings, UserProfile
+from .models import QueuedMessage, SiteSettings, UserProfile
 from .forms import UserProfileForm
-from .email_queue import enqueue_email
+from .message_queue import enqueue_message
+from . import telegram
 
 logger = logging.getLogger(__name__)
 
@@ -59,26 +62,50 @@ def cb_login_view(request):
 
 @login_required
 def dashboard_view(request):
-    return render(request, 'dashboard.html')
+    profile = _get_profile(request.user)
+    return render(request, 'dashboard.html', {
+        'telegram_link': telegram.connect_link(profile) if profile else None,
+    })
 
 
 START_CODE_RE = re.compile(r'[0-9]{6}')
 
-# Emails of each kind one user can trigger per hour. High enough that people
-# testing the flow repeatedly won't hit them; they only stop scripted abuse
-# (anyone signed in can point their contact email at any address).
-START_CODE_EMAILS_PER_HOUR = 50
-UNSCHEDULED_BREAK_EMAILS_PER_HOUR = 30
-NOTE_EMAILS_PER_HOUR = 60
+# Messages of each kind one user can trigger per hour. High enough that people
+# testing the flow repeatedly won't hit them; they only stop scripted abuse.
+START_CODE_MESSAGES_PER_HOUR = 50
+UNSCHEDULED_BREAK_MESSAGES_PER_HOUR = 30
+NOTE_MESSAGES_PER_HOUR = 60
 
-# Longest note put in a note email; longer ones are cut
+# Longest note put in a note message; longer ones are cut (Telegram's limit is 4096)
 NOTE_MAX_CHARS = 2000
 
 
-def _emails_sent_recently(user, category):
-    return QueuedEmail.objects.filter(
+def _messages_sent_recently(user, category):
+    return QueuedMessage.objects.filter(
         user=user, category=category, created_at__gte=timezone.now() - timedelta(hours=1),
     ).count()
+
+
+def _display_name(profile, user):
+    return ' '.join((profile.full_name or user.get_username()).split())[:80]
+
+
+def _send_to_student_chat(request, profile, category, limit, template, context):
+    """Queues a Telegram message to the student's linked chat. Returns a status
+    for the page: no linked chat and the hourly cap both just skip sending."""
+    if not profile or not profile.telegram_chat_id:
+        return 'no telegram chat'
+    if _messages_sent_recently(request.user, category) >= limit:
+        logger.warning("%s message limit reached for user %s", category, request.user.pk)
+        return 'limit reached'
+    context = {'name': _display_name(profile, request.user), **context}
+    enqueue_message(
+        chat_id=profile.telegram_chat_id,
+        text=render_to_string(f'telegram/{template}.html', context).strip(),
+        user=request.user,
+        category=category,
+    )
+    return 'ok'
 
 
 @login_required
@@ -94,21 +121,9 @@ def start_code_view(request):
             profile.start_code = full_code
             profile.save()
 
-        if profile and profile.contact_email:
-            if _emails_sent_recently(request.user, QueuedEmail.START_CODE) < START_CODE_EMAILS_PER_HOUR:
-                # Queue email — delivered by the rate-limited background senders
-                enqueue_email(
-                    subject=f"Your practice test start code: {full_code}",
-                    message=render_to_string('emails/start_code.txt', {'code': full_code}),
-                    html_message=render_to_string('emails/start_code.html', {'code': full_code}),
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[profile.contact_email],
-                    user=request.user,
-                    category=QueuedEmail.START_CODE,
-                )
-            else:
-                logger.warning("Start-code email limit reached for user %s", request.user.pk)
-
+        # Delivered by the rate-limited background senders
+        _send_to_student_chat(request, profile, QueuedMessage.START_CODE, START_CODE_MESSAGES_PER_HOUR,
+                              'start_code', {'code': full_code})
         return redirect('test_interface')
 
     return render(request, 'start_code.html')
@@ -123,9 +138,9 @@ def _format_duration(seconds):
 @login_required
 @require_POST
 def unscheduled_break_view(request):
-    """Emails the student's contact address when an unscheduled break starts
+    """Messages the student's Telegram chat when an unscheduled break starts
     or ends. The page sends only numbers (module index and timings), never
-    text, so the email content can't be chosen by the caller."""
+    text, so the message content can't be chosen by the caller."""
     event = request.POST.get('event')
     try:
         module_index = int(request.POST.get('module', ''))
@@ -137,34 +152,16 @@ def unscheduled_break_view(request):
             or not 0 <= time_left <= 7200 or not 0 <= break_seconds <= 7200):
         return JsonResponse({'error': 'Invalid input'}, status=400)
 
-    profile = _get_profile(request.user)
-    if not profile or not profile.contact_email:
-        return JsonResponse({'status': 'no contact email'})
-    if _emails_sent_recently(request.user, QueuedEmail.UNSCHEDULED_BREAK) >= UNSCHEDULED_BREAK_EMAILS_PER_HOUR:
-        logger.warning("Unscheduled-break email limit reached for user %s", request.user.pk)
-        return JsonResponse({'status': 'limit reached'})
-
-    name = _email_name(profile, request.user)
-    context = {
-        'name': name,
-        'event': event,
-        'module': MODULES[module_index][0],
-        'time_left': _format_duration(time_left)[0],
-        'break_length': _format_duration(break_seconds)[1],
-        'time_ran_out': event == 'end' and time_left == 0,
-    }
-    subject = (f"{name} started an unscheduled break" if event == 'start'
-               else f"{name} ended an unscheduled break ({context['break_length']})")
-    enqueue_email(
-        subject=subject,
-        message=render_to_string('emails/unscheduled_break.txt', context),
-        html_message=render_to_string('emails/unscheduled_break.html', context),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[profile.contact_email],
-        user=request.user,
-        category=QueuedEmail.UNSCHEDULED_BREAK,
-    )
-    return JsonResponse({'status': 'ok'})
+    status = _send_to_student_chat(
+        request, _get_profile(request.user), QueuedMessage.UNSCHEDULED_BREAK,
+        UNSCHEDULED_BREAK_MESSAGES_PER_HOUR, 'unscheduled_break', {
+            'event': event,
+            'module': MODULES[module_index][0],
+            'time_left': _format_duration(time_left)[0],
+            'break_length': _format_duration(break_seconds)[1],
+            'time_ran_out': event == 'end' and time_left == 0,
+        })
+    return JsonResponse({'status': status})
 
 
 def _shorten(text, limit):
@@ -172,18 +169,12 @@ def _shorten(text, limit):
     return text if len(text) <= limit else text[:limit].rstrip() + '…'
 
 
-def _email_name(profile, user):
-    # One line, no control characters: the name goes into the subject header
-    return ' '.join((profile.full_name or user.get_username()).split())[:80]
-
-
 @login_required
 @require_POST
 def note_view(request):
-    """Emails a note the student wrote on a highlight to their contact
-    address. Unlike the other emails the note is free text, so it is capped
-    per hour, cut to NOTE_MAX_CHARS, kept out of the subject and escaped in
-    the HTML version."""
+    """Messages a note the student wrote on a highlight to their Telegram
+    chat. The note is free text, so it is capped per hour, cut to
+    NOTE_MAX_CHARS and HTML-escaped by the template."""
     try:
         module_index = int(request.POST.get('module', ''))
         question_index = int(request.POST.get('question', ''))
@@ -196,30 +187,66 @@ def note_view(request):
     if not 0 <= question_index < end - start:
         return JsonResponse({'error': 'Invalid input'}, status=400)
 
-    profile = _get_profile(request.user)
-    if not profile or not profile.contact_email:
-        return JsonResponse({'status': 'no contact email'})
-    if _emails_sent_recently(request.user, QueuedEmail.NOTE) >= NOTE_EMAILS_PER_HOUR:
-        logger.warning("Note email limit reached for user %s", request.user.pk)
-        return JsonResponse({'status': 'limit reached'})
+    status = _send_to_student_chat(
+        request, _get_profile(request.user), QueuedMessage.NOTE, NOTE_MESSAGES_PER_HOUR, 'note', {
+            'module': MODULES[module_index][0],
+            'question': question_index + 1,
+            'text': _shorten(text, NOTE_MAX_CHARS),
+        })
+    return JsonResponse({'status': status})
 
-    name = _email_name(profile, request.user)
-    context = {
-        'name': name,
-        'module': MODULES[module_index][0],
-        'question': question_index + 1,
-        'text': _shorten(text, NOTE_MAX_CHARS),
-    }
-    enqueue_email(
-        subject=f"{name} wrote a note (Question {question_index + 1}, {context['module'].split(':')[0]})",
-        message=render_to_string('emails/note.txt', context),
-        html_message=render_to_string('emails/note.html', context),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[profile.contact_email],
-        user=request.user,
-        category=QueuedEmail.NOTE,
-    )
-    return JsonResponse({'status': 'ok'})
+
+def _chat_display_name(chat):
+    name = ' '.join(filter(None, [chat.get('first_name'), chat.get('last_name')])) or chat.get('title', '')
+    if chat.get('username'):
+        name = f"{name} (@{chat['username']})" if name else f"@{chat['username']}"
+    return name[:255]
+
+
+@csrf_exempt
+@require_POST
+def telegram_webhook_view(request):
+    """Receives updates from Telegram (set up with `manage.py telegram_setup`).
+
+    "/start <token>" comes from a student's connect link and links that chat
+    to the student's profile (replacing any earlier chat); "/stop" unlinks the
+    chat. Replies are returned as the webhook response, which Telegram sends.
+    """
+    secret = settings.TELEGRAM_WEBHOOK_SECRET
+    given = request.headers.get('X-Telegram-Bot-Api-Secret-Token', '')
+    if not secret or not hmac.compare_digest(given.encode(), secret.encode()):
+        return HttpResponse(status=403)
+    try:
+        update = json.loads(request.body)
+    except ValueError:
+        return HttpResponse(status=400)
+
+    message = update.get('message') or {}
+    chat = message.get('chat') or {}
+    chat_id = chat.get('id')
+    command, _, argument = (message.get('text') or '').strip().partition(' ')
+    command = command.split('@')[0]   # "/start@BotName" in group chats
+    if not chat_id or command not in ('/start', '/stop'):
+        return HttpResponse(status=200)
+
+    if command == '/start':
+        token = argument.strip()
+        profile = (UserProfile.objects.select_related('user').filter(telegram_link_token=token).first()
+                   if token else None)
+        if profile:
+            profile.telegram_chat_id = chat_id
+            profile.telegram_chat_name = _chat_display_name(chat)
+            profile.save(update_fields=['telegram_chat_id', 'telegram_chat_name'])
+            reply = render_to_string('telegram/connected.html', {
+                'name': _display_name(profile, profile.user)}).strip()
+        else:
+            reply = 'To get messages here, open the Connect Telegram link in your BB Test profile.'
+    else:
+        unlinked = UserProfile.objects.filter(telegram_chat_id=chat_id).update(
+            telegram_chat_id=None, telegram_chat_name='')
+        reply = ("Disconnected. You won't get BB Test messages here any more." if unlinked
+                 else "This chat isn't connected to a BB Test profile.")
+    return JsonResponse({'method': 'sendMessage', 'chat_id': chat_id, 'text': reply, 'parse_mode': 'HTML'})
 
 
 @login_required

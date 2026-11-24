@@ -23,6 +23,28 @@ The health check requests `https://bbtest.shop/cb_login/` through nginx (set
 `SITE_HOST` for another domain). The nginx files and cron job below are not
 applied by the script; it prints a note when they change.
 
+## Telegram bot (one-time)
+
+Start codes, unscheduled breaks and notes are sent by a Telegram bot.
+
+1. In Telegram, message @BotFather, send `/newbot` and follow the steps. It
+   gives you the bot's token and username.
+2. Add these to the server's `.env`:
+
+   ```sh
+   TELEGRAM_BOT_TOKEN=123456:ABC...        # from BotFather
+   TELEGRAM_BOT_USERNAME=your_bot_name      # without the @
+   TELEGRAM_WEBHOOK_SECRET=<random>         # e.g. the output of: openssl rand -hex 32
+   ```
+
+3. Run `deploy/update.sh` (or `venv/bin/python manage.py telegram_setup`). It
+   checks the token and points the bot's webhook at
+   `https://bbtest.shop/telegram/webhook/`. update.sh repeats this on every
+   deploy, which is harmless.
+
+Students then connect a chat from their profile window ("Connect Telegram").
+Students without a connected chat get no messages.
+
 ## One-time setup
 
 The other files in this folder are installed on the server by hand.

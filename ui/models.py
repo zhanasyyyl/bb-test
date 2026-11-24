@@ -6,9 +6,16 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255, blank=True, null=True)
     test_center_address = models.TextField(blank=True, null=True)
+    # No longer used (messages go to Telegram); kept so existing values aren't lost
     contact_email = models.EmailField(blank=True, null=True)
     start_code = models.CharField(max_length=50, blank=True, null=True)
     test_completed = models.BooleanField(default=False)
+    # The Telegram chat that gets this student's messages (one per student).
+    # It's linked when someone opens the student's connect link
+    # (t.me/<bot>?start=<telegram_link_token>) and presses Start.
+    telegram_chat_id = models.BigIntegerField(blank=True, null=True)
+    telegram_chat_name = models.CharField(max_length=255, blank=True)
+    telegram_link_token = models.CharField(max_length=64, blank=True, null=True, unique=True)
 
     @property
     def first_name(self):
@@ -20,8 +27,9 @@ class UserProfile(models.Model):
         return self.user.username
 
 
-class QueuedEmail(models.Model):
-    """Outgoing email, stored so it survives worker restarts. Sent by ui.email_queue."""
+class QueuedMessage(models.Model):
+    """Outgoing Telegram message, stored so it survives worker restarts.
+    Sent by ui.message_queue."""
 
     PENDING = 'pending'
     SENDING = 'sending'
@@ -34,19 +42,16 @@ class QueuedEmail(models.Model):
         (FAILED, 'Failed'),
     ]
 
-    # Who triggered the email, for per-user limits (None for system emails)
+    # Who triggered the message, for per-user limits (None for system messages)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    subject = models.CharField(max_length=255)
-    message = models.TextField()
-    # Optional HTML version, sent alongside the plain-text message
-    html_message = models.TextField(blank=True)
-    # What the email is about; used for per-user hourly caps and as a Resend tag
+    chat_id = models.BigIntegerField(blank=True, null=True)
+    # Telegram HTML (parse_mode=HTML): user-supplied text must be escaped
+    text = models.TextField()
+    # What the message is about; used for per-user hourly caps
     START_CODE = 'start_code'
     UNSCHEDULED_BREAK = 'unscheduled_break'
     NOTE = 'note'
     category = models.CharField(max_length=30, blank=True, default='')
-    from_email = models.CharField(max_length=255)
-    recipient_list = models.JSONField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
     attempts = models.PositiveIntegerField(default=0)
     next_attempt_at = models.DateTimeField(default=timezone.now)
@@ -59,7 +64,7 @@ class QueuedEmail(models.Model):
         indexes = [models.Index(fields=['status', 'next_attempt_at'])]
 
     def __str__(self):
-        return f"{self.subject} -> {', '.join(self.recipient_list)}"
+        return f"{self.category or 'message'} to chat {self.chat_id}"
 
 
 class LoginFailure(models.Model):

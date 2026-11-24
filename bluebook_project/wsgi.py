@@ -15,6 +15,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bluebook_project.settings')
 
 application = get_wsgi_application()
 
-# Start the background email senders in each server process (after gunicorn forks)
-from ui.email_queue import start_workers  # noqa: E402
+# Start the background message senders in each server process (after gunicorn forks)
+from ui.message_queue import start_workers  # noqa: E402
 start_workers()

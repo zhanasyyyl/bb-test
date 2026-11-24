@@ -1,0 +1,4 @@
+{# Telegram HTML (parse_mode=HTML); newlines are kept #}
+{% if event == 'start' %}<b>{{ name }}</b> started an unscheduled break during {{ module }}.
+Time left in the module: <b>{{ time_left }}</b>. The module timer keeps running during the break.{% else %}<b>{{ name }}</b> ended their unscheduled break after <b>{{ break_length }}</b>.
+{% if time_ran_out %}The time for {{ module }} ran out during the break, so they were moved on to the next part of the test.{% else %}They're back to {{ module }} with <b>{{ time_left }}</b> left in the module.{% endif %}{% endif %}

@@ -1,6 +1,7 @@
 #!/bin/sh
 # Pulls the latest main and applies it: requirements, migrations, static
-# files, Django checks, then a graceful gunicorn reload and a health check.
+# files, Django checks, the Telegram webhook, then a graceful gunicorn reload
+# and a health check.
 #
 #   deploy/update.sh
 #
@@ -49,6 +50,11 @@ step "Collecting static files"
 
 step "Checking the project"
 "$PY" manage.py check
+
+step "Telegram webhook"
+# Points the bot at this site (safe to repeat). Not fatal: messages just
+# queue up until it works, and the site itself is unaffected.
+"$PY" manage.py telegram_setup --if-configured || echo "Telegram setup failed; check TELEGRAM_* in .env and run: $PY manage.py telegram_setup" >&2
 
 step "Reloading gunicorn"
 if [ -n "${GUNICORN_SERVICE:-}" ]; then
