@@ -31,8 +31,15 @@ _MAX_RPS_TOTAL = 25
 # Give up on a message after this many failed sends
 _MAX_ATTEMPTS = 5
 
+# Wait before retry 1, 2, 3, 4 (seconds), unless Telegram says how long to wait.
+# Most failures are brief network blips, so the first retry comes quickly.
+_RETRY_DELAYS = (3, 10, 30, 60)
+
 # A row stuck in "sending" this long belongs to a worker that died mid-send
-_STALE_CLAIM = timedelta(minutes=5)
+# (killed by gunicorn's timeout). A live send can't take this long: the
+# request times out after 10 s and saving the result waits at most 20 s for
+# SQLite's lock.
+_STALE_CLAIM = timedelta(seconds=60)
 
 # How often idle senders check the table for messages queued by other processes
 # (a message queued in this process wakes them at once)
@@ -46,6 +53,10 @@ def _per_process_rps():
 
 # Wakes this process's senders as soon as a message is queued here
 _wake = threading.Event()
+
+# Set when the process is shutting down (see stop_workers)
+_stopping = threading.Event()
+_threads: list[threading.Thread] = []
 
 # Sliding-window rate limiter shared by this process's sender threads
 _rate_lock = threading.Lock()
@@ -116,8 +127,8 @@ def process_one():
         else:
             message.status = QueuedMessage.PENDING
             retry_after = getattr(e, 'retry_after', None)
-            # Telegram's own wait when it rate-limits us; otherwise 20s, 40s, 80s, 160s
-            delay = retry_after if retry_after else 10 * 2 ** message.attempts
+            # Telegram's own wait when it rate-limits us; otherwise _RETRY_DELAYS
+            delay = retry_after if retry_after else _RETRY_DELAYS[min(message.attempts, len(_RETRY_DELAYS)) - 1]
             message.next_attempt_at = timezone.now() + timedelta(seconds=delay)
             logger.warning("Message %s failed (attempt %s), will retry: %s",
                            message.id, message.attempts, e)
@@ -148,8 +159,8 @@ def _work_then_wait():
 
 
 def _worker():
-    """Background sender thread."""
-    while True:
+    """Background sender thread. Stops between messages once stop_workers() is called."""
+    while not _stopping.is_set():
         _work_then_wait()
 
 
@@ -169,8 +180,24 @@ def start_workers():
             return
         for i in range(_per_process_rps()):
             # Daemon threads exit with the process; unsent rows stay in the DB
-            threading.Thread(target=_worker, daemon=True, name=f"message-worker-{i}").start()
+            thread = threading.Thread(target=_worker, daemon=True, name=f"message-worker-{i}")
+            thread.start()
+            _threads.append(thread)
         _started = True
+
+
+def stop_workers(timeout=15):
+    """Lets this process's senders finish the message they're sending, then stop.
+
+    Called from gunicorn's worker_exit hook, so a worker restart (max_requests,
+    deploys) doesn't kill a thread mid-send and leave that message claimed
+    until _STALE_CLAIM passes.
+    """
+    _stopping.set()
+    _wake.set()
+    deadline = time.monotonic() + timeout
+    for thread in _threads:
+        thread.join(max(0, deadline - time.monotonic()))
 
 
 def enqueue_message(*, chat_id, text, user=None, category=''):

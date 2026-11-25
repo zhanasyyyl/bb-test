@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 import tempfile
+import threading
 import time
 import urllib.error
 from datetime import timedelta
@@ -448,13 +449,18 @@ class MessageQueueTests(SentTelegramMixin, TestCase):
         self.assertEqual(message.status, QueuedMessage.FAILED)
         self.assertIn('boom', message.last_error)
 
-    def test_first_retry_after_20_seconds(self):
+    def test_retries_come_quickly_then_back_off(self):
         message = self.enqueue()
+        waits = []
         with mock.patch.object(telegram, 'send_message', side_effect=RuntimeError('boom')):
-            before = timezone.now()
-            message_queue.process_one()
-        message.refresh_from_db()
-        self.assertAlmostEqual((message.next_attempt_at - before).total_seconds(), 20, delta=1)
+            for _ in range(4):
+                message_queue.process_one()
+                message.refresh_from_db()
+                # Measured from the failed send (the rate limiter can delay it a moment)
+                after = timezone.now()
+                waits.append(round((message.next_attempt_at - after).total_seconds()))
+                QueuedMessage.objects.filter(id=message.id).update(next_attempt_at=timezone.now())
+        self.assertEqual(waits, [3, 10, 30, 60])
 
     def test_waits_as_long_as_telegram_asks(self):
         message = self.enqueue()
@@ -495,10 +501,30 @@ class MessageQueueTests(SentTelegramMixin, TestCase):
         QueuedMessage.objects.filter(id=message.id).update(status=QueuedMessage.SENDING, claimed_at=timezone.now())
         self.assertFalse(message_queue.process_one())
 
+    def test_recent_claim_is_left_alone(self):
+        message = self.enqueue()
+        QueuedMessage.objects.filter(id=message.id).update(
+            status=QueuedMessage.SENDING, claimed_at=timezone.now() - timedelta(seconds=30))
+        self.assertFalse(message_queue.process_one())
+
+    def test_stop_workers_lets_a_sender_finish_then_stops_it(self):
+        sent = []
+        stopping, threads = threading.Event(), []
+        with mock.patch.object(message_queue, '_stopping', stopping), \
+                mock.patch.object(message_queue, '_threads', threads), \
+                mock.patch.object(message_queue, '_work_then_wait', side_effect=lambda: (sent.append(1), time.sleep(0.05))):
+            thread = threading.Thread(target=message_queue._worker, daemon=True)
+            thread.start()
+            threads.append(thread)
+            time.sleep(0.1)
+            message_queue.stop_workers(timeout=2)
+            self.assertFalse(thread.is_alive())
+        self.assertTrue(sent)
+
     def test_stale_claim_is_retried(self):
         message = self.enqueue()
         QueuedMessage.objects.filter(id=message.id).update(
-            status=QueuedMessage.SENDING, claimed_at=timezone.now() - timedelta(minutes=10))
+            status=QueuedMessage.SENDING, claimed_at=timezone.now() - timedelta(seconds=90))
         self.assertTrue(message_queue.process_one())
         message.refresh_from_db()
         self.assertEqual(message.status, QueuedMessage.SENT)

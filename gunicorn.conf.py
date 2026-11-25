@@ -17,6 +17,14 @@ timeout = 30
 max_requests = 1000
 max_requests_jitter = 50
 
+
+
+def worker_exit(server, worker):
+    """Let the Telegram senders finish their current message before the worker exits."""
+    from ui import message_queue
+    message_queue.stop_workers()
+
+
 # Log configuration
 loglevel = 'info'
 accesslog = '-' # Log to stdout

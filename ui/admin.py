@@ -91,7 +91,14 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(QueuedMessage)
 class QueuedMessageAdmin(admin.ModelAdmin):
-    list_display = ('category', 'user', 'chat_id', 'status', 'attempts', 'created_at', 'sent_at')
+    list_display = ('category', 'user', 'chat_id', 'status', 'attempts', 'delay', 'created_at', 'sent_at')
     list_filter = ('status', 'category')
     list_select_related = ('user',)
     readonly_fields = ('created_at', 'sent_at', 'claimed_at', 'last_error')
+
+    @admin.display(description='Delay')
+    def delay(self, message):
+        """Seconds from queued to delivered; the cause of a long one is in Attempts and Last error."""
+        if not message.sent_at:
+            return '-'
+        return f'{(message.sent_at - message.created_at).total_seconds():.1f} s'
