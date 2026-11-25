@@ -58,15 +58,26 @@
             const errorMessage = document.getElementById('error-message');
 
             let forceInvalid = false;
-            // Hidden shortcut: Ctrl + Shift + E to toggle error state
+            let failOnce = false;
+            // Hidden shortcuts:
+            //   Ctrl + Shift + E toggles the error state (every try fails)
+            //   Ctrl + Shift + F makes only the next try fail (press again to cancel)
+            // The last one pressed wins, so E then F fails once and then lets the code through
             document.addEventListener('keydown', (e) => {
                 if (e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
                     forceInvalid = !forceInvalid;
+                    failOnce = false;
+                }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'F' || e.key === 'f')) {
+                    e.preventDefault();
+                    failOnce = !failOnce;
+                    forceInvalid = false;
                 }
             });
 
             form.addEventListener('submit', (e) => {
-                if (forceInvalid) {
+                if (forceInvalid || failOnce) {
+                    failOnce = false;
                     e.preventDefault();
                     errorMessage.style.display = 'block';
                     // Turn code box borders red
