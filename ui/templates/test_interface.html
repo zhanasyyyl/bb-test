@@ -534,6 +534,19 @@
         margin-right: 3px;
     }
 
+    /* Narrow calculator: icon-only tabs, like the real app */
+    #calc-modal.calc-narrow .calc-type-label {
+        display: none;
+    }
+
+    #calc-modal.calc-narrow .calc-type {
+        padding: 0 7px;
+    }
+
+    #calc-modal.calc-narrow .calc-type img {
+        margin-right: 0;
+    }
+
     .question-image {
         width: 321px;
         display: flex;
@@ -772,6 +785,53 @@
         width: 100%;
         max-width: 300px;
         height: auto;
+    }
+
+    /* Expanded: figures in rows across the screen, white sheet on a light grey panel */
+    .ref-wide,
+    .ref-icon-collapse,
+    .ref-panel.expanded .ref-narrow,
+    .ref-panel.expanded .ref-icon-expand {
+        display: none;
+    }
+
+    .ref-panel.expanded .ref-icon-collapse {
+        display: block;
+    }
+
+    .ref-panel.expanded {
+        background: #f5f7fc;
+    }
+
+    .ref-panel.expanded .ref-panel-body {
+        flex: 0 1 auto;
+        background: #fff;
+        padding: 12px 18px 28px;
+    }
+
+    .ref-panel.expanded .ref-wide {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        row-gap: 10px;
+    }
+
+    .ref-panel-body .ref-wide img {
+        height: auto;
+        max-width: none;
+    }
+
+    .ref-panel-body .ref-wide .ref-wide-special {
+        margin: 0 28px;
+    }
+
+    /* Areas and the cylinder on the first row, the other volumes on the second, like the real app */
+    .ref-wide-break {
+        flex-basis: 100%;
+    }
+
+    .ref-panel.expanded .ref-paragraphs {
+        padding: 0 16px;
     }
 
     .ref-paragraphs {
@@ -2468,13 +2528,13 @@
         <div
             style="display:flex; height: 100%; border: 0.5px solid #fff; gap: 0; padding: 0; border-radius: 6px; margin-left: 6px;">
             <!-- Tabs -->
-            <div class="calc-type active" onclick="app.setCalcMode('graphing')">
-                <img src="{% static 'images/graphing.png' %}">
-                Graphing
+            <div class="calc-type active" onclick="app.setCalcMode('graphing')" title="Graphing">
+                <img src="{% static 'images/graphing.png' %}" alt="">
+                <span class="calc-type-label">Graphing</span>
             </div>
-            <div class="calc-type" onclick="app.setCalcMode('scientific')">
-                <img src="{% static 'images/scientific.png' %}">
-                Scientific
+            <div class="calc-type" onclick="app.setCalcMode('scientific')" title="Scientific">
+                <img src="{% static 'images/scientific.png' %}" alt="">
+                <span class="calc-type-label">Scientific</span>
             </div>
         </div>
         <img src="{% static 'images/move.png' %}" id="desmos-move">
@@ -2500,10 +2560,16 @@
         <span class="ref-panel-title">Reference</span>
         <div class="ref-panel-actions">
             <button class="ref-panel-btn" id="ref-expand-btn" title="Expand" onclick="app.expandReference()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="ref-icon-expand" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="15 3 21 3 21 9"></polyline>
                     <polyline points="9 21 3 21 3 15"></polyline>
                     <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+                <svg class="ref-icon-collapse" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="4 14 10 14 10 20"></polyline>
+                    <polyline points="20 10 14 10 14 4"></polyline>
+                    <line x1="14" y1="10" x2="21" y2="3"></line>
                     <line x1="3" y1="21" x2="10" y2="14"></line>
                 </svg>
             </button>
@@ -2516,12 +2582,26 @@
         </div>
     </div>
     <div class="ref-panel-body">
-        <img src="{% static 'images/reference-1.png' %}" alt="Reference Sheet - Formulas">
-        <img src="{% static 'images/reference-2.png' %}" alt="Reference Sheet - Volumes">
+        {# Side panel: the two-column sheet. Expanded: each figure on its own, in rows across the screen #}
+        <img class="ref-narrow" src="{% static 'images/reference-1.png' %}" alt="Reference Sheet - Formulas">
+        <img class="ref-narrow" src="{% static 'images/reference-2.png' %}" alt="Reference Sheet - Volumes">
+        <div class="ref-wide">
+            <img src="{% static 'images/reference/circle.png' %}" width="110" height="133" style="width: 110px;" alt="Circle: A = πr², C = 2πr">
+            <img src="{% static 'images/reference/rectangle.png' %}" width="119" height="133" style="width: 119px;" alt="Rectangle: A = ℓw">
+            <img src="{% static 'images/reference/triangle.png' %}" width="107" height="128" style="width: 107px;" alt="Triangle: A = ½bh">
+            <img src="{% static 'images/reference/right-triangle.png' %}" width="110" height="128" style="width: 110px;" alt="Right triangle: c² = a² + b²">
+            <img class="ref-wide-special" src="{% static 'images/reference/special-triangles.png' %}" width="228" height="135" style="width: 228px;" alt="Special right triangles">
+            <img src="{% static 'images/reference/box.png' %}" width="112" height="114" style="width: 112px;" alt="Rectangular prism: V = ℓwh">
+            <img src="{% static 'images/reference/cylinder.png' %}" width="102" height="114" style="width: 102px;" alt="Cylinder: V = πr²h">
+            <span class="ref-wide-break"></span>
+            <img src="{% static 'images/reference/sphere.png' %}" width="88" height="142" style="width: 88px;" alt="Sphere: V = 4/3 πr³">
+            <img src="{% static 'images/reference/cone.png' %}" width="100" height="142" style="width: 100px;" alt="Cone: V = 1/3 πr²h">
+            <img src="{% static 'images/reference/pyramid.png' %}" width="105" height="131" style="width: 105px;" alt="Pyramid: V = 1/3 ℓwh">
+        </div>
         <div class="ref-paragraphs">
             <p>The number of degrees of arc in a circle is $360$.</p>
             <p>The number of radians of arc in a circle is $2\pi$.</p>
-            <p>The sum of the measures in degrees of the angles of<br>a triangle is $180$.</p>
+            <p>The sum of the measures in degrees of the angles of <br class="ref-narrow">a triangle is $180$.</p>
         </div>
     </div>
 </div>
@@ -2914,6 +2994,7 @@
                 this.isReferenceOpen = false;
                 this.isReferenceExpanded = false;
                 panel.style.width = '500px';
+                panel.classList.remove('expanded');
                 if (workspace) workspace.style.paddingRight = '0';
                 if (toolItem) toolItem.style.borderBottom = 'none';
                 if (toolItem2) toolItem2.style.borderBottom = 'none';
@@ -2930,6 +3011,7 @@
         expandReference() {
             const panel = document.getElementById('ref-panel');
             const workspace = document.getElementById('main-workspace');
+            const button = document.getElementById('ref-expand-btn');
             if (this.isReferenceExpanded) {
                 panel.style.width = '500px';
                 if (workspace) workspace.style.paddingRight = '500px';
@@ -2939,6 +3021,8 @@
                 if (workspace) workspace.style.paddingRight = '0';
                 this.isReferenceExpanded = true;
             }
+            panel.classList.toggle('expanded', this.isReferenceExpanded);
+            button.title = this.isReferenceExpanded ? 'Collapse' : 'Expand';
             this.updateQuestionPanePosition();
         },
 
@@ -2980,6 +3064,10 @@
             document.addEventListener('mouseup', () => {
                 isDragging = false;
             });
+
+            // Below this width the tab labels don't fit beside the move handle: show icons only
+            const updateCalcNarrow = () => modal.classList.toggle('calc-narrow', modal.offsetWidth < 360);
+            new ResizeObserver(updateCalcNarrow).observe(modal);
 
             // Resize logic for bottom-right handle
             const calcResizer = document.getElementById('calc-resizer');
