@@ -16,6 +16,9 @@ class UserProfile(models.Model):
     telegram_chat_id = models.BigIntegerField(blank=True, null=True)
     telegram_chat_name = models.CharField(max_length=255, blank=True)
     telegram_link_token = models.CharField(max_length=64, blank=True, null=True, unique=True)
+    # Set when the linked chat sends /finished; one confetti piece on the
+    # congrats page turns black. Cleared when the student enters a start code.
+    tutor_finished_at = models.DateTimeField(blank=True, null=True)
 
     @property
     def first_name(self):

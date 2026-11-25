@@ -590,6 +590,13 @@ class StartCodeTests(SentTelegramMixin, TestCase):
     def post(self, code):
         return self.client.post('/start-code/', {'full_code': code})
 
+    def test_valid_code_clears_tutor_finished(self):
+        self.profile.tutor_finished_at = timezone.now()
+        self.profile.save()
+        self.post('123456')
+        self.profile.refresh_from_db()
+        self.assertIsNone(self.profile.tutor_finished_at)
+
     def test_valid_code_sends_telegram_message(self):
         self.assertRedirects(self.post('123456'), '/test/', fetch_redirect_response=False)
         message = QueuedMessage.objects.get()
@@ -871,6 +878,55 @@ class TelegramWebhookTests(TestCase):
         self.profile.refresh_from_db()
         self.assertIsNone(self.profile.telegram_chat_id)
 
+    def press(self, data, chat_id=555, message_id=42):
+        update = {'update_id': 2, 'callback_query': {'id': 'cb1', 'data': data,
+                                                       'message': {'message_id': message_id, 'chat': {'id': chat_id}}}}
+        with mock.patch.object(telegram, 'call') as call:
+            response = self.client.post('/telegram/webhook/', json.dumps(update), content_type='application/json',
+                                        HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN='webhook-secret-123456')
+        call.assert_called_once_with('answerCallbackQuery', {'callback_query_id': 'cb1'}, timeout=5)
+        return response
+
+    def test_finished_marks_the_only_linked_student(self):
+        self.update('/start tok_ABC-123')
+        reply = self.update('/finished').json()
+        self.assertEqual(reply['text'], 'Got it: the practice test for <b>Ana Lee</b> is marked as finished.')
+        self.profile.refresh_from_db()
+        self.assertIsNotNone(self.profile.tutor_finished_at)
+
+    def test_finished_in_an_unlinked_chat(self):
+        self.assertIn("isn't connected", self.update('/finished').json()['text'])
+        self.profile.refresh_from_db()
+        self.assertIsNone(self.profile.tutor_finished_at)
+
+    def test_finished_with_several_students_asks_which(self):
+        self.update('/start tok_ABC-123')
+        ben = UserProfile.objects.create(user=User.objects.create_user('ben@example.com', password='pw'),
+                                         full_name='Ben Kim', telegram_chat_id=555)
+        reply = self.update('/finished').json()
+        self.assertEqual(reply['text'], 'Which student finished the practice test?')
+        self.assertEqual(reply['reply_markup']['inline_keyboard'],
+                         [[{'text': 'Ana Lee', 'callback_data': f'finished:{self.profile.id}'}],
+                          [{'text': 'Ben Kim', 'callback_data': f'finished:{ben.id}'}]])
+        self.profile.refresh_from_db()
+        self.assertIsNone(self.profile.tutor_finished_at)    # nothing marked until a button is pressed
+
+        reply = self.press(f'finished:{ben.id}').json()
+        self.assertEqual((reply['method'], reply['chat_id'], reply['message_id']), ('editMessageText', 555, 42))
+        self.assertIn('<b>Ben Kim</b>', reply['text'])
+        ben.refresh_from_db()
+        self.profile.refresh_from_db()
+        self.assertIsNotNone(ben.tutor_finished_at)
+        self.assertIsNone(self.profile.tutor_finished_at)
+
+    def test_button_from_another_chat_is_ignored(self):
+        self.update('/start tok_ABC-123')
+        for data in (f'finished:{self.profile.id}', 'finished:abc', 'other:1'):
+            response = self.press(data, chat_id=999 if data.endswith(str(self.profile.id)) else 555)
+            self.assertEqual((response.status_code, response.content), (200, b''))
+        self.profile.refresh_from_db()
+        self.assertIsNone(self.profile.tutor_finished_at)
+
     def test_bad_requests(self):
         self.assertEqual(self.client.get('/telegram/webhook/').status_code, 405)
         response = self.client.post('/telegram/webhook/', 'not json', content_type='application/json',
@@ -948,18 +1004,22 @@ class TelegramSetupCommandTests(TestCase):
     @override_settings(ALLOWED_HOSTS=['localhost', 'bbtest.shop'], **TELEGRAM)
     def test_sets_webhook(self):
         results = {'getMe': {'username': 'bbtest_bot'},
-                   'setWebhook': True,
+                   'setWebhook': True, 'setMyCommands': True,
                    'getWebhookInfo': {'url': 'https://bbtest.shop/telegram/webhook/'}}
         with mock.patch.object(telegram, 'call', side_effect=lambda method, payload: results[method]) as call:
             out = self.run_command()
         call.assert_any_call('setWebhook', {'url': 'https://bbtest.shop/telegram/webhook/',
-                                            'secret_token': 'webhook-secret-123456', 'allowed_updates': ['message']})
+                                            'secret_token': 'webhook-secret-123456',
+                                            'allowed_updates': ['message', 'callback_query']})
+        commands = [c.args[1]['commands'] for c in call.call_args_list if c.args[0] == 'setMyCommands'][0]
+        self.assertEqual([c['command'] for c in commands], ['finished', 'stop'])
         self.assertIn('Webhook for @bbtest_bot set to https://bbtest.shop/telegram/webhook/', out)
         self.assertNotIn('connect links', out)
 
     @override_settings(**{**TELEGRAM, 'TELEGRAM_BOT_USERNAME': 'other_bot'})
     def test_warns_when_username_does_not_match(self):
-        results = {'getMe': {'username': 'bbtest_bot'}, 'setWebhook': True, 'getWebhookInfo': {'url': 'x'}}
+        results = {'getMe': {'username': 'bbtest_bot'}, 'setWebhook': True, 'setMyCommands': True,
+                   'getWebhookInfo': {'url': 'x'}}
         with mock.patch.object(telegram, 'call', side_effect=lambda method, payload: results[method]):
             self.assertIn("connect links won't work", self.run_command())
 
@@ -1041,3 +1101,22 @@ class EmailTelegramLinksCommandTests(TestCase):
             call_command('email_telegram_links', '--send', stdout=out)
         self.assertIn('Sent 1 emails.', out.getvalue())
         self.assertIn('Failed: cat.mom@example.org: Resend returned HTTP 422', out.getvalue())
+
+
+class TutorFinishedPageTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('student@example.com', password='pw')
+        self.profile = UserProfile.objects.create(user=self.user, full_name='Ana Lee')
+        self.client.force_login(self.user)
+
+    def test_endpoint_and_page_follow_the_flag(self):
+        self.assertEqual(self.client.get('/api/tutor-finished/').json(), {'finished': False})
+        self.assertIn('var tutorFinished = false;', self.client.get('/congrats/').content.decode())
+        self.profile.tutor_finished_at = timezone.now()
+        self.profile.save()
+        self.assertEqual(self.client.get('/api/tutor-finished/').json(), {'finished': True})
+        self.assertIn('var tutorFinished = true;', self.client.get('/congrats/').content.decode())
+
+    def test_requires_login(self):
+        self.client.logout()
+        self.assertEqual(self.client.get('/api/tutor-finished/').status_code, 302)

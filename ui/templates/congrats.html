@@ -368,6 +368,36 @@
             particles.push(createParticle());
         }
 
+        // When the tutor sends /finished on Telegram, the lowest confetti piece turns black
+        function blackenBottomPiece() {
+            var lowest = particles[0];
+            for (var i = 1; i < particles.length; i++) {
+                if (particles[i].p3.y > lowest.p3.y) lowest = particles[i];
+            }
+            lowest.color = '#000';
+            lowest.opacity = 1;
+            if (settled) drawStatic();
+        }
+
+        var tutorFinished = {{ tutor_finished|yesno:"true,false" }};
+        if (tutorFinished) {
+            blackenBottomPiece();
+        } else {
+            // Check every 5 s until the tutor has finished, skipping while the tab is hidden
+            var poll = setInterval(function () {
+                if (document.hidden) return;
+                fetch('{% url "tutor_finished" %}', { credentials: 'same-origin', cache: 'no-store' })
+                    .then(function (r) { return r.ok ? r.json() : null; })
+                    .then(function (data) {
+                        if (data && data.finished) {
+                            clearInterval(poll);
+                            blackenBottomPiece();
+                        }
+                    })
+                    .catch(function () { /* offline: try again next time */ });
+            }, 5000);
+        }
+
         // Cubic Bezier formula
         function getBezierPoint(p0, p1, p2, p3, t) {
             var cx = 3 * (p1.x - p0.x);

@@ -32,7 +32,13 @@ class Command(BaseCommand):
                              if h not in ('localhost', '127.0.0.1') and not h.startswith('.') and h != '*'),
                             'bbtest.shop')
                 url = f'https://{host}{reverse("telegram_webhook")}'
-            telegram.call('setWebhook', {'url': url, 'secret_token': secret, 'allowed_updates': ['message']})
+            telegram.call('setWebhook', {'url': url, 'secret_token': secret,
+                                         'allowed_updates': ['message', 'callback_query']})
+            # The bot's command menu in Telegram
+            telegram.call('setMyCommands', {'commands': [
+                {'command': 'finished', 'description': 'Mark the practice test as finished'},
+                {'command': 'stop', 'description': 'Stop getting BB Test messages here'},
+            ]})
             info = telegram.call('getWebhookInfo', {})
         except telegram.TelegramError as e:
             raise CommandError(f'Telegram said: {e}') from None

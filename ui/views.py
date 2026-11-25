@@ -123,6 +123,7 @@ def start_code_view(request):
         profile = _get_profile(request.user)
         if profile:
             profile.start_code = full_code
+            profile.tutor_finished_at = None   # a new test: the tutor hasn't finished it yet
             profile.save()
 
         # Delivered by the rate-limited background senders
@@ -207,6 +208,48 @@ def _chat_display_name(chat):
     return name[:255]
 
 
+def _mark_tutor_finished(profile):
+    profile.tutor_finished_at = timezone.now()
+    profile.save(update_fields=['tutor_finished_at'])
+    return render_to_string('telegram/finished.html', {'name': _display_name(profile, profile.user)}).strip()
+
+
+def _finished_command(chat_id):
+    """/finished: marks the chat's student as finished, or asks which one
+    when the chat is linked to several students."""
+    profiles = list(UserProfile.objects.select_related('user').filter(telegram_chat_id=chat_id)
+                    .order_by('full_name', 'user__username'))
+    reply = {'method': 'sendMessage', 'chat_id': chat_id, 'parse_mode': 'HTML'}
+    if not profiles:
+        return JsonResponse({**reply, 'text': "This chat isn't connected to a BB Test profile."})
+    if len(profiles) == 1:
+        return JsonResponse({**reply, 'text': _mark_tutor_finished(profiles[0])})
+    buttons = [[{'text': _display_name(p, p.user)[:60], 'callback_data': f'finished:{p.id}'}] for p in profiles[:50]]
+    return JsonResponse({**reply, 'text': 'Which student finished the practice test?',
+                         'reply_markup': {'inline_keyboard': buttons}})
+
+
+def _finished_button(query):
+    """A student's button under "Which student finished…?". Only counts if
+    that student is still linked to the chat the button was pressed in."""
+    message = query.get('message') or {}
+    chat_id = (message.get('chat') or {}).get('id')
+    action, _, profile_id = (query.get('data') or '').partition(':')
+    profile = None
+    if chat_id and action == 'finished' and profile_id.isdigit():
+        profile = UserProfile.objects.select_related('user').filter(
+            id=int(profile_id), telegram_chat_id=chat_id).first()
+    try:
+        # Stops the button's loading spinner; the webhook reply below edits the message
+        telegram.call('answerCallbackQuery', {'callback_query_id': query.get('id')}, timeout=5)
+    except telegram.TelegramError:
+        pass
+    if not profile:
+        return HttpResponse(status=200)
+    return JsonResponse({'method': 'editMessageText', 'chat_id': chat_id, 'message_id': message.get('message_id'),
+                         'text': _mark_tutor_finished(profile), 'parse_mode': 'HTML'})
+
+
 @csrf_exempt
 @require_POST
 def telegram_webhook_view(request):
@@ -214,7 +257,7 @@ def telegram_webhook_view(request):
 
     "/start <token>" comes from a student's connect link and links that chat
     to the student's profile (replacing any earlier chat); "/stop" unlinks the
-    chat. Replies are returned as the webhook response, which Telegram sends.
+    chat; "/finished" tells the student's congrats page the tutor is done. Replies are returned as the webhook response, which Telegram sends.
     """
     secret = settings.TELEGRAM_WEBHOOK_SECRET
     given = request.headers.get('X-Telegram-Bot-Api-Secret-Token', '')
@@ -225,14 +268,19 @@ def telegram_webhook_view(request):
     except ValueError:
         return HttpResponse(status=400)
 
+    if update.get('callback_query'):
+        return _finished_button(update['callback_query'])
+
     message = update.get('message') or {}
     chat = message.get('chat') or {}
     chat_id = chat.get('id')
     command, _, argument = (message.get('text') or '').strip().partition(' ')
     command = command.split('@')[0]   # "/start@BotName" in group chats
-    if not chat_id or command not in ('/start', '/stop'):
+    if not chat_id or command not in ('/start', '/stop', '/finished'):
         return HttpResponse(status=200)
 
+    if command == '/finished':
+        return _finished_command(chat_id)
     if command == '/start':
         token = argument.strip()
         profile = (UserProfile.objects.select_related('user').filter(telegram_link_token=token).first()
@@ -415,7 +463,15 @@ def test_interface_view(request):
 
 @login_required
 def congrats_view(request):
-    return render(request, 'congrats.html')
+    profile = _get_profile(request.user)
+    return render(request, 'congrats.html', {'tutor_finished': bool(profile and profile.tutor_finished_at)})
+
+
+@login_required
+def tutor_finished_view(request):
+    """Polled by the congrats page until the tutor sends /finished."""
+    profile = _get_profile(request.user)
+    return JsonResponse({'finished': bool(profile and profile.tutor_finished_at)})
 
 
 

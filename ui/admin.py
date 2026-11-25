@@ -69,7 +69,8 @@ class UserProfileAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'user__first_name', 'user__last_name', 'user__email',
                      'full_name', 'telegram_chat_name')
     # contact_email is no longer used; it's kept read-only so old values aren't lost
-    readonly_fields = ('telegram_chat_id', 'telegram_chat_name', 'telegram_connect_link', 'contact_email')
+    readonly_fields = ('telegram_chat_id', 'telegram_chat_name', 'telegram_connect_link', 'tutor_finished_at',
+                       'contact_email')
     exclude = ('telegram_link_token',)
 
     @admin.display(description='Date joined', ordering='user__date_joined')
