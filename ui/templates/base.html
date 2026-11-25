@@ -74,26 +74,6 @@
         }
       });
 
-      // 3. Detect DevTools being opened via debugger-timing heuristic
-      var devtoolsOpen = false;
-      var threshold = 160;
-
-      function detectDevTools() {
-        var widthThreshold = window.outerWidth - window.innerWidth > threshold;
-        var heightThreshold = window.outerHeight - window.innerHeight > threshold;
-
-        if (widthThreshold || heightThreshold) {
-          if (!devtoolsOpen) {
-            devtoolsOpen = true;
-            document.documentElement.innerHTML = '';
-          }
-        } else {
-          devtoolsOpen = false;
-        }
-      }
-
-      setInterval(detectDevTools, 1000);
-
       // 5. Console-clear loop to discourage console use
       try {
         var _c = console;

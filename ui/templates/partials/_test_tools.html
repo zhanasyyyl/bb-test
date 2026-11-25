@@ -1,0 +1,1012 @@
+{% comment %}
+Tools behind the test page's "More" menu: Help, Keyboard Shortcuts and
+Assistive Technology dialogs, the Line Reader, the Exit the Exam
+confirmation, and the keyboard shortcuts listed in the shortcuts dialog.
+Included at the end of test_interface.html, after `app` is defined.
+{% endcomment %}
+<style>
+    /* ===== Help / Shortcuts / Assistive Technology dialogs ===== */
+    .info-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 9500;
+        display: none;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 46px;
+    }
+
+    .info-modal-overlay.open {
+        display: flex;
+    }
+
+    .info-modal {
+        position: relative;
+        width: min(900px, calc(100vw - 48px));
+        max-height: calc(100vh - 92px);
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 12px;
+        padding: 26px 24px 20px;
+        font-family: 'Roboto', sans-serif;
+        color: #1e1e1e;
+        box-sizing: border-box;
+    }
+
+    .info-modal h2 {
+        font-size: 31px;
+        font-weight: 400;
+        margin: 0 0 18px;
+    }
+
+    .info-modal-x {
+        position: absolute;
+        top: 24px;
+        right: 26px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-radius: 6px;
+    }
+
+    .info-modal-x:hover {
+        background: #f0f0f0;
+    }
+
+    .info-modal-toggles {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 20px 12px;
+        border-bottom: 1px solid #b2b2b2;
+    }
+
+    .info-modal-toggles button {
+        border: none;
+        background: none;
+        font: 600 14px 'Roboto', sans-serif;
+        color: #1e1e1e;
+        cursor: pointer;
+        padding: 2px 24px;
+    }
+
+    .info-modal-toggles button + button {
+        border-left: 1px solid #b2b2b2;
+    }
+
+    .info-modal-toggles button:hover {
+        text-decoration: underline;
+    }
+
+    .info-modal-body {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+
+    .info-section {
+        border-bottom: 1px solid #d9d9d9;
+    }
+
+    .info-section summary {
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px 20px 26px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .info-section summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .info-section summary:hover {
+        background: #f6f6f6;
+    }
+
+    /* "+" when closed, "−" when open */
+    .info-section summary::after {
+        content: '';
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        background:
+            linear-gradient(#1e1e1e, #1e1e1e) center / 18px 2px no-repeat,
+            linear-gradient(#1e1e1e, #1e1e1e) center / 2px 18px no-repeat;
+    }
+
+    .info-section[open] summary::after {
+        background: linear-gradient(#1e1e1e, #1e1e1e) center / 18px 2px no-repeat;
+    }
+
+    .info-section-body {
+        padding: 6px 26px 22px;
+        font-size: 15px;
+        line-height: 1.6;
+        background: linear-gradient(to bottom, #f2f2f2, #fff 85%);
+    }
+
+    .info-section-body h3 {
+        font-size: 15px;
+        font-weight: 700;
+        margin: 14px 0 4px;
+    }
+
+    .info-section-body h4 {
+        font-size: 21px;
+        font-weight: 400;
+        margin: 22px 0 12px;
+    }
+
+    .info-section-body p {
+        margin: 8px 0;
+    }
+
+    .info-section-body ul {
+        margin: 6px 0;
+        padding-left: 22px;
+        list-style: disc;
+    }
+
+    .info-section-body kbd {
+        font-family: inherit;
+        font-weight: 700;
+    }
+
+    .shortcut-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 6px 0 10px;
+        font-size: 14px;
+    }
+
+    .shortcut-table th {
+        background: #4f4f4f;
+        color: #fff;
+        text-align: left;
+        padding: 10px 12px;
+        border: 1px solid #4f4f4f;
+    }
+
+    .shortcut-table td {
+        padding: 10px 12px;
+        border: 1px solid #d0d0d0;
+        background: rgba(255, 255, 255, 0.6);
+    }
+
+    .shortcut-table td:first-child {
+        font-weight: 700;
+        width: 62%;
+    }
+
+    .info-modal-footer {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        padding-top: 16px;
+    }
+
+    .info-modal-close,
+    .exit-confirm-btn {
+        background: #fedb00;
+        border: 1px solid #1e1e1e;
+        border-radius: 40px;
+        padding: 13px 26px;
+        font: 600 15px 'Roboto', sans-serif;
+        color: #1e1e1e;
+        cursor: pointer;
+    }
+
+    .info-modal-close:hover,
+    .exit-confirm-btn:hover {
+        box-shadow: 0 0 0 1px #1e1e1e;
+    }
+
+    /* Exit the Exam: a smaller dialog in the middle of the screen */
+    #exit-modal {
+        align-items: center;
+        padding-top: 0;
+    }
+
+    .info-modal.exit-modal {
+        width: min(640px, calc(100vw - 48px));
+        border-radius: 6px;
+        padding: 22px 24px 24px;
+    }
+
+    .exit-modal h2 {
+        font-size: 27px;
+        margin: 0 48px 26px 0;
+    }
+
+    .exit-modal .info-modal-x {
+        top: 22px;
+        right: 22px;
+    }
+
+    .exit-modal p {
+        font-size: 16px;
+        line-height: 1.5;
+        margin: 0 0 26px 2px;
+    }
+
+    .exit-modal .info-modal-footer {
+        justify-content: flex-end;
+        align-items: center;
+        gap: 38px;
+        padding-top: 0;
+    }
+
+    .exit-cancel-btn {
+        background: none;
+        border: none;
+        padding: 6px 0;
+        font: 600 15px 'Roboto', sans-serif;
+        color: #324dc7;
+        cursor: pointer;
+    }
+
+    .exit-cancel-btn:hover {
+        text-decoration: underline;
+    }
+
+    .exit-modal .exit-confirm-btn {
+        background: #fedb00;
+        padding: 10px 22px;
+    }
+
+    /* ===== Line Reader ===== */
+    .line-reader {
+        position: fixed;
+        z-index: 1500;
+        /* The panel lets clicks through; its bars and dimmed areas catch them,
+           so text in the window stays clickable and selectable */
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Roboto', sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .line-reader[hidden] {
+        display: none;
+    }
+
+    .lr-bar,
+    .lr-dim,
+    .lr-bar-bottom {
+        pointer-events: auto;
+    }
+
+    .lr-bar {
+        position: relative;
+        height: 44px;
+        flex-shrink: 0;
+        background: #1e1e1e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .lr-handle {
+        width: 42px;
+        height: 34px;
+        border: 2px solid transparent;
+        border-radius: 7px;
+        background: none;
+        cursor: grab;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .lr-handle:hover,
+    .lr-handle:focus,
+    .lr-handle.active {
+        border-color: #fff;
+        outline: none;
+    }
+
+    .lr-handle:active {
+        cursor: grabbing;
+    }
+
+    .lr-buttons {
+        position: absolute;
+        right: 14px;
+        top: 6px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .lr-buttons button {
+        width: 34px;
+        height: 32px;
+        border: 2px solid transparent;
+        border-radius: 7px;
+        background: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .lr-buttons button:hover,
+    .lr-buttons button:focus-visible,
+    .line-reader.expanded .lr-expand {
+        border-color: #fff;
+        outline: none;
+    }
+
+    /* Everything in the reader except the window is dimmed and blocks clicks */
+    .lr-dim {
+        flex-shrink: 0;
+        background: rgba(30, 30, 30, 0.82);
+        position: relative;
+    }
+
+    .lr-dim-top {
+        height: 34px;
+    }
+
+    .lr-hint {
+        margin: 0;
+        padding-top: 8px;
+        text-align: center;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .lr-window {
+        flex-shrink: 0;
+        background: rgba(0, 0, 0, 0.06);
+        pointer-events: none;
+    }
+
+    .lr-dim-bottom {
+        height: 44px;
+    }
+
+    .lr-resize {
+        position: absolute;
+        left: 50%;
+        top: 2px;
+        transform: translateX(-50%);
+        width: 34px;
+        height: 22px;
+        border: none;
+        border-radius: 4px;
+        background: none;
+        cursor: ns-resize;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .lr-resize:focus-visible {
+        outline: 2px solid #fff;
+    }
+
+    .lr-bar-bottom {
+        height: 30px;
+        flex-shrink: 0;
+        background: #1e1e1e;
+    }
+</style>
+
+{# ===== Help ===== #}
+<div class="info-modal-overlay" id="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+    <div class="info-modal">
+        <h2 id="help-modal-title">Help</h2>
+        <button class="info-modal-x" data-close-modal aria-label="Close">{% include "partials/_x_icon.html" %}</button>
+        <div class="info-modal-toggles">
+            <button type="button" data-expand-all>Expand All</button>
+            <button type="button" data-collapse-all>Collapse All</button>
+        </div>
+        <div class="info-modal-body">
+            <details class="info-section">
+                <summary>Zoom and Magnification</summary>
+                <div class="info-section-body">
+                    <p>To zoom in or out, press <kbd>Control + Plus (+)</kbd> or <kbd>Control + Minus (-)</kbd>
+                        (<kbd>Command</kbd> on a Mac). Press <kbd>Control + 0</kbd> to go back to 100%.</p>
+                    <p>On a touchscreen or touchpad, pinch in or out.</p>
+                    <p>Your device's own magnifier also works during the test:</p>
+                    <ul>
+                        <li><strong>Windows:</strong> Magnifier, <kbd>Windows logo key + Plus (+)</kbd></li>
+                        <li><strong>Mac:</strong> Zoom, <kbd>Option + Command + 8</kbd> (turn it on in System Settings
+                            &gt; Accessibility &gt; Zoom)</li>
+                        <li><strong>Chromebook:</strong> full-screen magnifier, <kbd>Search + Ctrl + M</kbd></li>
+                    </ul>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>In-App Calculator</summary>
+                <div class="info-section-body">
+                    <p>On math questions, select <strong>Calculator</strong> at the top right to open a built-in
+                        calculator. Switch between <strong>Graphing</strong> and <strong>Scientific</strong> at its top.</p>
+                    <p>Drag the calculator's top bar to move it and its bottom-right corner to resize it. You may also use
+                        your own approved calculator.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Testing Timers</summary>
+                <div class="info-section-body">
+                    <p>The timer at the top shows how much time is left in the current module. Select
+                        <strong>Hide</strong> to hide it and <strong>Show</strong> to bring it back. You'll see a message
+                        when 5 minutes are left.</p>
+                    <p>When time runs out, the module ends and you move on automatically. After the Reading and
+                        Writing section there's a 10-minute break.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Highlights &amp; Notes</summary>
+                <div class="info-section-body">
+                    <p>Select <strong>Highlights &amp; Notes</strong> at the top right, then select text in the passage
+                        or question to highlight it.</p>
+                    <ul>
+                        <li>Select a highlight to change its color, add an underline, add a note or delete it.</li>
+                        <li>Notes appear beside the passage and stay with that question.</li>
+                        <li>Highlights and notes aren't scored.</li>
+                    </ul>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Line Reader</summary>
+                <div class="info-section-body">
+                    <p>Select <strong>More &gt; Line Reader</strong> to show a reading band that helps you focus on a
+                        few lines at a time.</p>
+                    <ul>
+                        <li>Drag the six dots at the top to move it, or select the six dots and use the up and down arrow
+                            keys.</li>
+                        <li>Drag the arrow below the band to show more or fewer lines.</li>
+                        <li>Use the expand button to stretch it across the screen.</li>
+                    </ul>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Option Eliminator</summary>
+                <div class="info-section-body">
+                    <p>On multiple-choice questions, select the <strong>ABC</strong> button above the answer choices to
+                        turn on option eliminator mode. Then select the crossed-out letter next to any choice you think
+                        is wrong. Select <strong>Undo</strong> to bring it back. A crossed-out choice can't be selected.
+                    </p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Mark for Review</summary>
+                <div class="info-section-body">
+                    <p>Select <strong>Mark for Review</strong> next to the question number to flag a question you want
+                        to come back to. Flagged questions are marked in the question menu and on the review page.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Question Menu</summary>
+                <div class="info-section-body">
+                    <p>Select <strong>Question X of Y</strong> at the bottom of the screen to see every question in the
+                        module: which you've answered and which you've marked for review. Select a number to go to that
+                        question, or select <strong>Go to Review Page</strong>.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Make an Educated Guess</summary>
+                <div class="info-section-body">
+                    <p>There's no penalty for wrong answers, but a blank answer can't earn credit. If you're stuck, rule
+                        out the choices you can and guess rather than leave a question blank.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Restarting the App</summary>
+                <div class="info-section-body">
+                    <p>Your answers are kept only in this browser window. Don't refresh the page or close the tab during
+                        the test: if you do, the test starts again from the beginning.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Submitting Your Answers</summary>
+                <div class="info-section-body">
+                    <p>When the timer for the last module reaches zero, the test ends and you're taken to the finish
+                        screen. If your device is offline at that moment, you'll see a <strong>Reconnect to
+                        Finish</strong> message; reconnect and it finishes automatically.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Screen Readers</summary>
+                <div class="info-section-body">
+                    <p>Start your device's screen reader before you begin:</p>
+                    <ul>
+                        <li><strong>Windows:</strong> Narrator, <kbd>Windows logo key + Ctrl + Enter</kbd></li>
+                        <li><strong>Mac:</strong> VoiceOver, <kbd>Command + F5</kbd></li>
+                        <li><strong>iPad:</strong> VoiceOver, in Settings &gt; Accessibility &gt; VoiceOver</li>
+                        <li><strong>Chromebook:</strong> ChromeVox, <kbd>Ctrl + Alt + Z</kbd></li>
+                    </ul>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Screen Magnification</summary>
+                <div class="info-section-body">
+                    <p>Screen magnifiers built into your device, or approved third-party tools, work with the test. See
+                        <strong>Zoom and Magnification</strong> above for the built-in options.</p>
+                </div>
+            </details>
+        </div>
+        <div class="info-modal-footer">
+            <button type="button" class="info-modal-close" data-close-modal>Close</button>
+        </div>
+    </div>
+</div>
+
+{# ===== Keyboard Shortcuts (each row works: see the keydown handler below) ===== #}
+<div class="info-modal-overlay" id="shortcuts-modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-modal-title">
+    <div class="info-modal">
+        <h2 id="shortcuts-modal-title">Keyboard Shortcuts</h2>
+        <button class="info-modal-x" data-close-modal aria-label="Close">{% include "partials/_x_icon.html" %}</button>
+        <div class="info-modal-toggles">
+            <button type="button" data-expand-all>Expand All</button>
+            <button type="button" data-collapse-all>Collapse All</button>
+        </div>
+        <div class="info-modal-body">
+            <details class="info-section" open>
+                <summary>Keyboard Shortcuts</summary>
+                <div class="info-section-body">
+                    <p>These keyboard shortcuts take you to important functions in the test.</p>
+                    <p><strong>Note:</strong> For shortcuts with "F1", you may need to press "Fn" too. On a Mac, use
+                        <kbd>Control</kbd> (not Command) and <kbd>Option</kbd> for Alt; zoom uses <kbd>Command</kbd>.</p>
+                    <h4>Keyboard Shortcuts for Multiple-Choice Questions</h4>
+                    <table class="shortcut-table">
+                        <thead><tr><th>Action</th><th>Shortcut</th></tr></thead>
+                        <tbody>
+                            <tr><td>Open/Close Keyboard Shortcuts</td><td>F1</td></tr>
+                            <tr><td>Zoom In</td><td>Control + Plus (+)</td></tr>
+                            <tr><td>Zoom Out</td><td>Control + Minus (-)</td></tr>
+                            <tr><td>Zoom Back to 100%</td><td>Control + 0</td></tr>
+                            <tr><td>Back</td><td>Control + Alt + B</td></tr>
+                            <tr><td>Next</td><td>Control + Alt + X</td></tr>
+                            <tr><td>Open/Close Question Menu</td><td>Control + Alt + G</td></tr>
+                            <tr><td>Help</td><td>Control + Alt + H</td></tr>
+                            <tr><td>Open/Close Directions</td><td>Control + Alt + Shift + D</td></tr>
+                            <tr><td>Open/Close Line Reader</td><td>Control + L</td></tr>
+                            <tr><td>Hide/Show Timer or Close 5-Minute Message</td><td>Control + Alt + T</td></tr>
+                            <tr><td>Pause Timer (w/certain accommodations only)</td><td>Control + Alt + P</td></tr>
+                            <tr><td>Mark for Review</td><td>Control + Alt + V</td></tr>
+                            <tr><td>Highlights &amp; Notes</td><td>Control + H</td></tr>
+                            <tr><td>Open/Close Calculator</td><td>Control + Alt + C</td></tr>
+                            <tr><td>Open/Close Reference Sheet</td><td>Control + Alt + R</td></tr>
+                            <tr><td>Select/Deselect Option A</td><td>Control + Shift + 1</td></tr>
+                            <tr><td>Select/Deselect Option B</td><td>Control + Shift + 2</td></tr>
+                            <tr><td>Select/Deselect Option C</td><td>Control + Shift + 3</td></tr>
+                            <tr><td>Select/Deselect Option D</td><td>Control + Shift + 4</td></tr>
+                            <tr><td>Select/Deselect Option E</td><td>Control + Shift + 5</td></tr>
+                            <tr><td>Option Eliminator Mode</td><td>Control + Alt + O</td></tr>
+                            <tr><td>Eliminate Option A</td><td>Control + Alt + 1</td></tr>
+                            <tr><td>Eliminate Option B</td><td>Control + Alt + 2</td></tr>
+                            <tr><td>Eliminate Option C</td><td>Control + Alt + 3</td></tr>
+                            <tr><td>Eliminate Option D</td><td>Control + Alt + 4</td></tr>
+                            <tr><td>Eliminate Option E</td><td>Control + Alt + 5</td></tr>
+                            <tr><td>Text-to-Speech (Play/Pause)</td><td>Alt + P</td></tr>
+                            <tr><td>Text-to-Speech (Stop)</td><td>Control</td></tr>
+                            <tr><td>Text-to-Speech (Click Mode On/Off)</td><td>Alt + C</td></tr>
+                        </tbody>
+                    </table>
+                    <p>Note: For multiselect options, use the space bar to make your selection.</p>
+                    <h4>Keyboard Shortcuts for Free-Response Questions and Student-Produced Responses</h4>
+                    <table class="shortcut-table">
+                        <thead><tr><th>Action</th><th>Shortcut</th></tr></thead>
+                        <tbody>
+                            <tr><td>Bold</td><td>Control + B</td></tr>
+                            <tr><td>Italics</td><td>Control + I</td></tr>
+                            <tr><td>Underline</td><td>Control + U</td></tr>
+                            <tr><td>Superscript</td><td>Control + Shift + Plus (+)</td></tr>
+                            <tr><td>Subscript</td><td>Control + Shift + Minus (-)</td></tr>
+                            <tr><td>Undo</td><td>Control + Z</td></tr>
+                            <tr><td>Redo</td><td>Control + Y</td></tr>
+                            <tr><td>Cut</td><td>Control + X</td></tr>
+                            <tr><td>Copy</td><td>Control + C</td></tr>
+                            <tr><td>Paste</td><td>Control + V</td></tr>
+                            <tr><td>Insert Symbols</td><td>Control + Shift + /</td></tr>
+                            <tr><td>Focus on Editor Toolbar</td><td>Alt + F10</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+        </div>
+        <div class="info-modal-footer">
+            <button type="button" class="info-modal-close" data-close-modal>Close</button>
+        </div>
+    </div>
+</div>
+
+{# ===== Assistive Technology ===== #}
+<div class="info-modal-overlay" id="assistive-modal" role="dialog" aria-modal="true" aria-labelledby="assistive-modal-title">
+    <div class="info-modal">
+        <h2 id="assistive-modal-title">Assistive Technology</h2>
+        <button class="info-modal-x" data-close-modal aria-label="Close">{% include "partials/_x_icon.html" %}</button>
+        <div class="info-modal-toggles">
+            <button type="button" data-expand-all>Expand All</button>
+            <button type="button" data-collapse-all>Collapse All</button>
+        </div>
+        <div class="info-modal-body">
+            <details class="info-section">
+                <summary>Assistive Technology</summary>
+                <div class="info-section-body">
+                    <p>The assistive technology you use everywhere else (screen readers, magnifiers, dictation, braille
+                        displays) also works here, because the test runs in your web browser.</p>
+                    <p>Turn on and set up any assistive technology before you start the test, so you don't lose testing
+                        time.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Text to Speech</summary>
+                <div class="info-section-body">
+                    <p>This practice test doesn't have its own read-aloud tool. To hear passages and questions, use your
+                        device's screen reader (see <strong>Screen Readers</strong> below).</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Speech-to-Text</summary>
+                <div class="info-section-body">
+                    <p>Use your device's dictation to type answers by voice:</p>
+                    <ul>
+                        <li><strong>Windows:</strong> voice typing, <kbd>Windows logo key + H</kbd></li>
+                        <li><strong>Mac:</strong> Dictation, press the Microphone key or turn it on in System Settings
+                            &gt; Keyboard</li>
+                        <li><strong>Chromebook:</strong> dictation, <kbd>Search + D</kbd></li>
+                    </ul>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Screen Readers</summary>
+                <div class="info-section-body">
+                    <ul>
+                        <li><strong>Windows:</strong> Narrator, <kbd>Windows logo key + Ctrl + Enter</kbd></li>
+                        <li><strong>Mac:</strong> VoiceOver, <kbd>Command + F5</kbd></li>
+                        <li><strong>iPad:</strong> VoiceOver, in Settings &gt; Accessibility &gt; VoiceOver</li>
+                        <li><strong>Chromebook:</strong> ChromeVox, <kbd>Ctrl + Alt + Z</kbd></li>
+                    </ul>
+                    <p>Use <strong>Tab</strong> and the arrow keys to move between answer choices and buttons. See
+                        <strong>More &gt; Shortcuts</strong> for the test's keyboard shortcuts.</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Zoom and Magnification</summary>
+                <div class="info-section-body">
+                    <p>Press <kbd>Control + Plus (+)</kbd> or <kbd>Control + Minus (-)</kbd> to zoom (<kbd>Command</kbd>
+                        on a Mac) and <kbd>Control + 0</kbd> to reset. Your device's magnifier also works: Windows
+                        Magnifier (<kbd>Windows logo key + Plus (+)</kbd>), Mac Zoom (<kbd>Option + Command + 8</kbd>) or
+                        the Chromebook magnifier (<kbd>Search + Ctrl + M</kbd>).</p>
+                </div>
+            </details>
+            <details class="info-section">
+                <summary>Refreshable Braille Displays</summary>
+                <div class="info-section-body">
+                    <p>A refreshable braille display connected to your screen reader shows the test's text. Set it up and
+                        test it with your screen reader before you begin.</p>
+                </div>
+            </details>
+        </div>
+        <div class="info-modal-footer">
+            <button type="button" class="info-modal-close" data-close-modal>Close</button>
+        </div>
+    </div>
+</div>
+
+{# ===== Exit the Exam ===== #}
+<div class="info-modal-overlay" id="exit-modal" role="dialog" aria-modal="true" aria-labelledby="exit-modal-title">
+    <div class="info-modal exit-modal">
+        <h2 id="exit-modal-title">Are You Sure You Want to Exit the Test?</h2>
+        <button class="info-modal-x" data-close-modal aria-label="Close">{% include "partials/_x_icon.html" %}</button>
+        <p>Practice tests are not scored, and your progress isn't saved. If you exit and come back, you'll start
+            over.</p>
+        <div class="info-modal-footer">
+            <button type="button" class="exit-cancel-btn" data-close-modal>Continue Test</button>
+            <button type="button" class="exit-confirm-btn" id="exit-confirm-btn">Exit</button>
+        </div>
+    </div>
+</div>
+
+{# ===== Line Reader ===== #}
+<div class="line-reader" id="line-reader" hidden>
+    <div class="lr-bar">
+        <button type="button" class="lr-handle" aria-label="Move the line reader: drag, or use the up and down arrow keys">
+            <svg width="22" height="14" viewBox="0 0 22 14" fill="#fff" aria-hidden="true">
+                <circle cx="3" cy="3" r="2.2" /><circle cx="11" cy="3" r="2.2" /><circle cx="19" cy="3" r="2.2" />
+                <circle cx="3" cy="11" r="2.2" /><circle cx="11" cy="11" r="2.2" /><circle cx="19" cy="11" r="2.2" />
+            </svg>
+        </button>
+        <div class="lr-buttons">
+            <button type="button" class="lr-expand" aria-label="Expand the line reader">
+                <svg class="lr-icon-expand" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true">
+                    <path d="M10.5 2.5h5v5M15.5 2.5l-5.5 5.5M7.5 15.5h-5v-5M2.5 15.5l5.5-5.5" />
+                </svg>
+                <svg class="lr-icon-collapse" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true" style="display: none;">
+                    <path d="M15.5 7.5h-5v-5M10.5 7.5l5.5-5.5M2.5 10.5h5v5M7.5 10.5l-5.5 5.5" />
+                </svg>
+            </button>
+            <button type="button" class="lr-close" aria-label="Close the line reader">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="lr-dim lr-dim-top">
+        <p class="lr-hint">Click on the six dots, then use the arrow keys to move the line reader.</p>
+    </div>
+    <div class="lr-window"></div>
+    <div class="lr-dim lr-dim-bottom">
+        <button type="button" class="lr-resize" aria-label="Show more or fewer lines: drag, or use the up and down arrow keys">
+            <svg width="14" height="9" viewBox="0 0 14 9" fill="#fff" aria-hidden="true"><path d="M0 0h14L7 9z" /></svg>
+        </button>
+    </div>
+    <div class="lr-bar-bottom"></div>
+</div>
+
+<script>
+(function () {
+    // ===== Dialogs =====
+    let lastFocus = null;
+
+    function openModal(id) {
+        closeMenus();
+        closeModals();
+        lastFocus = document.activeElement;
+        const overlay = document.getElementById(id);
+        overlay.classList.add('open');
+        const body = overlay.querySelector('.info-modal-body');
+        if (body) body.scrollTop = 0;
+        overlay.querySelector('[data-close-modal]').focus();
+    }
+
+    function closeModals() {
+        let closed = false;
+        document.querySelectorAll('.info-modal-overlay.open').forEach(overlay => {
+            overlay.classList.remove('open');
+            closed = true;
+        });
+        if (closed && lastFocus && document.contains(lastFocus)) lastFocus.focus();
+        return closed;
+    }
+
+    function toggleModal(id) {
+        if (document.getElementById(id).classList.contains('open')) closeModals();
+        else openModal(id);
+    }
+
+    function closeMenus() {
+        document.querySelectorAll('.more-dropdown.open').forEach(dd => {
+            dd.classList.remove('open');
+            const item = dd.parentElement.querySelector('.tool-item');
+            if (item) item.style.borderBottom = 'none';
+        });
+    }
+
+    document.querySelectorAll('.info-modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay || e.target.closest('[data-close-modal]')) closeModals();
+            const sections = overlay.querySelectorAll('details.info-section');
+            if (e.target.closest('[data-expand-all]')) sections.forEach(d => { d.open = true; });
+            if (e.target.closest('[data-collapse-all]')) sections.forEach(d => { d.open = false; });
+        });
+    });
+
+    document.getElementById('exit-confirm-btn').addEventListener('click', () => {
+        window.location.href = '{% url "dashboard" %}';
+    });
+
+    // ===== Line Reader =====
+    const reader = document.getElementById('line-reader');
+    const handle = reader.querySelector('.lr-handle');
+    const win = reader.querySelector('.lr-window');
+    const resizer = reader.querySelector('.lr-resize');
+    const lr = { lines: 1, top: null, expanded: false, minLines: 1, maxLines: 10 };
+
+    function lineHeight() {
+        const passage = document.getElementById('ui-passage');
+        const value = parseFloat(getComputedStyle(passage).lineHeight);
+        return Number.isFinite(value) ? value : 22.5;
+    }
+
+    // The reader covers the passage column, or the whole workspace when expanded
+    // or when the question has no passage (math)
+    function targetRect() {
+        const workspace = document.getElementById('main-workspace').getBoundingClientRect();
+        const passage = document.getElementById('ui-passage');
+        if (!lr.expanded && passage.offsetParent !== null && passage.offsetWidth > 0) {
+            return passage.getBoundingClientRect();
+        }
+        return workspace;
+    }
+
+    function layoutReader() {
+        if (reader.hidden) return;
+        const rect = targetRect();
+        win.style.height = (lr.lines * lineHeight()) + 'px';
+        reader.style.left = rect.left + 'px';
+        reader.style.width = rect.width + 'px';
+        const maxTop = window.innerHeight - reader.offsetHeight;
+        if (lr.top === null) {
+            // Start with the window over the first line of text (below the pane's padding)
+            const padding = parseFloat(getComputedStyle(document.getElementById('ui-passage')).paddingTop) || 48;
+            lr.top = rect.top + padding - reader.querySelector('.lr-bar').offsetHeight
+                - reader.querySelector('.lr-dim-top').offsetHeight;
+        }
+        lr.top = Math.max(0, Math.min(lr.top, maxTop));
+        reader.style.top = lr.top + 'px';
+    }
+
+    function setExpanded(expanded) {
+        lr.expanded = expanded;
+        reader.classList.toggle('expanded', expanded);
+        reader.querySelector('.lr-icon-expand').style.display = expanded ? 'none' : '';
+        reader.querySelector('.lr-icon-collapse').style.display = expanded ? '' : 'none';
+        reader.querySelector('.lr-expand').setAttribute('aria-label',
+            expanded ? 'Shrink the line reader' : 'Expand the line reader');
+        layoutReader();
+    }
+
+    function hideHint() {
+        reader.querySelector('.lr-hint').style.visibility = 'hidden';
+    }
+
+    function toggleLineReader(show = reader.hidden) {
+        closeMenus();
+        reader.hidden = !show;
+        if (show) {
+            layoutReader();
+            handle.focus();
+        }
+    }
+
+    function moveBy(dy) {
+        lr.top += dy;
+        layoutReader();
+    }
+
+    // Drag the six dots (or a finger) to move; arrow keys move one line at a time
+    handle.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        handle.focus();
+        handle.classList.add('active');
+        hideHint();
+        const startY = e.clientY, startTop = lr.top;
+        const move = ev => { lr.top = startTop + ev.clientY - startY; layoutReader(); };
+        const up = () => {
+            handle.classList.remove('active');
+            document.removeEventListener('pointermove', move);
+            document.removeEventListener('pointerup', up);
+        };
+        document.addEventListener('pointermove', move);
+        document.addEventListener('pointerup', up);
+    });
+    handle.addEventListener('keydown', e => {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            hideHint();
+            moveBy((e.key === 'ArrowUp' ? -1 : 1) * lineHeight());
+        }
+    });
+
+    // Drag the arrow below the window to show more or fewer lines
+    function setLines(lines) {
+        lr.lines = Math.max(lr.minLines, Math.min(lr.maxLines, lines));
+        layoutReader();
+    }
+    resizer.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        resizer.focus();
+        const startY = e.clientY, startLines = lr.lines;
+        const move = ev => setLines(startLines + Math.round((ev.clientY - startY) / lineHeight()));
+        const up = () => {
+            document.removeEventListener('pointermove', move);
+            document.removeEventListener('pointerup', up);
+        };
+        document.addEventListener('pointermove', move);
+        document.addEventListener('pointerup', up);
+    });
+    resizer.addEventListener('keydown', e => {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            setLines(lr.lines + (e.key === 'ArrowDown' ? 1 : -1));
+        }
+    });
+
+    reader.querySelector('.lr-expand').addEventListener('click', () => setExpanded(!lr.expanded));
+    reader.querySelector('.lr-close').addEventListener('click', () => toggleLineReader(false));
+    window.addEventListener('resize', layoutReader);
+
+    // ===== More menu =====
+    const actions = {
+        help: () => openModal('help-modal'),
+        shortcuts: () => openModal('shortcuts-modal'),
+        assistive: () => openModal('assistive-modal'),
+        'line-reader': () => toggleLineReader(),
+        exit: () => openModal('exit-modal'),
+    };
+    document.querySelectorAll('.more-dropdown-item[data-action]').forEach(item => {
+        item.addEventListener('click', e => {
+            e.stopPropagation();
+            actions[item.dataset.action]();
+        });
+    });
+
+    // ===== Keyboard shortcuts (listed in the Keyboard Shortcuts dialog) =====
+    function testScreenShown() {
+        return document.getElementById('main-workspace').style.display !== 'none'
+            && !document.querySelector('.info-modal-overlay.open');
+    }
+
+    function currentQuestionHasOptions() {
+        const q = modulesData[app.modIdx]?.questions[app.qIdx];
+        return Boolean(q && q.options && q.options.length);
+    }
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && closeModals()) {
+            e.preventDefault();
+            return;
+        }
+        if (e.key === 'F1') {
+            e.preventDefault();
+            toggleModal('shortcuts-modal');
+            return;
+        }
+        if (!e.ctrlKey || e.metaKey) return;
+        // e.code, not e.key: on a Mac, Option changes the typed character
+        const code = e.code, alt = e.altKey, shift = e.shiftKey;
+        const isMath = app.modIdx >= 2;
+        let handled = true;
+
+        if (alt && !shift && code === 'KeyH') toggleModal('help-modal');
+        else if (!testScreenShown()) handled = false;
+        else if (alt && shift && code === 'KeyD') app.toggleDirections();
+        else if (alt && !shift && code === 'KeyB') app.prevQuestion();
+        else if (alt && !shift && code === 'KeyX') app.nextQuestion();
+        else if (alt && !shift && code === 'KeyG') app.showNavModal();
+        else if (alt && !shift && code === 'KeyT') {
+            // Closes the 5-minute message if it's showing, otherwise hides/shows the timer
+            const toast = document.getElementById('timer-toast');
+            if (toast && toast.style.display === 'block') toast.style.display = 'none';
+            else app.toggleTimer();
+        }
+        else if (alt && !shift && code === 'KeyV') app.toggleReview();
+        else if (alt && !shift && code === 'KeyC' && isMath) app.toggleCalculator();
+        else if (alt && !shift && code === 'KeyR' && isMath) app.toggleReference();
+        else if (alt && !shift && code === 'KeyO' && currentQuestionHasOptions()) app.toggleCrossOutMode();
+        else if (!alt && !shift && code === 'KeyL') toggleLineReader();
+        else if (!alt && !shift && code === 'KeyH' && !isMath) {
+            // Highlights & Notes is only on Reading and Writing, like its button
+            app.toggleHighlightMode(document.querySelector('#ui-tools-reading-1 .highlight-tool'));
+        }
+        else if (/^Digit[1-5]$/.test(code) && currentQuestionHasOptions() && (shift !== alt)) {
+            const index = Number(code.slice(-1)) - 1;
+            const letter = 'ABCDE'[index];
+            const state = moduleState[app.modIdx][app.qIdx];
+            if (index >= modulesData[app.modIdx].questions[app.qIdx].options.length) { /* no such option */ }
+            else if (alt) app.toggleCrossOut(letter);
+            else if (state.answer === letter) { state.answer = null; app.syncSelections(); }  // deselect
+            else app.selectOption(letter);
+        }
+        else handled = false;
+
+        if (handled) e.preventDefault();
+    }, true);
+
+    // Keep the reader in place when the question changes (passage column may resize)
+    const originalRender = app.renderQuestion.bind(app);
+    app.renderQuestion = function () {
+        originalRender();
+        layoutReader();
+    };
+
+    app.toggleLineReader = toggleLineReader;
+    app.openToolModal = openModal;
+})();
+</script>

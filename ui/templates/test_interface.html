@@ -1403,22 +1403,22 @@
                 <img src="{% static 'images/more.svg' %}" style="height: 15px;"> More
             </div>
             <div class="more-dropdown" id="more-dropdown-1">
-                <button class="more-dropdown-item">
+                <button class="more-dropdown-item" data-action="help">
                     <img src="{% static 'images/help.svg' %}">Help
                 </button>
-                <button class="more-dropdown-item">
+                <button class="more-dropdown-item" data-action="shortcuts">
                     <img src="{% static 'images/shortcuts.svg' %}">Shortcuts
                 </button>
-                <button class="more-dropdown-item">
+                <button class="more-dropdown-item" data-action="assistive">
                     <img src="{% static 'images/assistive.svg' %}">Assistive Technology
                 </button>
-                <button class="more-dropdown-item">
+                <button class="more-dropdown-item" data-action="line-reader">
                     <img src="{% static 'images/line-reader.svg' %}">Line Reader
                 </button>
                 <button class="more-dropdown-item unscheduled-break">
                     <img src="{% static 'images/unscheduled.svg' %}">Unscheduled Break
                 </button>
-                <button class="more-dropdown-item">
+                <button class="more-dropdown-item" data-action="exit">
                     <img src="{% static 'images/exit.svg' %}">Exit the Exam
                 </button>
             </div>
@@ -2376,22 +2376,22 @@
                     <img src="{% static 'images/more.svg' %}" style="height: 15px;"> More
                 </div>
                 <div class="more-dropdown" id="more-dropdown-2">
-                    <button class="more-dropdown-item">
+                    <button class="more-dropdown-item" data-action="help">
                         <img src="{% static 'images/help.svg' %}">Help
                     </button>
-                    <button class="more-dropdown-item">
+                    <button class="more-dropdown-item" data-action="shortcuts">
                         <img src="{% static 'images/shortcuts.svg' %}">Shortcuts
                     </button>
-                    <button class="more-dropdown-item">
+                    <button class="more-dropdown-item" data-action="assistive">
                         <img src="{% static 'images/assistive.svg' %}">Assistive Technology
                     </button>
-                    <button class="more-dropdown-item">
+                    <button class="more-dropdown-item" data-action="line-reader">
                         <img src="{% static 'images/line-reader.svg' %}">Line Reader
                     </button>
                     <button class="more-dropdown-item unscheduled-break">
                         <img src="{% static 'images/unscheduled.svg' %}">Unscheduled Break
                     </button>
-                    <button class="more-dropdown-item">
+                    <button class="more-dropdown-item" data-action="exit">
                         <img src="{% static 'images/exit.svg' %}">Exit the Exam
                     </button>
                 </div>
@@ -4342,4 +4342,5 @@
         if (e.target === this) app.closeUnscheduledBreakModal();
     });
 </script>
+{% include "partials/_test_tools.html" %}
 {% endblock %}
