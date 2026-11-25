@@ -2,6 +2,7 @@ import io
 import json
 import os
 import shutil
+import socket
 import tempfile
 import threading
 import time
@@ -547,7 +548,7 @@ class TelegramApiTests(TestCase):
                                       io.BytesIO(json.dumps(body).encode()))
 
     def test_send_message(self):
-        with mock.patch('urllib.request.urlopen', return_value=self.response({'ok': True, 'result': {'message_id': 5}})) as urlopen:
+        with mock.patch.object(telegram, '_open', return_value=self.response({'ok': True, 'result': {'message_id': 5}})) as urlopen:
             self.assertEqual(telegram.send_message(111, '<b>Hi</b>'), {'message_id': 5})
         request = urlopen.call_args[0][0]
         self.assertEqual(request.full_url, 'https://api.telegram.org/bot123:TEST-TOKEN/sendMessage')
@@ -555,7 +556,7 @@ class TelegramApiTests(TestCase):
                                                     'disable_web_page_preview': True})
 
     def test_blocked_is_permanent(self):
-        with mock.patch('urllib.request.urlopen', side_effect=self.http_error(403, {
+        with mock.patch.object(telegram, '_open', side_effect=self.http_error(403, {
                 'ok': False, 'description': 'Forbidden: bot was blocked by the user'})):
             with self.assertRaises(telegram.TelegramError) as caught:
                 telegram.send_message(111, 'x')
@@ -563,18 +564,32 @@ class TelegramApiTests(TestCase):
         self.assertIn('blocked', str(caught.exception))
 
     def test_rate_limit_passes_retry_after(self):
-        with mock.patch('urllib.request.urlopen', side_effect=self.http_error(429, {
+        with mock.patch.object(telegram, '_open', side_effect=self.http_error(429, {
                 'ok': False, 'description': 'Too Many Requests', 'parameters': {'retry_after': 12}})):
             with self.assertRaises(telegram.TelegramError) as caught:
                 telegram.send_message(111, 'x')
         self.assertEqual((caught.exception.permanent, caught.exception.retry_after), (False, 12))
 
     def test_network_error_never_shows_the_token(self):
-        with mock.patch('urllib.request.urlopen', side_effect=urllib.error.URLError('timed out')):
+        with mock.patch.object(telegram, '_open', side_effect=urllib.error.URLError('timed out')):
             with self.assertRaises(telegram.TelegramError) as caught:
                 telegram.send_message(111, 'x')
         self.assertNotIn('TEST-TOKEN', str(caught.exception))
         self.assertFalse(caught.exception.permanent)
+
+    def test_connects_over_ipv4_only(self):
+        # IPv6 to Telegram sometimes hangs on the server, delaying messages
+        sock = mock.MagicMock()
+        with mock.patch('socket.getaddrinfo', return_value=[(socket.AF_INET, socket.SOCK_STREAM, 6, '', ('149.154.167.220', 443))]) as getaddrinfo, \
+                mock.patch('socket.socket', return_value=sock):
+            self.assertIs(telegram._create_connection_ipv4(('api.telegram.org', 443), timeout=10), sock)
+        self.assertEqual(getaddrinfo.call_args.args[2], socket.AF_INET)
+        sock.settimeout.assert_called_once_with(10)
+        sock.connect.assert_called_once_with(('149.154.167.220', 443))
+        conn = telegram._opener.handlers
+        self.assertTrue(any(isinstance(h, telegram._IPv4HTTPSHandler) for h in conn))
+        self.assertIs(telegram._IPv4HTTPSConnection('api.telegram.org')._create_connection,
+                      telegram._create_connection_ipv4)
 
     @override_settings(TELEGRAM_BOT_TOKEN='')
     def test_missing_token(self):

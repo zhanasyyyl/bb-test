@@ -7,14 +7,59 @@ Telegram passes that to telegram_webhook_view (set up with
 `manage.py telegram_setup`), which links that chat to the profile.
 """
 
+import http.client
 import json
 import secrets
+import socket
 import urllib.error
 import urllib.request
 
 from django.conf import settings
 
 API_URL = 'https://api.telegram.org/bot{token}/{method}'
+
+
+def _create_connection_ipv4(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_address=None):
+    """socket.create_connection, but IPv4 only.
+
+    On the server, IPv6 to api.telegram.org sometimes hangs: the connection
+    then waits the whole timeout before falling back to IPv4, and that
+    message arrives about 10 s late. Telegram is always reachable over IPv4.
+    """
+    host, port = address
+    error = None
+    for family, socktype, proto, _, sockaddr in socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM):
+        sock = socket.socket(family, socktype, proto)
+        try:
+            if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
+                sock.settimeout(timeout)
+            if source_address:
+                sock.bind(source_address)
+            sock.connect(sockaddr)
+            return sock
+        except OSError as e:
+            error = e
+            sock.close()
+    raise error or OSError(f'No IPv4 address for {host}')
+
+
+class _IPv4HTTPSConnection(http.client.HTTPSConnection):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._create_connection = _create_connection_ipv4
+
+
+class _IPv4HTTPSHandler(urllib.request.HTTPSHandler):
+    def https_open(self, req):
+        return self.do_open(_IPv4HTTPSConnection, req, context=self._context)
+
+
+_opener = urllib.request.build_opener(_IPv4HTTPSHandler())
+
+
+def _open(request, timeout):
+    """Opens a Bot API request over IPv4 (see _create_connection_ipv4)."""
+    return _opener.open(request, timeout=timeout)
 
 
 class TelegramError(Exception):
@@ -39,7 +84,7 @@ def call(method, payload, timeout=10):
         headers={'Content-Type': 'application/json'},
     )
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with _open(request, timeout=timeout) as response:
             body = json.load(response)
     except urllib.error.HTTPError as e:
         try:
