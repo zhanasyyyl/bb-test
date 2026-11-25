@@ -1616,3 +1616,12 @@ input[type="radio"] {
     font-weight: 500 !important;
     -webkit-text-stroke: 0.25px currentColor;
 }
+
+/* Line math up with the surrounding text by its baseline. MathQuill's root
+   block is overflow: hidden, which makes the browser align it by its bottom
+   edge, so taller expressions (superscripts, fractions) sat lower than the
+   text around them. (span. outranks mathquill.css, which loads after this file.) */
+.mq-math-mode span.mq-root-block {
+    overflow: visible;
+    vertical-align: baseline;
+}
