@@ -284,11 +284,16 @@ Included at the end of test_interface.html, after `app` is defined.
         pointer-events: auto;
     }
 
+    .lr-bar,
+    .lr-bar-bottom {
+        cursor: grab;
+    }
+
     .lr-bar {
         position: relative;
         height: 44px;
         flex-shrink: 0;
-        background: #1e1e1e;
+        background: #141414;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -298,7 +303,7 @@ Included at the end of test_interface.html, after `app` is defined.
         width: 42px;
         height: 34px;
         border: 2px solid transparent;
-        border-radius: 7px;
+        border-radius: 6px;
         background: none;
         cursor: grab;
         display: flex;
@@ -307,11 +312,22 @@ Included at the end of test_interface.html, after `app` is defined.
         padding: 0;
     }
 
+    /* Hover like the calculator's top bar buttons */
     .lr-handle:hover,
+    .lr-buttons button:hover {
+        background: #505050;
+    }
+
     .lr-handle:focus,
     .lr-handle.active {
         border-color: #fff;
         outline: none;
+    }
+
+    /* Grey fill once selected (clicked, dragged or focused with the keyboard) */
+    .lr-handle:focus,
+    .lr-handle.active {
+        background: #8d8d8d;
     }
 
     .lr-handle:active {
@@ -330,7 +346,7 @@ Included at the end of test_interface.html, after `app` is defined.
         width: 34px;
         height: 32px;
         border: 2px solid transparent;
-        border-radius: 7px;
+        border-radius: 6px;
         background: none;
         cursor: pointer;
         display: flex;
@@ -339,7 +355,6 @@ Included at the end of test_interface.html, after `app` is defined.
         padding: 0;
     }
 
-    .lr-buttons button:hover,
     .lr-buttons button:focus-visible,
     .line-reader.expanded .lr-expand {
         border-color: #fff;
@@ -349,7 +364,7 @@ Included at the end of test_interface.html, after `app` is defined.
     /* Everything in the reader except the window is dimmed and blocks clicks */
     .lr-dim {
         flex-shrink: 0;
-        background: rgba(30, 30, 30, 0.82);
+        background: rgba(15, 15, 15, 0.86);
         position: relative;
     }
 
@@ -380,16 +395,32 @@ Included at the end of test_interface.html, after `app` is defined.
         left: 50%;
         top: 2px;
         transform: translateX(-50%);
-        width: 34px;
-        height: 22px;
+        width: 26px;
+        height: 24px;
         border: none;
-        border-radius: 4px;
+        border-radius: 5px;
         background: none;
-        cursor: ns-resize;
+        color: #d4d4d4;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 0;
+    }
+
+    /* Points down while the band can grow, up once it's at its largest */
+    .lr-resize svg {
+        transition: transform 0.15s;
+    }
+
+    .lr-resize.shrinking svg {
+        transform: rotate(180deg);
+    }
+
+    /* Hover: light rounded square behind a grey arrow */
+    .lr-resize:hover {
+        background: #ececec;
+        color: #9a9a9a;
     }
 
     .lr-resize:focus-visible {
@@ -399,7 +430,7 @@ Included at the end of test_interface.html, after `app` is defined.
     .lr-bar-bottom {
         height: 30px;
         flex-shrink: 0;
-        background: #1e1e1e;
+        background: #141414;
     }
 </style>
 
@@ -465,9 +496,9 @@ Included at the end of test_interface.html, after `app` is defined.
                     <p>Select <strong>More &gt; Line Reader</strong> to show a reading band that helps you focus on a
                         few lines at a time.</p>
                     <ul>
-                        <li>Drag the six dots at the top to move it, or select the six dots and use the up and down arrow
+                        <li>Drag the bar at the top or bottom to move it, or select the six dots and use the up and down arrow
                             keys.</li>
-                        <li>Drag the arrow below the band to show more or fewer lines.</li>
+                        <li>Select the arrow below the band to show one more line, up to three. Then the arrow flips, and selecting it shows one fewer line at a time.</li>
                         <li>Use the expand button to stretch it across the screen.</li>
                     </ul>
                 </div>
@@ -742,8 +773,8 @@ Included at the end of test_interface.html, after `app` is defined.
     </div>
     <div class="lr-window"></div>
     <div class="lr-dim lr-dim-bottom">
-        <button type="button" class="lr-resize" aria-label="Show more or fewer lines: drag, or use the up and down arrow keys">
-            <svg width="14" height="9" viewBox="0 0 14 9" fill="#fff" aria-hidden="true"><path d="M0 0h14L7 9z" /></svg>
+        <button type="button" class="lr-resize" aria-label="Show one more line">
+            <svg width="14" height="9" viewBox="0 0 14 9" fill="currentColor" aria-hidden="true"><path d="M0 0h14L7 9z" /></svg>
         </button>
     </div>
     <div class="lr-bar-bottom"></div>
@@ -806,7 +837,7 @@ Included at the end of test_interface.html, after `app` is defined.
     const handle = reader.querySelector('.lr-handle');
     const win = reader.querySelector('.lr-window');
     const resizer = reader.querySelector('.lr-resize');
-    const lr = { lines: 1, top: null, expanded: false, minLines: 1, maxLines: 10 };
+    const lr = { lines: 1, top: null, expanded: false, minLines: 1, maxLines: 3, growing: true };
 
     function lineHeight() {
         const passage = document.getElementById('ui-passage');
@@ -859,10 +890,8 @@ Included at the end of test_interface.html, after `app` is defined.
     function toggleLineReader(show = reader.hidden) {
         closeMenus();
         reader.hidden = !show;
-        if (show) {
-            layoutReader();
-            handle.focus();
-        }
+        // Don't focus the six dots here: they turn grey only once clicked or dragged
+        if (show) layoutReader();
     }
 
     function moveBy(dy) {
@@ -870,14 +899,25 @@ Included at the end of test_interface.html, after `app` is defined.
         layoutReader();
     }
 
-    // Drag the six dots (or a finger) to move; arrow keys move one line at a time
-    handle.addEventListener('pointerdown', e => {
+    // Drag anywhere on the top or bottom bar (except buttons) to move; after clicking
+    // the six dots, arrow keys move one line at a time
+    const startDrag = e => {
+        if (e.button !== 0 || e.target.closest('.lr-buttons')) return;
         e.preventDefault();
-        handle.focus();
-        handle.classList.add('active');
-        hideHint();
+        // Only the six dots get selected (grey, arrow keys); the rest of the bar just drags
+        if (e.target.closest('.lr-handle')) {
+            handle.focus();
+            handle.classList.add('active');
+        } else if (document.activeElement === handle) {
+            handle.blur();
+        }
         const startY = e.clientY, startTop = lr.top;
-        const move = ev => { lr.top = startTop + ev.clientY - startY; layoutReader(); };
+        const move = ev => {
+            // The hint goes away once the reader actually moves, not on a plain click
+            if (ev.clientY !== startY) hideHint();
+            lr.top = startTop + ev.clientY - startY;
+            layoutReader();
+        };
         const up = () => {
             handle.classList.remove('active');
             document.removeEventListener('pointermove', move);
@@ -885,7 +925,9 @@ Included at the end of test_interface.html, after `app` is defined.
         };
         document.addEventListener('pointermove', move);
         document.addEventListener('pointerup', up);
-    });
+    };
+    reader.querySelector('.lr-bar').addEventListener('pointerdown', startDrag);
+    reader.querySelector('.lr-bar-bottom').addEventListener('pointerdown', startDrag);
     handle.addEventListener('keydown', e => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault();
@@ -894,28 +936,15 @@ Included at the end of test_interface.html, after `app` is defined.
         }
     });
 
-    // Drag the arrow below the window to show more or fewer lines
-    function setLines(lines) {
-        lr.lines = Math.max(lr.minLines, Math.min(lr.maxLines, lines));
+    // The arrow below the window adds a line at a time up to maxLines, then
+    // flips and removes a line at a time back down to one
+    resizer.addEventListener('click', () => {
+        lr.lines += lr.growing ? 1 : -1;
+        if (lr.lines >= lr.maxLines) lr.growing = false;
+        if (lr.lines <= lr.minLines) lr.growing = true;
+        resizer.classList.toggle('shrinking', !lr.growing);
+        resizer.setAttribute('aria-label', lr.growing ? 'Show one more line' : 'Show one fewer line');
         layoutReader();
-    }
-    resizer.addEventListener('pointerdown', e => {
-        e.preventDefault();
-        resizer.focus();
-        const startY = e.clientY, startLines = lr.lines;
-        const move = ev => setLines(startLines + Math.round((ev.clientY - startY) / lineHeight()));
-        const up = () => {
-            document.removeEventListener('pointermove', move);
-            document.removeEventListener('pointerup', up);
-        };
-        document.addEventListener('pointermove', move);
-        document.addEventListener('pointerup', up);
-    });
-    resizer.addEventListener('keydown', e => {
-        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            e.preventDefault();
-            setLines(lr.lines + (e.key === 'ArrowDown' ? 1 : -1));
-        }
     });
 
     reader.querySelector('.lr-expand').addEventListener('click', () => setExpanded(!lr.expanded));
