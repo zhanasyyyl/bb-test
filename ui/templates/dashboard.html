@@ -3,6 +3,38 @@
 
 {% block body_class %}body-dashboard{% endblock %}
 
+{% block extra_head %}
+<style>
+    /* Past Tests card (Your Tests > Past, after finishing the test) */
+    .past-test-card {
+        text-align: left;
+    }
+
+    .past-test-date {
+        margin: 0;
+        font-weight: 400;
+    }
+
+    .past-test-status {
+        margin-top: 6px;
+        font-size: 14px;
+    }
+
+    .past-test-card a.past-test-link {
+        display: inline-block;
+        margin: 18px 0 8px 32px;
+        color: #324dc7;
+        font-weight: 400;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .past-test-card a.past-test-link:hover {
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="dashboard-container">
     <div class="dashboard-top">
@@ -24,14 +56,15 @@
         <div class="split-section">
             <div class="section-header">
                 <h2>Your Tests</h2>
-                <div class="toggle-switch">
-                    <div class="toggle-option active"><img style="width: 13px; margin-left: -8px"
-                            src="{% static 'images/active-tick.png' %}">Active</div>
-                    <div class="toggle-option">Past</div>
+                <div class="toggle-switch" id="tests-toggle" role="tablist">
+                    <div class="toggle-option active" data-panel="tests-active" role="tab"><img class="toggle-tick"
+                            style="width: 13px; margin-left: -8px" src="{% static 'images/active-tick.png' %}">Active</div>
+                    <div class="toggle-option" data-panel="tests-past" role="tab">Past</div>
                 </div>
                 <a class="header-link">Don't see your test here?</a>
             </div>
 
+            <div id="tests-active">
             {% if request.user.userprofile.test_completed %}
             <div class="registration-card no-upcoming-tests-card">
                 <h3 class="no-tests-title">You Have No Upcoming Tests</h3>
@@ -47,7 +80,7 @@
                 <div class="reg-title">SAT</div>
                 <div class="reg-details">
                     <div class="reg-left">
-                        <p><strong>Date:</strong> Sat, Nov 7, 2026</p>
+                        <p><strong>Date:</strong> Sat, Dec 5, 2026</p>
                         <p><strong>Arrival Time:</strong> 7:45 a.m. <span class="tz-offset"></span></p>
                         <p><strong>Doors Close:</strong> 8:00 a.m. <span class="tz-offset"></span></p>
                         <script>
@@ -133,6 +166,52 @@
                 </div>
             </div>
             {% endif %}
+            </div>
+
+            <div id="tests-past" hidden>
+            {% if request.user.userprofile.test_completed %}
+            <div class="registration-card past-test-card">
+                <div class="reg-title">SAT</div>
+                <p class="past-test-date"><strong>Date:</strong> Sat, Dec 5, 2026</p>
+                <div class="reg-accommodations">
+                    <strong>Testing Accommodations:</strong>
+                    <p style="margin-top: 4px;">You have no approved accommodations for this test.</p>
+                </div>
+                <div class="reg-divider"></div>
+                <div class="reg-status past-test-status">
+                    <svg viewBox="0 0 24 24" fill="none" class="status-icon">
+                        <circle cx="12" cy="12" r="10" stroke="#188038" stroke-width="2"></circle>
+                        <polyline points="8 12 11 15 16 9" stroke="#188038" stroke-width="2"></polyline>
+                    </svg>
+                    <span>Your answers have been submitted!</span>
+                </div>
+                <a class="past-test-link" href="#" onclick="return false;">See score release dates.</a>
+            </div>
+            {% else %}
+            <div class="registration-card no-upcoming-tests-card">
+                <h3 class="no-tests-title">You Have No Past Tests</h3>
+                <p class="no-tests-description">Tests you've taken will appear here.</p>
+            </div>
+            {% endif %}
+            </div>
+            <script>
+                // Active / Past switch for "Your Tests"
+                (function () {
+                    var toggle = document.getElementById('tests-toggle');
+                    var tick = toggle.querySelector('.toggle-tick');
+                    toggle.querySelectorAll('.toggle-option').forEach(function (option) {
+                        option.addEventListener('click', function () {
+                            toggle.querySelectorAll('.toggle-option').forEach(function (o) {
+                                var on = o === option;
+                                o.classList.toggle('active', on);
+                                o.setAttribute('aria-selected', on);
+                                document.getElementById(o.dataset.panel).hidden = !on;
+                            });
+                            option.insertBefore(tick, option.firstChild);
+                        });
+                    });
+                })();
+            </script>
         </div>
 
         <div class="split-section">
