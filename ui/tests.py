@@ -1161,3 +1161,30 @@ class TutorFinishedPageTests(TestCase):
     def test_requires_login(self):
         self.client.logout()
         self.assertEqual(self.client.get('/api/tutor-finished/').status_code, 302)
+
+
+class PasswordValidationTests(TestCase):
+    def test_password_may_resemble_the_username(self):
+        from django.contrib.auth.password_validation import validate_password
+        user = User(username='anabel.lee@example.com', email='anabel.lee@example.com')
+        validate_password('anabellee1', user)     # no "too similar" error
+
+    def test_common_password_is_allowed(self):
+        from django.contrib.auth.password_validation import validate_password
+        validate_password('password123')
+
+    def test_other_checks_still_apply(self):
+        from django.contrib.auth.password_validation import validate_password
+        from django.core.exceptions import ValidationError
+        for weak in ('short1', '12345678901'):
+            with self.assertRaises(ValidationError):
+                validate_password(weak)
+
+    def test_admin_add_user_accepts_it(self):
+        admin = User.objects.create_superuser('admin@example.com', 'admin@example.com', 'Admin-pass-123')
+        self.client.force_login(admin)
+        response = self.client.post('/admin/auth/user/add/', {
+            'username': 'anabel.lee@example.com', 'password1': 'anabellee1', 'password2': 'anabellee1',
+            'usable_password': 'true'})
+        self.assertEqual(response.status_code, 302, response.content.decode()[-2000:] if response.status_code != 302 else '')
+        self.assertTrue(User.objects.get(username='anabel.lee@example.com').check_password('anabellee1'))
