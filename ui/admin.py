@@ -46,6 +46,9 @@ class ProfileActiveFilter(ActiveFilter):
 # Django's user list, plus a sortable "Date joined" column and a date bar for
 # narrowing it down by when users were created. Opens newest first, showing
 # only active users.
+# "View site" in the admin header goes straight to the student dashboard
+admin.site.site_url = '/dashboard/'
+
 admin.site.unregister(User)
 
 

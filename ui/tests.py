@@ -1188,3 +1188,9 @@ class PasswordValidationTests(TestCase):
             'usable_password': 'true'})
         self.assertEqual(response.status_code, 302, response.content.decode()[-2000:] if response.status_code != 302 else '')
         self.assertTrue(User.objects.get(username='anabel.lee@example.com').check_password('anabellee1'))
+
+
+class AdminViewSiteLinkTests(TestCase):
+    def test_view_site_goes_to_the_dashboard(self):
+        self.client.force_login(User.objects.create_superuser('admin@example.com', 'admin@example.com', 'Admin-pass-123'))
+        self.assertContains(self.client.get('/admin/'), '<a href="/dashboard/">View site</a>', html=True)
