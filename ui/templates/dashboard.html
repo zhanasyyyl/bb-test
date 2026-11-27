@@ -32,6 +32,15 @@
     .past-test-card a.past-test-link:hover {
         text-decoration: none;
     }
+
+    .no-tests-description.practice-past-note {
+        margin-top: 16px;
+    }
+
+    /* A hidden Active / Past panel stays hidden even if its class sets display (e.g. .cards-grid) */
+    .split-section [hidden] {
+        display: none !important;
+    }
 </style>
 {% endblock %}
 
@@ -189,43 +198,35 @@
             </div>
             {% else %}
             <div class="registration-card no-upcoming-tests-card">
-                <h3 class="no-tests-title">You Have No Past Tests</h3>
-                <p class="no-tests-description">Tests you've taken will appear here.</p>
+                <h3 class="no-tests-title">You Haven't Taken Any Digital Tests Yet</h3>
+                <p class="no-tests-description">Once you take any exam in Bluebook, you'll see it listed here.</p>
             </div>
             {% endif %}
             </div>
-            <script>
-                // Active / Past switch for "Your Tests"
-                (function () {
-                    var toggle = document.getElementById('tests-toggle');
-                    var tick = toggle.querySelector('.toggle-tick');
-                    toggle.querySelectorAll('.toggle-option').forEach(function (option) {
-                        option.addEventListener('click', function () {
-                            toggle.querySelectorAll('.toggle-option').forEach(function (o) {
-                                var on = o === option;
-                                o.classList.toggle('active', on);
-                                o.setAttribute('aria-selected', on);
-                                document.getElementById(o.dataset.panel).hidden = !on;
-                            });
-                            option.insertBefore(tick, option.firstChild);
-                        });
-                    });
-                })();
-            </script>
         </div>
 
         <div class="split-section">
             <div class="section-header">
                 <h2>Practice and Prepare</h2>
-                <div class="toggle-switch">
-                    <div class="toggle-option active"><img style="width: 14px;"
-                            src="{% static 'images/active-tick.png' %}">Active</div>
-                    <div class="toggle-option">Past</div>
+                <div class="toggle-switch" role="tablist">
+                    <div class="toggle-option active" data-panel="practice-active" role="tab"><img class="toggle-tick"
+                            style="width: 14px;" src="{% static 'images/active-tick.png' %}">Active</div>
+                    <div class="toggle-option" data-panel="practice-past" role="tab">Past</div>
                 </div>
                 <a class="header-link">Learn more about practice</a>
             </div>
 
-            <div class="cards-grid">
+            <div id="practice-past" hidden>
+                <div class="registration-card no-upcoming-tests-card">
+                    <h3 class="no-tests-title">Ready to Practice?</h3>
+                    <p class="no-tests-description">Go to <strong>Active</strong> and select <strong>Full-Length
+                            Practice</strong>.</p>
+                    <p class="no-tests-description practice-past-note">Once you take any full-length practice test,
+                        you'll see it listed here.</p>
+                </div>
+            </div>
+
+            <div class="cards-grid" id="practice-active">
                 <div class="practice-card">
                     <div class="card-icon">
                         <img src="{% static 'images/test-preview.svg' %}" style="width: 82px;" alt="">
@@ -260,6 +261,23 @@
     <div class="dashboard-bottom"></div>
     {% include "partials/_version_info.html" %}
 </div>
+<script>
+    // Active / Past switches for "Your Tests" and "Practice and Prepare"
+    document.querySelectorAll('.toggle-switch[role="tablist"]').forEach(function (toggle) {
+        var tick = toggle.querySelector('.toggle-tick');
+        toggle.querySelectorAll('.toggle-option').forEach(function (option) {
+            option.addEventListener('click', function () {
+                toggle.querySelectorAll('.toggle-option').forEach(function (o) {
+                    var on = o === option;
+                    o.classList.toggle('active', on);
+                    o.setAttribute('aria-selected', on);
+                    document.getElementById(o.dataset.panel).hidden = !on;
+                });
+                option.insertBefore(tick, option.firstChild);
+            });
+        });
+    });
+</script>
 
 <!-- Profile Edit Modal -->
 <div id="profile-modal" class="profile-modal-overlay" style="display: none;">
