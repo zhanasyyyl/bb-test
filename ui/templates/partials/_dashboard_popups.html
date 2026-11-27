@@ -1,0 +1,592 @@
+{% comment %}
+Dashboard popups, opened by any element with data-open-popup="<id>":
+- full-screen pages: "Exam Overview" and "Test Day Checklist" (registration card links)
+- accordion dialogs: "Don't See Your Test Here?" and "Bluebook Practice" (section header links)
+Text is the real app's wording, copied exactly from its screens; don't reword it.
+{% endcomment %}
+<style>
+    .dash-popup {
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        display: none;
+        flex-direction: column;
+        background: #f8f8f8;
+        font-family: 'Roboto', sans-serif;
+        color: #1e1e1e;
+    }
+
+    .dash-popup.open {
+        display: flex;
+    }
+
+    .dash-popup-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 24px 40px;
+    }
+
+    .dash-popup h2 {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 400;
+        margin: 52px 0 32px;
+    }
+
+    .dash-popup-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .dash-popup-footer {
+        flex-shrink: 0;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 220px 0 24px;
+        background: #fff;
+        border-top: 1px solid #c8c8c8;
+    }
+
+    .dash-popup-done {
+        background: #f7dc4a;
+        border: 1px solid #1e1e1e;
+        border-radius: 999px;
+        padding: 7px 18px;
+        font: 700 13px 'Roboto', sans-serif;
+        color: #1e1e1e;
+        cursor: pointer;
+    }
+
+    .dash-popup-done:hover {
+        box-shadow: 0 0 0 1px #1e1e1e;
+    }
+
+    @media (max-width: 900px) {
+        .dash-popup-footer {
+            padding-right: 24px;
+        }
+    }
+
+    /* ===== Accordion dialogs (Don't See Your Test Here?, Bluebook Practice) ===== */
+    .dash-popup.dash-modal {
+        background: rgba(0, 0, 0, 0.78);
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 46px;
+    }
+
+    .dash-modal-box {
+        position: relative;
+        width: min(730px, calc(100vw - 48px));
+        height: calc(100vh - 92px);
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px 20px 20px;
+        box-sizing: border-box;
+    }
+
+    .dash-modal-box h2 {
+        text-align: left;
+        font-size: 26px;
+        font-weight: 400;
+        margin: 2px 0 10px;
+    }
+
+    .dash-modal-x {
+        position: absolute;
+        top: 18px;
+        right: 22px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .dash-modal-x:hover {
+        background: #f0f0f0;
+    }
+
+    .dash-modal-toggles {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 16px 9px;
+        border-bottom: 1px solid #c8c8c8;
+    }
+
+    .dash-modal-toggles button {
+        border: none;
+        background: none;
+        font: 700 12px 'Roboto', sans-serif;
+        color: #1e1e1e;
+        cursor: pointer;
+        padding: 3px 20px;
+    }
+
+    .dash-modal-toggles button+button {
+        border-left: 1px solid #c8c8c8;
+    }
+
+    .dash-modal-toggles button:hover {
+        text-decoration: underline;
+    }
+
+    .dash-modal-body {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .dash-section {
+        border-bottom: 1px solid #d9d9d9;
+    }
+
+    .dash-section summary {
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 22px 20px 21px;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .dash-section summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .dash-section summary:hover {
+        background: #f6f6f6;
+    }
+
+    /* "+" closed, "−" open */
+    .dash-section summary::after {
+        content: '';
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        background:
+            linear-gradient(#1e1e1e, #1e1e1e) center / 14px 1.5px no-repeat,
+            linear-gradient(#1e1e1e, #1e1e1e) center / 1.5px 14px no-repeat;
+    }
+
+    .dash-section[open] summary::after {
+        background: linear-gradient(#1e1e1e, #1e1e1e) center / 14px 1.5px no-repeat;
+    }
+
+    .dash-section-body {
+        padding: 22px 20px 6px;
+        font-size: 13px;
+        line-height: 1.5;
+        background: linear-gradient(to bottom, #f1f1f1, #fff 40px);
+    }
+
+    .dash-section-body p {
+        margin: 0 0 19px;
+    }
+
+    .dash-modal-footer {
+        display: flex;
+        justify-content: center;
+        padding-top: 18px;
+    }
+
+    .dash-modal-close {
+        background: #f7dc4a;
+        border: 1px solid #1e1e1e;
+        border-radius: 999px;
+        padding: 10px 18px;
+        font: 700 13px 'Roboto', sans-serif;
+        color: #1e1e1e;
+        cursor: pointer;
+    }
+
+    .dash-modal-close:hover {
+        box-shadow: 0 0 0 1px #1e1e1e;
+    }
+
+    /* ===== Exam Overview ===== */
+    .overview-card {
+        max-width: 830px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .overview-banner {
+        height: 465px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border-bottom: 1px solid #4f4f4f;
+    }
+
+    .overview-banner-title {
+        font-size: 37px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+    }
+
+    .overview-text {
+        padding: 18px 40px 26px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .overview-text h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 12px 0 18px;
+    }
+
+    .overview-text p {
+        margin: 0 0 19px;
+    }
+
+    /* ===== Test Day Checklist ===== */
+    .checklist-grid {
+        max-width: 830px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    @media (max-width: 760px) {
+        .checklist-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .checklist-card {
+        padding: 26px 26px 18px;
+    }
+
+    .checklist-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 10px;
+        letter-spacing: -0.2px;
+    }
+
+    .checklist-card h3.ok {
+        color: #2f7a46;
+    }
+
+    .checklist-card h3.no {
+        color: #a3283a;
+    }
+
+    .checklist-card h3+ul+h3 {
+        margin-top: 22px;
+    }
+
+    .checklist-card ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .checklist-card li {
+        display: flex;
+        gap: 13px;
+        align-items: flex-start;
+        font-size: 12px;
+        line-height: 1.45;
+        margin-bottom: 9px;
+    }
+
+    .checklist-card li strong {
+        font-weight: 700;
+    }
+
+    .checklist-icon {
+        flex-shrink: 0;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .checklist-icon.ok {
+        background: #e6e6e6;
+    }
+
+    .checklist-icon.no {
+        border: 1.5px solid #a3283a;
+        position: relative;
+        width: 23px;
+        height: 23px;
+    }
+
+    /* the red slash across a prohibited item */
+    .checklist-icon.no::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1.5px;
+        height: 26px;
+        background: #a3283a;
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    .checklist-icon svg {
+        width: 15px;
+        height: 15px;
+        fill: none;
+        stroke: #1e1e1e;
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .checklist-link {
+        color: #324dc7;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
+
+{# ===== Exam Overview ===== #}
+<div class="dash-popup" id="popup-overview" role="dialog" aria-modal="true" aria-labelledby="popup-overview-title">
+    <div class="dash-popup-scroll">
+        <h2 id="popup-overview-title">SAT Overview</h2>
+        <div class="dash-popup-card overview-card">
+            <div class="overview-banner" aria-hidden="true">
+                <svg width="270" height="200" viewBox="0 0 270 200">
+                    <rect x="27" y="4" width="216" height="152" rx="10" fill="none" stroke="#1e1e1e" stroke-width="5" />
+                    <rect x="44" y="21" width="182" height="117" fill="none" stroke="#1e1e1e" stroke-width="4" />
+                    <path d="M4 157h262v6a20 20 0 0 1-20 20H24A20 20 0 0 1 4 163z" fill="none" stroke="#1e1e1e" stroke-width="5" stroke-linejoin="round" />
+                    <text x="135" y="104" text-anchor="middle" font-family="'Roboto Slab', 'Noto Serif', Georgia, serif" font-size="62" font-weight="900" fill="#479fd8">SAT</text>
+                    <text x="194" y="64" font-family="Arial, sans-serif" font-size="11" fill="#479fd8">®</text>
+                </svg>
+                <div class="overview-banner-title">Get Ready for the Digital SAT</div>
+            </div>
+            <div class="overview-text">
+                <h3>Get Ready for the Digital SAT</h3>
+                <p>If you’re taking the test on a weekend, here’s how it’ll work.</p>
+                <p>Before test day, head to the Practice and Prepare section of the Bluebook homepage and start practicing.</p>
+                <p>You can explore the tools and features of the app and try a few sample questions in the test preview or take a full-length practice test.</p>
+                <p>The week of the test, you'll complete a quick exam setup to check your device and get your admission ticket.</p>
+                <p>You’ll need this admission ticket on test day. You can take a picture of it, print it, or email it to yourself.</p>
+                <p>Arrive on time on test day. Check your admission ticket for your arrival time and the address of your test center.</p>
+                <p>Be sure to bring your fully charged device. It’ll need to stay on for roughly three hours, so we recommend you bring a power cord or portable charger. You’ll also need your admission ticket, a valid photo ID, and a pencil or pen. Scratch paper will be provided.</p>
+                <p>The digital SAT has two sections—Reading and Writing, and Math. It should take you just over 2 hours to complete, not including breaks.</p>
+                <p>Each section of the test has two parts called modules, and each module is timed separately. You can move back and forth between questions in a module and review your answers until time expires. There will be a break between sections.</p>
+                <p>During the test, you’ll have access to a set of tools.</p>
+                <p>On all math questions, you’ll find a reference sheet and a calculator. You can also bring an approved calculator.</p>
+                <p>Click Highlights &amp; Notes, then select some text to highlight, underline, or leave yourself a note.</p>
+                <p>On multiple-choice questions, if you think an answer option is wrong, you can cross it out.</p>
+                <p>You can use the line reader to help you focus as you’re reading test content.</p>
+                <p>And you can mark for review any questions you want to come back to later.</p>
+                <p>Zoom in and out using keyboard shortcuts on laptops or by pinching on tablets.</p>
+                <p>If you have a problem during the test, click the Help icon for troubleshooting tips. And you can always raise your hand to ask the proctor for help, too.</p>
+                <p>When the test is over, your answers will be submitted automatically. Wait until you see the “Congratulations” screen to close your device.</p>
+                <p>We’re excited for you to take the digital SAT. Good luck on test day!</p>
+            </div>
+        </div>
+    </div>
+    <div class="dash-popup-footer">
+        <button type="button" class="dash-popup-done" data-close-popup>Done</button>
+    </div>
+</div>
+
+{# ===== Test Day Checklist ===== #}
+<div class="dash-popup" id="popup-checklist" role="dialog" aria-modal="true" aria-labelledby="popup-checklist-title">
+    <div class="dash-popup-scroll">
+        <h2 id="popup-checklist-title">Test Day Checklist</h2>
+        <div class="checklist-grid">
+            <div class="dash-popup-card checklist-card">
+                <h3 class="ok">REQUIRED:</h3>
+                <ul>
+                    <li><span class="checklist-icon ok"><svg viewBox="0 0 16 16"><rect x="3" y="3.5" width="10" height="7" rx="0.8" /><path d="M1.5 12.5h13" /></svg></span>
+                        <span><strong>You must bring this fully charged device—it needs to stay on for roughly 3 hours.</strong></span></li>
+                    <li><span class="checklist-icon ok"><svg viewBox="0 0 16 16"><path d="M8 1.8l6.2 6.2L8 14.2 1.8 8z" /><path d="M6.2 6.2l3.6 3.6" /></svg></span>
+                        <span>Bring your admission ticket, which you can view in Bluebook. You can print it or email it to yourself.</span></li>
+                    <li><span class="checklist-icon ok"><svg viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="0.8" /><circle cx="8" cy="6.8" r="1.7" /><path d="M5.3 11.5c.5-1.5 1.5-2.2 2.7-2.2s2.2.7 2.7 2.2" /></svg></span>
+                        <span>You’ll need a <span class="checklist-link">valid photo ID</span> on test day.</span></li>
+                    <li><span class="checklist-icon ok"><svg viewBox="0 0 16 16"><rect x="2.5" y="5" width="11" height="6" rx="3" /><path d="M4.5 7h7M4.5 9h7" /></svg></span>
+                        <span>Follow all safety procedures at your school or test center.</span></li>
+                </ul>
+                <h3 class="ok">ALLOWED:</h3>
+                <ul>
+                    <li><span class="checklist-icon ok"><svg viewBox="0 0 16 16"><path d="M5.5 1.5v3.5M10.5 1.5v3.5M4 5h8v2.5a4 4 0 0 1-8 0zM8 11.5v3" /></svg></span>
+                        <span>You should bring a power cord or a portable charger, but we can’t guarantee you’ll have access to an outlet.</span></li>
+                    <li><span class="checklist-icon ok"><svg viewBox="0 0 16 16"><rect x="3.5" y="1.5" width="9" height="13" rx="0.8" /><rect x="5.3" y="3.3" width="5.4" height="2.4" /><path d="M5.5 8h1M7.5 8h1M9.5 8h1M5.5 10h1M7.5 10h1M9.5 10h1M5.5 12h1M7.5 12h1M9.5 12h1" /></svg></span>
+                        <span>There’s a calculator built into the app, but you can also bring your own <span class="checklist-link">approved calculator.</span></span></li>
+                    <li><span class="checklist-icon ok"><svg viewBox="0 0 16 16"><rect x="4.5" y="1.5" width="7" height="13" rx="3.5" /><path d="M8 1.5v4.5M4.5 6h7" /></svg></span>
+                        <span>You can bring an external mouse or keyboard. You can use an external keyboard with a tablet—not with a laptop.</span></li>
+                    <li><span class="checklist-icon ok"><svg viewBox="0 0 16 16"><rect x="2" y="6" width="5" height="8.5" rx="0.6" /><path d="M10 3.5h3v1.5l1 1.5v8h-5v-8l1-1.5zM11 1.5h1v2h-1z" /></svg></span>
+                        <span>You’re allowed snacks and water, but only during breaks.</span></li>
+                </ul>
+            </div>
+            <div class="dash-popup-card checklist-card">
+                <h3 class="no">PROHIBITED:</h3>
+                <ul>
+                    <li><span class="checklist-icon no"><svg viewBox="0 0 16 16"><circle cx="4.5" cy="9" r="2.5" /><circle cx="11.5" cy="9" r="2.5" /><path d="M7 9h2M2 9L1.5 6M14 9l.5-3" /></svg></span>
+                        <span>Smart glasses, smartphones, and smartwatches are prohibited. If you bring one, the proctor will collect it before the test.</span></li>
+                    <li><span class="checklist-icon no"><svg viewBox="0 0 16 16"><rect x="2.5" y="3" width="11" height="10" rx="0.8" /><path d="M2.5 6h11M6 6v7" /></svg></span>
+                        <span>Other applications—you must close all other apps and programs while the test is in progress.</span></li>
+                    <li><span class="checklist-icon no"><svg viewBox="0 0 16 16"><path d="M8 4c-1.5-1-3.5-1.3-5.5-1v10c2-.3 4 0 5.5 1 1.5-1 3.5-1.3 5.5-1V3c-2-.3-4 0-5.5 1zM8 4v10" /></svg></span>
+                        <span>Notes, books, or any other reference materials.</span></li>
+                    <li><span class="checklist-icon no"><svg viewBox="0 0 16 16"><path d="M4 1.5h6l2.5 2.5v10.5H4z" /><path d="M6 6h4.5M6 8.5h4.5M6 11h4.5" /></svg></span>
+                        <span>You will be provided scratch paper, but you may not bring your own.</span></li>
+                    <li><span class="checklist-icon no"><svg viewBox="0 0 16 16"><path d="M2.5 11V8.5a5.5 5.5 0 0 1 11 0V11" /><rect x="2" y="9.5" width="2.5" height="4.5" rx="0.8" /><rect x="11.5" y="9.5" width="2.5" height="4.5" rx="0.8" /></svg></span>
+                        <span>Headphones or earbuds—unless you have a College Board–approved accommodation.</span></li>
+                    <li><span class="checklist-icon no"><svg viewBox="0 0 16 16"><rect x="4.5" y="1.5" width="7" height="13" rx="1" /><path d="M7 12.5h2" /></svg></span>
+                        <span>Any camera, recording device, or timer.</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="dash-popup-footer">
+        <button type="button" class="dash-popup-done" data-close-popup>Done</button>
+    </div>
+</div>
+
+{# ===== Don't See Your Test Here? ===== #}
+<div class="dash-popup dash-modal" id="popup-missing-test" role="dialog" aria-modal="true" aria-labelledby="popup-missing-test-title">
+    <div class="dash-modal-box">
+        <h2 id="popup-missing-test-title">Don't See Your Test Here?</h2>
+        <button type="button" class="dash-modal-x" data-close-popup aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e1e1e" stroke-width="1.6" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+        <div class="dash-modal-toggles">
+            <button type="button" data-expand-all>Expand All</button>
+            <button type="button" data-collapse-all>Collapse All</button>
+        </div>
+        <div class="dash-modal-body">
+            <details class="dash-section">
+                <summary>If You're Taking an AP Exam</summary>
+                <div class="dash-section-body">
+                    <p>If you're registered for an AP Exam, you'll see your exam listed on the Bluebook app homepage five days before your test date. Make sure you’re signed in to Bluebook with a College Board account.</p>
+                    <p>If it's within five days of your exam, and it's not showing up in the app, please contact your teacher or your AP coordinator.</p>
+                </div>
+            </details>
+            <details class="dash-section">
+                <summary>If You’re Taking a PSAT/NMSQT, PSAT 10, or PSAT 8/9</summary>
+                <div class="dash-section-body">
+                    <p>If you're registered for any PSAT-related assessment, your school will give you a sign-in ticket that you’ll use to access Bluebook. Then you'll see your test listed on the homepage.</p>
+                    <p>If you signed in with a College Board account, you need to sign out and then sign back in using your sign-in ticket.</p>
+                    <p>If your test is still not showing up, please contact your teacher or someone at your school.</p>
+                </div>
+            </details>
+            <details class="dash-section">
+                <summary>If You’re Taking an SAT</summary>
+                <div class="dash-section-body">
+                    <p>If you're registered to take the SAT on a weekend, you'll see it listed on the Bluebook homepage five days before your test date. Make sure you’re signed in to Bluebook with a College Board account (if not, you need to sign out then sign back in).</p>
+                    <p>If you're taking the SAT on a school day, your school will give you a sign-in ticket that you’ll use to access Bluebook (if you signed in with a College Board account, you need to sign out and then sign back in).</p>
+                    <p>If it's within five days of your test, and it's not showing up in the app, please contact your teacher or your SAT coordinator.</p>
+                </div>
+            </details>
+        </div>
+        <div class="dash-modal-footer">
+            <button type="button" class="dash-modal-close" data-close-popup>Close</button>
+        </div>
+    </div>
+</div>
+
+{# ===== Bluebook Practice ===== #}
+<div class="dash-popup dash-modal" id="popup-practice" role="dialog" aria-modal="true" aria-labelledby="popup-practice-title">
+    <div class="dash-modal-box">
+        <h2 id="popup-practice-title">Bluebook Practice</h2>
+        <button type="button" class="dash-modal-x" data-close-popup aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e1e1e" stroke-width="1.6" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+        <div class="dash-modal-toggles">
+            <button type="button" data-expand-all>Expand All</button>
+            <button type="button" data-collapse-all>Collapse All</button>
+        </div>
+        <div class="dash-modal-body">
+            <details class="dash-section">
+                <summary>AP Exam Previews</summary>
+                <div class="dash-section-body">
+                    <p>These short previews will give you a way to see real AP questions in the app, try out the testing tools, and practice testing with any assistive technology you may use.</p>
+                    <p>AP Exam previews will not be scored.</p>
+                </div>
+            </details>
+            <details class="dash-section">
+                <summary>Full-Length AP Practice</summary>
+                <div class="dash-section-body">
+                    <p>Full-length AP practice is not available in Bluebook. Your AP teacher can assign practice exams to you in <strong>AP Classroom</strong>. Please check there to see what practice resources are available for your course.</p>
+                </div>
+            </details>
+            <details class="dash-section">
+                <summary>Full-Length PSAT/NMSQT, PSAT 10, or PSAT 8/9 Practice</summary>
+                <div class="dash-section-body">
+                    <p>If you take a full-length practice test for any of the PSAT-related assessments, your scores will be available on <strong>My Practice</strong>. Make sure you sign in to My Practice the same way you signed in to Bluebook to see your practice test scores.</p>
+                    <p>If you take a practice test more than once, you'll just see one listing for it on the <strong>Past</strong> tab under <strong>Practice and Prepare</strong>. But when you go to My Practice, each completed test will be listed.</p>
+                </div>
+            </details>
+            <details class="dash-section">
+                <summary>SAT Test Preview</summary>
+                <div class="dash-section-body">
+                    <p>This short preview gives you a way to see real SAT questions in the app, try out the testing tools, and practice testing with any assistive technology you may use.</p>
+                    <p>If you take the SAT test preview, you won't get a score. To get a score on a practice test, return to the homepage and select <strong>SAT Full-Length Practice</strong>.</p>
+                </div>
+            </details>
+            <details class="dash-section">
+                <summary>Full-Length SAT Practice</summary>
+                <div class="dash-section-body">
+                    <p>If you take a full-length SAT practice test, your scores will be available on <strong>My Practice</strong>. Make sure you sign in to My Practice the same way you signed in to Bluebook to see your practice test scores.</p>
+                    <p>If you take a practice test more than once, you'll just see one listing for it on the <strong>Past</strong> tab under <strong>Practice and Prepare</strong>. But when you go to My SAT, each completed test will be listed.</p>
+                </div>
+            </details>
+        </div>
+        <div class="dash-modal-footer">
+            <button type="button" class="dash-modal-close" data-close-popup>Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var lastFocus = null;
+        function closePopups() {
+            var closed = false;
+            document.querySelectorAll('.dash-popup.open').forEach(function (popup) {
+                popup.classList.remove('open');
+                closed = true;
+            });
+            if (closed) {
+                document.body.style.overflow = '';
+                if (lastFocus) lastFocus.focus();
+            }
+            return closed;
+        }
+        document.querySelectorAll('[data-open-popup]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                var popup = document.getElementById(link.dataset.openPopup);
+                lastFocus = link;
+                popup.classList.add('open');
+                var scroller = popup.querySelector('.dash-popup-scroll, .dash-modal-body');
+                scroller.scrollTop = 0;
+                popup.querySelectorAll('details.dash-section').forEach(function (d) { d.open = false; });
+                document.body.style.overflow = 'hidden';
+                popup.querySelector('[data-close-popup]').focus();
+            });
+        });
+        document.querySelectorAll('[data-close-popup]').forEach(function (button) {
+            button.addEventListener('click', closePopups);
+        });
+        document.querySelectorAll('.dash-modal').forEach(function (modal) {
+            var sections = modal.querySelectorAll('details.dash-section');
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) closePopups();      // click on the dark backdrop
+                if (e.target.closest('[data-expand-all]')) sections.forEach(function (d) { d.open = true; });
+                if (e.target.closest('[data-collapse-all]')) sections.forEach(function (d) { d.open = false; });
+            });
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && closePopups()) e.preventDefault();
+        });
+    })();
+</script>

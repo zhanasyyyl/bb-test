@@ -70,7 +70,7 @@
                             style="width: 13px; margin-left: -8px" src="{% static 'images/active-tick.png' %}">Active</div>
                     <div class="toggle-option" data-panel="tests-past" role="tab">Past</div>
                 </div>
-                <a class="header-link">Don't see your test here?</a>
+                <a class="header-link" href="#" data-open-popup="popup-missing-test">Don't see your test here?</a>
             </div>
 
             <div id="tests-active">
@@ -145,11 +145,11 @@
                             <img src="{% static 'images/ticket-blue.svg' %}" style="width: 16px;">
                             Admission Ticket
                         </a>
-                        <a class="reg-link">
+                        <a class="reg-link" href="#" data-open-popup="popup-overview">
                             <img src="{% static 'images/exam-overview.svg' %}" style="width: 16px;">
                             Exam Overview
                         </a>
-                        <a class="reg-link">
+                        <a class="reg-link" href="#" data-open-popup="popup-checklist">
                             <img src="{% static 'images/checklist.svg' %}" style="width: 16px;">
                             Test Day Checklist
                         </a>
@@ -213,7 +213,7 @@
                             style="width: 14px;" src="{% static 'images/active-tick.png' %}">Active</div>
                     <div class="toggle-option" data-panel="practice-past" role="tab">Past</div>
                 </div>
-                <a class="header-link">Learn more about practice</a>
+                <a class="header-link" href="#" data-open-popup="popup-practice">Learn more about practice</a>
             </div>
 
             <div id="practice-past" hidden>
@@ -261,6 +261,7 @@
     <div class="dashboard-bottom"></div>
     {% include "partials/_version_info.html" %}
 </div>
+{% include "partials/_dashboard_popups.html" %}
 <script>
     // Active / Past switches for "Your Tests" and "Practice and Prepare"
     document.querySelectorAll('.toggle-switch[role="tablist"]').forEach(function (toggle) {
