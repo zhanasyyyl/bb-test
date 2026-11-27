@@ -20,6 +20,17 @@ Text is the real app's wording, copied exactly from its screens; don't reword it
         display: flex;
     }
 
+    /* Everything in the popups is drawn 15% larger than the base sizes below */
+    .dash-popup {
+        --popup-scale: 1.15;
+    }
+
+    .dash-popup-scroll > *,
+    .dash-popup-done,
+    .dash-modal-box {
+        zoom: var(--popup-scale);
+    }
+
     .dash-popup-scroll {
         flex: 1;
         overflow-y: auto;
@@ -80,8 +91,9 @@ Text is the real app's wording, copied exactly from its screens; don't reword it
 
     .dash-modal-box {
         position: relative;
-        width: min(730px, calc(100vw - 48px));
-        height: calc(100vh - 92px);
+        /* divided by the zoom so the scaled dialog still fits the window */
+        width: min(730px, calc((100vw - 48px) / var(--popup-scale)));
+        height: calc((100vh - 92px) / var(--popup-scale));
         display: flex;
         flex-direction: column;
         background: #fff;
